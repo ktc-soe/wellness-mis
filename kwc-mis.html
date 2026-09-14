@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWC MIS · Kibidula Wellness Centre</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --g:#163A2B;--g2:#1f4f3a;--g3:#0d2419;
+  --gold:#C29B3B;--gold2:#e7d3a1;--gold3:#fdf8ee;
+  --paper:#f4f3ee;--card:#fff;--tint:#edf2ec;
+  --ink:#1a231d;--muted:#5a6b5e;--line:#dde3d8;
+  --ok:#2a7a4b;--err:#b03030;--warn:#854F0B;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:grid;place-items:center;background:var(--g);padding:1rem}
+.login-card{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:360px}
+.login-logo{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.login-badge{width:44px;height:44px;border-radius:11px;background:var(--g);display:grid;place-items:center;font-weight:900;font-size:.85rem;color:var(--gold)}
+.login-title{font-size:1.05rem;font-weight:700;color:var(--g)}
+.login-sub{font-size:.72rem;color:var(--muted)}
+.lf{margin-bottom:.85rem}
+.lf label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+.lf input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.6rem .75rem;font:inherit;color:var(--ink)}
+.lf input:focus{outline:none;border-color:var(--gold)}
+.lf .hint{font-size:.65rem;color:var(--muted);margin-top:.2rem}
+.login-btn{width:100%;background:var(--g);color:var(--gold);border:none;border-radius:10px;padding:.75rem;font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;margin-top:.3rem}
+.login-btn:disabled{opacity:.6;cursor:progress}
+.err-box{margin-top:.65rem;padding:.55rem .75rem;background:#fbe8e8;color:#8c2828;border-radius:8px;font-size:.8rem;display:none}
+.err-box.show{display:block}
+
+/* SHELL */
+.shell{display:none;height:100vh;overflow:hidden}
+.shell.active{display:flex}
+
+/* SIDEBAR */
+.sidebar{width:215px;flex:0 0 215px;background:var(--g);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo{display:flex;align-items:center;gap:.65rem}
+.sb-badge{width:32px;height:32px;border-radius:8px;background:var(--gold);color:var(--g);display:grid;place-items:center;font-weight:900;font-size:.75rem;flex:0 0 auto}
+.sb-name{color:#fff;font-size:.82rem;font-weight:700;line-height:1.2}
+.sb-dept{color:rgba(255,255,255,.5);font-size:.6rem}
+.sb-user{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-urow{display:flex;align-items:center;gap:.6rem}
+.sb-av{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--g);display:grid;place-items:center;font-size:.65rem;font-weight:800;flex:0 0 auto}
+.sb-uname{color:#fff;font-size:.75rem;font-weight:600}
+.sb-roles{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.sr{font-size:.55rem;padding:1px 5px;border-radius:99px;font-weight:700}
+.sr-supervisor{background:var(--gold);color:var(--g)}
+.sr-administrator{background:#378ADD;color:#042C53}
+.sr-receptionist{background:#1D9E75;color:#04342C}
+.sr-practitioner{background:#7F77DD;color:#26215C}
+.sr-herbalist{background:#D85A30;color:#4A1B0C}
+.sb-nav{flex:1;padding:5px 0;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:.6rem;padding:7px 12px;color:rgba(255,255,255,.6);font-size:.76rem;cursor:pointer;border-left:3px solid transparent}
+.ni:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.ni.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--gold)}
+.ni i{font-size:14px;width:15px;flex:0 0 auto}
+.ni-section{font-size:.6rem;color:rgba(255,255,255,.3);padding:8px 12px 2px;text-transform:uppercase;letter-spacing:.08em}
+.sb-foot{padding:9px 12px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:5px}
+.sb-footbtn{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.45);font-size:.72rem;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left}
+.sb-footbtn:hover{color:rgba(255,255,255,.75)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--line);padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.page-title{font-size:1rem;font-weight:700;color:var(--g)}
+.tb-right{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.pill{font-size:.63rem;padding:2px 7px;border-radius:99px;font-weight:600}
+.pill-g{background:#e1f5ee;color:#085041}
+.pill-b{background:#e6f1fb;color:#0C447C}
+.pill-o{background:#faeeda;color:#633806}
+.pill-r{background:#fbe8e8;color:#8c2828}
+.pill-p{background:#EEEDFE;color:#3C3489}
+.content{flex:1;overflow-y:auto;padding:1rem 1.2rem 3rem}
+
+/* CARDS */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.95rem 1.05rem;margin-bottom:.8rem}
+.panel-title{font-size:.85rem;font-weight:700;color:var(--g);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
+.panel-title span{font-weight:400;color:var(--muted);font-size:.7rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.65rem;margin-bottom:.8rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.8rem .95rem}
+.kpi-n{font-size:1.55rem;font-weight:800;color:var(--g);line-height:1}
+.kpi-l{font-size:.66rem;color:var(--muted);margin-top:.2rem}
+.kpi.gold{background:var(--g)}.kpi.gold .kpi-n{color:var(--gold2)}.kpi.gold .kpi-l{color:rgba(255,255,255,.65)}
+
+/* TABLES */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.77rem}
+th,td{border:1px solid var(--line);padding:.4rem .52rem;text-align:left;white-space:nowrap}
+th{background:var(--g);color:#fff;font-weight:600;border-color:var(--g2)}
+tbody tr:nth-child(even){background:var(--tint)}
+td.r{text-align:right}
+.tbl-link{color:var(--g);cursor:pointer;text-decoration:underline;font-size:.75rem}
+
+/* FORMS */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem}
+.field{display:flex;flex-direction:column;gap:.25rem}
+.field label{font-size:.7rem;font-weight:600;color:var(--muted)}
+.field .hint{font-size:.63rem;color:var(--muted);font-style:italic}
+.field input,.field select,.field textarea{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.5rem .62rem;font:inherit;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,155,59,.1)}
+.field textarea{min-height:58px;resize:vertical}
+.field.full{grid-column:1/-1}
+.field.full3{grid-column:1/-1}
+.bmi-display{background:var(--tint);border-radius:7px;padding:.4rem .65rem;font-size:.8rem;font-weight:700;color:var(--g);margin-top:.2rem;display:none}
+.bmi-display.show{display:block}
+.certify{grid-column:1/-1;display:flex;align-items:flex-start;gap:.5rem;background:var(--tint);border-radius:8px;padding:.6rem .7rem;margin-top:.2rem}
+.certify input[type=checkbox]{margin-top:3px;flex:0 0 auto;accent-color:var(--g)}
+.cert-text{font-size:.7rem;color:var(--g);font-weight:600}
+.cert-by{font-size:.63rem;color:var(--muted);margin-top:2px}
+.form-actions{margin-top:.8rem;display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:9px;padding:.6rem 1rem;font-size:.82rem}
+.btn-primary{background:var(--gold);color:var(--g)}
+.btn-primary:hover{filter:brightness(1.04)}
+.btn-primary:disabled{opacity:.55;cursor:progress}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--g)}
+.btn-dark{background:var(--g);color:#fff}
+.btn-danger{background:#fbe8e8;border:1.5px solid #eec3c3;color:var(--err)}
+.btn-sm{padding:.35rem .65rem;font-size:.72rem;border-radius:7px}
+
+/* MESSAGES */
+.msg{padding:.55rem .75rem;border-radius:8px;font-size:.8rem;display:none;margin-top:.45rem}
+.msg.show{display:block}
+.msg-ok{background:#e5f3eb;color:#1b5e38;border:1px solid #b8dfc8}
+.msg-err{background:#fbe8e8;color:#8c2828;border:1px solid #edc0c0}
+.msg-warn{background:#faeeda;color:#633806;border:1px solid #e7d3a1}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:1.35rem;width:100%;max-width:580px;position:relative}
+.modal-title{font-size:.98rem;font-weight:700;color:var(--g);margin-bottom:1rem;padding-bottom:.55rem;border-bottom:1px solid var(--line);padding-right:1.5rem}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);line-height:1}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:1rem;border-bottom:1.5px solid var(--line)}
+.tab{padding:.55rem .9rem;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px}
+.tab.active{color:var(--g);border-bottom-color:var(--gold)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* SEVERITY COLOURS */
+.sev-0{background:#f1efea;color:#5f6b62}
+.sev-1{background:#e1f5ee;color:#085041}
+.sev-2{background:#e6f1fb;color:#0C447C}
+.sev-3{background:#faeeda;color:#633806}
+.sev-4{background:#fde8d8;color:#7a3010}
+.sev-5{background:#fbe8e8;color:#8c2828}
+
+/* PATIENT CARD */
+.pt-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:border-color .15s}
+.pt-card:hover{border-color:var(--gold)}
+.pt-av{width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--g);display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:0 0 auto}
+.pt-name{font-size:.85rem;font-weight:700;color:var(--ink)}
+.pt-id{font-size:.68rem;color:var(--muted);font-family:monospace}
+.pt-meta{font-size:.68rem;color:var(--muted);margin-top:2px}
+.pt-badges{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
+
+/* PATIENT GRID */
+.pt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.65rem}
+
+/* SEARCH */
+.search-bar{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap}
+.search-bar input,.search-bar select{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.48rem .65rem;font:inherit;font-size:.8rem;color:var(--ink)}
+.search-bar input{flex:1;min-width:160px}
+
+/* VITALS TABLE */
+.vitals-hist td:first-child{font-family:monospace;font-size:.72rem}
+
+/* SYMPTOMS GRID */
+.sym-section{margin-bottom:1rem}
+.sym-section h4{font-size:.78rem;font-weight:700;color:var(--g);margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+.sym-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.4rem}
+.sym-item{display:flex;flex-direction:column;gap:.2rem}
+.sym-item label{font-size:.68rem;color:var(--ink)}
+.sym-item select{font-size:.72rem;padding:.3rem .4rem;border-radius:6px;border:1px solid var(--line);background:#fff}
+
+/* STAFF CARDS */
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem}
+.staff-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem}
+.sc-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem}
+.sc-av{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--g);display:grid;place-items:center;font-size:.7rem;font-weight:800;flex:0 0 auto}
+.sc-name{font-size:.8rem;font-weight:700}
+.sc-user{font-size:.63rem;color:var(--muted)}
+.sc-roles{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.55rem}
+.sc-foot{display:flex;justify-content:space-between;align-items:center}
+.sc-status{font-size:.6rem;padding:2px 6px;border-radius:99px;font-weight:600}
+.sc-active{background:#e1f5ee;color:#085041}
+.sc-revoked{background:#fbe8e8;color:#8c2828}
+.sc-btns{display:flex;gap:.25rem}
+.sc-btn{font-size:.63rem;padding:2px 7px;border-radius:5px;border:1px solid var(--line);background:var(--card);color:var(--g);cursor:pointer}
+.sc-btn.danger{color:var(--err);border-color:#eec3c3}
+
+/* ROLE CHECKS */
+.role-checks{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.2rem}
+.rc{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .62rem;border:1.5px solid var(--line);border-radius:99px;cursor:pointer;font-size:.72rem;background:#fff}
+.rc:has(input:checked){background:var(--tint);border-color:var(--gold);color:var(--g);font-weight:600}
+.rc input{width:auto;accent-color:var(--g)}
+
+/* EMPTY / LOADING */
+.empty{text-align:center;color:var(--muted);padding:2.5rem 1rem;font-size:.84rem}
+.loading{text-align:center;color:var(--muted);padding:2rem;font-size:.84rem}
+
+/* WHATSAPP BTN */
+.wa-btn{display:inline-flex;align-items:center;gap:.4rem;background:#25D366;color:#fff;border:none;border-radius:8px;padding:.45rem .85rem;font:.78rem/1 inherit;font-weight:700;cursor:pointer;text-decoration:none}
+
+/* TIMELINE */
+.timeline{padding:.5rem 0}
+.tl-item{display:flex;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--line)}
+.tl-item:last-child{border:none}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;margin-top:.35rem}
+.tl-date{font-size:.65rem;color:var(--muted);min-width:75px}
+.tl-content{flex:1}
+.tl-type{font-size:.7rem;font-weight:700;color:var(--g)}
+.tl-detail{font-size:.72rem;color:var(--ink);margin-top:1px}
+.tl-by{font-size:.63rem;color:var(--muted)}
+
+/* PRINT */
+@media print{
+  .sidebar,.topbar,.modal-bg{display:none!important}
+  .main{overflow:visible}
+  .content{overflow:visible;padding:0}
+}
+@media(max-width:640px){
+  .sidebar{width:52px;flex:0 0 52px}
+  .sb-head .sb-name,.sb-head .sb-dept,.sb-uname,.sb-roles,.ni span,.ni-section,.sb-foot .sb-footbtn span{display:none}
+  .sb-badge{margin:auto}
+  .fg,.fg3{grid-template-columns:1fr}
+  .field.full,.field.full3{grid-column:1}
+  .certify{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-badge">KW</div>
+      <div>
+        <div class="login-title">KWC MIS</div>
+        <div class="login-sub">Kibidula Wellness Centre · Management Information System</div>
+      </div>
+    </div>
+    <div class="lf">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Your username" autocomplete="username">
+      <div class="hint">Username is not case-sensitive</div>
+    </div>
+    <div class="lf">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Your password" autocomplete="current-password">
+      <div class="hint">Password is case-sensitive</div>
+    </div>
+    <button class="login-btn" id="loginBtn">Sign in</button>
+    <div class="err-box" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="appShell">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="sb-badge">KW</div>
+        <div><div class="sb-name">Kibidula Wellness</div><div class="sb-dept">Centre MIS</div></div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-urow">
+        <div class="sb-av" id="sbAv">--</div>
+        <div><div class="sb-uname" id="sbName">--</div><div class="sb-roles" id="sbRoles"></div></div>
+      </div>
+    </div>
+    <div class="sb-nav" id="sbNav">
+      <div class="ni-section">Main</div>
+      <div class="ni" data-page="overview" data-acc="overview"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>Overview</span></div>
+      <div class="ni-section">Patients</div>
+      <div class="ni" data-page="patients" data-acc="patients"><i class="ti ti-users" aria-hidden="true"></i><span>Patients</span></div>
+      <div class="ni" data-page="visits" data-acc="visits"><i class="ti ti-calendar-check" aria-hidden="true"></i><span>Visits</span></div>
+      <div class="ni-section">Clinical</div>
+      <div class="ni" data-page="practitioner" data-acc="consultations"><i class="ti ti-stethoscope" aria-hidden="true"></i><span>Practitioner</span></div>
+      <div class="ni" data-page="inpatient" data-acc="inpatient"><i class="ti ti-bed" aria-hidden="true"></i><span>Inpatient logs</span></div>
+      <div class="ni-section">Herbs</div>
+      <div class="ni" data-page="herbs" data-acc="herbs"><i class="ti ti-leaf" aria-hidden="true"></i><span>Herb guide</span></div>
+      <div class="ni" data-page="inventory" data-acc="inventory"><i class="ti ti-package" aria-hidden="true"></i><span>Inventory</span></div>
+      <div class="ni" data-page="sales" data-acc="sales"><i class="ti ti-shopping-cart" aria-hidden="true"></i><span>Herb sales</span></div>
+      <div class="ni-section">Finance</div>
+      <div class="ni" data-page="billing" data-acc="billing"><i class="ti ti-receipt" aria-hidden="true"></i><span>Billing</span></div>
+      <div class="ni-section">Admin</div>
+      <div class="ni" data-page="staff" data-acc="staff"><i class="ti ti-users-group" aria-hidden="true"></i><span>Staff accounts</span></div>
+      <div class="ni" data-page="delete_req" data-acc="delete"><i class="ti ti-trash" aria-hidden="true"></i><span>Delete requests</span></div>
+      <div class="ni" data-page="reports" data-acc="reports"><i class="ti ti-file-analytics" aria-hidden="true"></i><span>Reports</span></div>
+    </div>
+    <div class="sb-foot">
+      <button class="sb-footbtn" id="changePwBtn"><i class="ti ti-lock" aria-hidden="true"></i><span>Change password</span></button>
+      <button class="sb-footbtn" id="signoutBtn"><i class="ti ti-logout" aria-hidden="true"></i><span>Sign out</span></button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Overview</div>
+      <div class="tb-right" id="tbRight"></div>
+    </div>
+    <div class="content" id="pageContent"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const URL_ = "https://script.google.com/macros/s/AKfycbyHl6x0oWy-BxOvmizuNMWEBlNuDecL9USz5d1tDJ6GvF_d3Dx9ZXNHtnFD5gd-HfyXow/exec";
+const SEV_LABELS = ["0 — Hakuna (None)","1 — Mara chache (Rarely)","2 — Mara kwa mara kidogo (Occasionally)","3 — Wakati mwingine (Sometimes)","4 — Mara nyingi (Often)","5 — Kila wakati (Always)"];
+const SEV_CLASS = ["sev-0","sev-1","sev-2","sev-3","sev-4","sev-5"];
+let USER = null;
+
+/* ── API ── */
+async function GET(params){
+  const q=new URLSearchParams({...params,username:USER.username,password:USER.password});
+  return (await fetch(URL_+"?"+q)).json();
+}
+async function POST(body){
+  return (await fetch(URL_,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({...body,username:USER.username,password:USER.password})})).json();
+}
+
+/* ── LOGIN ── */
+document.getElementById("loginBtn").addEventListener("click",doLogin);
+document.getElementById("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+
+async function doLogin(){
+  const btn=document.getElementById("loginBtn");
+  const err=document.getElementById("loginErr");
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  if(!u||!p){showE(err,"Enter username and password.");return;}
+  btn.disabled=true;btn.textContent="Signing in…";err.classList.remove("show");
+  try{
+    const q=new URLSearchParams({action:"login",username:u,password:p});
+    const data=await (await fetch(URL_+"?"+q)).json();
+    if(data.ok){USER=data;USER.username=u;USER.password=p;bootApp();}
+    else showE(err,data.error||"Sign-in failed.");
+  }catch(e){showE(err,"Cannot connect. Check internet.");}
+  finally{btn.disabled=false;btn.textContent="Sign in";}
+}
+function showE(el,m){el.textContent=m;el.classList.add("show");}
+
+/* ── BOOT ── */
+function bootApp(){
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("appShell").classList.add("active");
+  const init=(USER.title+" "+USER.name).split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+  document.getElementById("sbAv").textContent=init;
+  document.getElementById("sbName").textContent=(USER.title?USER.title+" ":"")+USER.name;
+  document.getElementById("sbRoles").innerHTML=(USER.roles||[]).map(r=>`<span class="sr sr-${r}">${cap(r)}</span>`).join("");
+  document.querySelectorAll(".ni[data-acc]").forEach(ni=>{
+    ni.style.display=(USER.access||[]).includes(ni.dataset.acc)?"flex":"none";
+  });
+  document.querySelectorAll(".ni").forEach(ni=>ni.addEventListener("click",()=>navigate(ni.dataset.page)));
+  document.getElementById("signoutBtn").addEventListener("click",()=>{if(confirm("Sign out?"))location.reload();});
+  document.getElementById("changePwBtn").addEventListener("click",openChangePw);
+  document.getElementById("modalClose").addEventListener("click",closeModal);
+  document.getElementById("modalBg").addEventListener("click",e=>{if(e.target===document.getElementById("modalBg"))closeModal();});
+  navigate("overview");
+}
+
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):"";}
+
+/* ── NAV ── */
+const PAGE_TITLES={overview:"Overview",patients:"Patients",visits:"Visits & Billing",
+  practitioner:"Practitioner Workspace",inpatient:"Inpatient Daily Logs",
+  herbs:"Natural Herb Guide",inventory:"Herb Inventory",sales:"Herb Sales",
+  billing:"Billing",staff:"Staff Accounts",delete_req:"Delete Requests",reports:"Reports"};
+
+function navigate(page){
+  document.querySelectorAll(".ni").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+  document.getElementById("pageTitle").textContent=PAGE_TITLES[page]||page;
+  document.getElementById("tbRight").innerHTML="";
+  const map={overview:renderOverview,patients:renderPatients,visits:renderVisits,
+    practitioner:renderPractitioner,inpatient:renderInpatient,
+    herbs:renderHerbs,inventory:renderInventory,sales:renderSales,
+    billing:renderBilling,staff:renderStaff,delete_req:renderDeleteReq,reports:renderReports};
+  (map[page]||function(){set("<div class='empty'>Coming soon.</div>");})();
+}
+function set(html){document.getElementById("pageContent").innerHTML=html;}
+function loading(){set("<div class='loading'>Loading…</div>");}
+
+/* ── OVERVIEW ── */
+async function renderOverview(){
+  loading();
+  const isAdm=(USER.roles||[]).includes("administrator");
+  if(isAdm) document.getElementById("tbRight").innerHTML=`<span class="pill pill-b">Read only</span>`;
+  try{
+    const [pR,vR,iR,bR]=await Promise.all([
+      GET({action:"read_patients"}),GET({action:"read_visits"}),
+      GET({action:"read_ip_logs"}),GET({action:"read_billing"})
+    ]);
+    const pts=pR.rows||[],visits=vR.rows||[],logs=iR.rows||[],bills=bR.rows||[];
+    const today=new Date().toISOString().slice(0,10);
+    const todayV=visits.filter(r=>r.visit_date===today);
+    const openIP=visits.filter(r=>r.visit_type==="IP"&&r.discharged!=="YES");
+    const totalRev=bills.filter(r=>r.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    set(`
+      <div class="kpis">
+        <div class="kpi gold"><div class="kpi-n">${pts.length}</div><div class="kpi-l">Total patients</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--g)">${openIP.length}</div><div class="kpi-l">Active inpatients</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--g)">${visits.filter(r=>r.visit_type==="OP").length}</div><div class="kpi-l">OP visits (all)</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--g)">${todayV.length}</div><div class="kpi-l">Visits today</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--gold)">${totalRev.toLocaleString()}</div><div class="kpi-l">Revenue (TSh)</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+        <div class="panel">
+          <div class="panel-title">Active inpatients <span>current</span></div>
+          ${openIP.slice(0,5).map(v=>`
+            <div style="padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.76rem">
+              <div style="font-weight:600">${v.patient_name||"—"}</div>
+              <div style="color:var(--muted);font-size:.67rem">${v.visit_id} · Admitted ${v.visit_date||"—"}</div>
+            </div>`).join("")||`<div class="empty" style="padding:1rem">No active inpatients.</div>`}
+        </div>
+        <div class="panel">
+          <div class="panel-title">Recent registrations <span>latest 5</span></div>
+          ${pts.slice(-5).reverse().map(p=>`
+            <div style="padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.76rem">
+              <div style="font-weight:600">${p.title||""} ${p.name} <span class="pill pill-b" style="font-size:.58rem">${p.patient_id}</span></div>
+              <div style="color:var(--muted);font-size:.67rem">${p.patient_type||"—"} · ${p.reg_date||"—"} · by ${p.registered_by||"—"}</div>
+            </div>`).join("")||`<div class="empty" style="padding:1rem">No patients yet.</div>`}
+        </div>
+      </div>
+      ${isAdm?`
+      <div class="panel" style="margin-top:.8rem">
+        <div class="panel-title">Comments</div>
+        <div id="commentsList"></div>
+        <textarea id="commentText" style="width:100%;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.5rem .65rem;font:inherit;min-height:54px;margin-top:.6rem" placeholder="Add a comment or observation…"></textarea>
+        <div class="form-actions"><button class="btn btn-primary btn-sm" onclick="submitComment()">Add comment</button></div>
+        <div class="msg" id="commentMsg"></div>
+      </div>`:""}
+    `);
+    if(isAdm) loadComments();
+  }catch(e){set(`<div class="empty">Could not load. ${e.message}</div>`);}
+}
+
+async function loadComments(){
+  const res=await GET({action:"read_comments"});
+  const rows=res.rows||[];
+  const el=document.getElementById("commentsList");
+  if(el) el.innerHTML=rows.slice(-8).reverse().map(r=>`
+    <div style="padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.75rem">
+      <div>${r.comment}</div>
+      <div style="font-size:.63rem;color:var(--muted)">${r.commented_by} · ${r.date}</div>
+    </div>`).join("")||`<div style="color:var(--muted);font-size:.76rem">No comments yet.</div>`;
+}
+async function submitComment(){
+  const txt=document.getElementById("commentText").value.trim();
+  const msg=document.getElementById("commentMsg");
+  if(!txt){showMsg(msg,"err","Write a comment first.");return;}
+  const res=await POST({action:"add_comment",payload:{comment:txt,ref_type:"overview",ref_id:"",ref_name:"Overview"}});
+  if(res.ok){document.getElementById("commentText").value="";showMsg(msg,"ok","Comment added.");loadComments();}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── PATIENTS ── */
+async function renderPatients(){
+  loading();
+  const canAdd=(USER.access||[]).includes("patients");
+  try{
+    const res=await GET({action:"read_patients"});
+    const rows=res.rows||[];
+    window._pts=rows;
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openRegPt()">+ Register patient</button>`:""}
+      <div class="search-bar">
+        <input type="text" id="ptQ" placeholder="Search by name, ID, or phone…" oninput="filterPts()">
+        <select id="ptType" onchange="filterPts()"><option value="">All types</option><option value="OP">OP</option><option value="IP">IP</option></select>
+      </div>
+      <div class="pt-grid" id="ptGrid">${renderPtCards(rows)}</div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function renderPtCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No patients found.</div>`;
+  return rows.slice().reverse().map(p=>`
+    <div class="pt-card" onclick="openPtProfile('${p.patient_id}')">
+      <div class="pt-av">${initials(p.title+" "+p.name)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="pt-name">${p.title||""} ${p.name}</div>
+        <div class="pt-id">${p.patient_id}</div>
+        <div class="pt-meta">${p.age||"—"}yrs · ${p.gender||"—"} · ${p.phone||"—"}</div>
+        <div class="pt-badges">
+          <span class="pill ${p.patient_type==="IP"?"pill-p":"pill-g"}">${p.patient_type||"—"}</span>
+          ${p.consent_signed==="YES"?`<span class="pill pill-g">Consent ✓</span>`:`<span class="pill pill-r">No consent</span>`}
+          <span class="pill pill-b">BMI ${p.bmi||"—"}</span>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function filterPts(){
+  const q=(document.getElementById("ptQ").value||"").toLowerCase();
+  const t=document.getElementById("ptType").value;
+  const f=(window._pts||[]).filter(p=>{
+    const m=(p.name||"").toLowerCase().includes(q)||(p.patient_id||"").toLowerCase().includes(q)||(p.phone||"").includes(q);
+    return m&&(!t||p.patient_type===t);
+  });
+  document.getElementById("ptGrid").innerHTML=renderPtCards(f);
+}
+
+function openRegPt(){
+  const by=byLine();
+  openModal("Register patient",`
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'pt-personal')">Personal info</div>
+      <div class="tab" onclick="switchTab(this,'pt-medical')">Medical</div>
+      <div class="tab" onclick="switchTab(this,'pt-consent')">Consent</div>
+    </div>
+    <div class="tab-panel active" id="pt-personal">
+      <div class="fg">
+        <div class="field"><label>Title</label><select id="ptTitle"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select><div class="hint">e.g. Mr., Mrs., Dr.</div></div>
+        <div class="field"><label>Full name *</label><input type="text" id="ptName" placeholder="Full name as on ID"><div class="hint">Required — as on national ID</div></div>
+        <div class="field"><label>Date of birth</label><input type="date" id="ptDob"><div class="hint">Used to calculate age</div></div>
+        <div class="field"><label>Age</label><input type="number" id="ptAge" placeholder="e.g. 45"><div class="hint">Enter if DOB unknown</div></div>
+        <div class="field"><label>Gender</label><select id="ptGender"><option value="">—</option><option>Female</option><option>Male</option></select></div>
+        <div class="field"><label>Tribe / Kabila</label><input type="text" id="ptTribe" placeholder="e.g. Hehe"><div class="hint">Optional</div></div>
+        <div class="field"><label>Religion / Dini</label><input type="text" id="ptReligion" placeholder="e.g. SDA"></div>
+        <div class="field"><label>Marital status</label><select id="ptMarital"><option value="">—</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div>
+        <div class="field"><label>Occupation / Kazi</label><input type="text" id="ptOcc" placeholder="e.g. Teacher"></div>
+        <div class="field"><label>Phone / Simu</label><input type="text" id="ptPhone" placeholder="+255 7xx xxx xxx"><div class="hint">For WhatsApp patient card</div></div>
+        <div class="field"><label>Email / Barua pepe</label><input type="email" id="ptEmail" placeholder="email@example.com"></div>
+        <div class="field full"><label>Region / Mkoa *</label>
+          <select id="ptRegion" onchange="loadDistricts('ptRegion','ptDistrict')">
+            <option value="">— Select region —</option>
+          </select>
+          <div class="hint">Select the patient's region of residence</div>
+        </div>
+        <div class="field"><label>District / Wilaya</label>
+          <select id="ptDistrict"><option value="">— Select district —</option></select>
+          <div class="hint">Auto-fills based on region selected</div>
+        </div>
+        <div class="field"><label>Street / Mtaa</label>
+          <input type="text" id="ptStreet" list="streetSuggestions" placeholder="Type or select street…">
+          <datalist id="streetSuggestions">
+            <option value="Mjini"><option value="Sokoni"><option value="Msimbazi">
+            <option value="Kariakoo"><option value="Mafinga"><option value="Makambako">
+            <option value="Iringa Town"><option value="Dodoma Town"><option value="Mwanakwerekwe">
+          </datalist>
+          <div class="hint">Type freely or pick a suggestion — new streets can be written manually</div>
+        </div>
+        <div class="field full"><label>Emergency contact name</label><input type="text" id="ptEmName" placeholder="Full name"><div class="hint">Person to contact in emergency</div></div>
+        <div class="field"><label>Relationship / Uhusiano</label><input type="text" id="ptEmRel" placeholder="e.g. Spouse, Parent"></div>
+        <div class="field"><label>Emergency phone</label><input type="text" id="ptEmPhone" placeholder="+255 7xx xxx xxx"></div>
+      </div>
+    </div>
+    <div class="tab-panel" id="pt-medical">
+      <div class="fg">
+        <div class="field"><label>Weight (kg) / Uzito</label><input type="number" id="ptWeight" placeholder="e.g. 70" oninput="calcBMI('ptWeight','ptHeight','ptBmi')"><div class="hint">Current weight in kilograms</div></div>
+        <div class="field"><label>Height (cm) / Urefu</label><input type="number" id="ptHeight" placeholder="e.g. 165" oninput="calcBMI('ptWeight','ptHeight','ptBmi')"><div class="hint">Height in centimetres</div></div>
+        <div class="bmi-display" id="ptBmi">BMI: —</div>
+        <div class="field"><label>Patient type</label><select id="ptType2"><option value="OP">Outpatient (OP)</option><option value="IP">Inpatient (IP)</option><option value="HC">Herb consultation only (HC)</option></select><div class="hint">Mark the type for this visit</div></div>
+      </div>
+    </div>
+    <div class="tab-panel" id="pt-consent">
+      <div class="fg">
+        <div class="field"><label>Consent signed?</label><select id="ptConsent"><option value="YES">Yes — signed</option><option value="NO">No — not yet</option></select><div class="hint">Mambo ya Makubaliano form</div></div>
+        <div class="field"><label>Consent date</label><input type="date" id="ptConsentDate" value="${today()}"><div class="hint">Date patient signed</div></div>
+        <div class="field full"><label>Witnessed by</label><input type="text" id="ptConsentWit" placeholder="Staff name who witnessed"><div class="hint">Staff member present when consent was signed</div></div>
+        <div class="certify">
+          <input type="checkbox" id="ptCert">
+          <div><div class="cert-text">I hereby certify that the above information is accurate and complete to the best of my knowledge.</div>
+          <div class="cert-by">Registered by: ${by}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitPt()">Register patient</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="ptMsg"></div>
+  `);
+}
+
+async function submitPt(){
+  const msg=document.getElementById("ptMsg");
+  if(!v("ptName")){showMsg(msg,"err","Full name is required.");return;}
+  if(!document.getElementById("ptCert").checked){showMsg(msg,"err","Please tick the certification checkbox.");return;}
+  const w=v("ptWeight"),h=v("ptHeight");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const payload={
+    title:v("ptTitle"),name:v("ptName"),dob:v("ptDob"),age:v("ptAge"),
+    gender:v("ptGender"),tribe:v("ptTribe"),religion:v("ptReligion"),
+    marital_status:v("ptMarital"),occupation:v("ptOcc"),
+    region:v("ptRegion"),district:v("ptDistrict"),street:v("ptStreet"),
+    phone:v("ptPhone"),email:v("ptEmail"),
+    emergency_name:v("ptEmName"),emergency_relation:v("ptEmRel"),emergency_phone:v("ptEmPhone"),
+    weight:w,height:h,bmi:bmiVal,
+    patient_type:v("ptType2"),
+    consent_signed:v("ptConsent"),consent_date:v("ptConsentDate"),
+    consent_witness:v("ptConsentWit"),certified:true
+  };
+  const res=await POST({action:"add_patient",payload});
+  if(res.ok){
+    showMsg(msg,"ok",`Patient registered. ID: ${res.patient_id} · BMI: ${res.bmi||"—"}`);
+    // WhatsApp link
+    const phone=(v("ptPhone")||"").replace(/\D/g,"");
+    if(phone){
+      const waMsg=encodeURIComponent(`Karibu Kibidula Wellness Centre!\nJina lako: ${v("ptName")}\nNamba yako ya mgonjwa: ${res.patient_id}\nHifadhi namba hii muhimu.`);
+      document.getElementById("ptMsg").innerHTML+=` <a class="wa-btn" href="https://wa.me/${phone}?text=${waMsg}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>Send patient card</a>`;
+    }
+    setTimeout(()=>{closeModal();renderPatients();},2500);
+  }else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function openPtProfile(patientId){
+  const pts=window._pts||[];
+  const pt=pts.find(p=>p.patient_id===patientId);
+  if(!pt) return;
+  const [vRes,logRes,vitRes,conRes,symRes]= await Promise.all([
+    GET({action:"read_visits"}),GET({action:"read_ip_logs"}),
+    GET({action:"read_vitals"}),GET({action:"read_consultations"}),
+    GET({action:"read_symptoms"})
+  ]);
+  const visits=(vRes.rows||[]).filter(r=>r.patient_id===patientId);
+  const logs=(logRes.rows||[]).filter(r=>r.patient_id===patientId);
+  const vitals=(vitRes.rows||[]).filter(r=>r.patient_id===patientId);
+  const consults=(conRes.rows||[]).filter(r=>r.patient_id===patientId);
+  const syms=(symRes.rows||[]).filter(r=>r.patient_id===patientId);
+  const latestSym=syms.length?syms[syms.length-1]:null;
+
+  openModal(`${pt.title||""} ${pt.name} — ${pt.patient_id}`,`
+    <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <span class="pill pill-b">${pt.patient_id}</span>
+      <span class="pill ${pt.patient_type==="IP"?"pill-p":"pill-g"}">${pt.patient_type||"—"}</span>
+      <span class="pill pill-b">BMI ${pt.bmi||"—"}</span>
+      <span class="pill ${pt.consent_signed==="YES"?"pill-g":"pill-r"}">${pt.consent_signed==="YES"?"Consent ✓":"No consent"}</span>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'prof-info')">Info</div>
+      <div class="tab" onclick="switchTab(this,'prof-timeline')">Timeline</div>
+      <div class="tab" onclick="switchTab(this,'prof-vitals')">Vitals</div>
+      <div class="tab" onclick="switchTab(this,'prof-syms')">Symptoms</div>
+    </div>
+    <div class="tab-panel active" id="prof-info">
+      <div class="fg" style="font-size:.78rem">
+        <div><span style="color:var(--muted)">Phone:</span> ${pt.phone||"—"}</div>
+        <div><span style="color:var(--muted)">Age:</span> ${pt.age||"—"}</div>
+        <div><span style="color:var(--muted)">Gender:</span> ${pt.gender||"—"}</div>
+        <div><span style="color:var(--muted)">Marital:</span> ${pt.marital_status||"—"}</div>
+        <div><span style="color:var(--muted)">Religion:</span> ${pt.religion||"—"}</div>
+        <div><span style="color:var(--muted)">Occupation:</span> ${pt.occupation||"—"}</div>
+        <div class="full"><span style="color:var(--muted)">Address:</span> ${[pt.street,pt.district,pt.region].filter(Boolean).join(", ")||"—"}</div>
+        <div class="full"><span style="color:var(--muted)">Emergency:</span> ${pt.emergency_name||"—"} (${pt.emergency_relation||"—"}) ${pt.emergency_phone||""}</div>
+        <div><span style="color:var(--muted)">Weight:</span> ${pt.weight||"—"} kg</div>
+        <div><span style="color:var(--muted)">Height:</span> ${pt.height||"—"} cm</div>
+        <div><span style="color:var(--muted)">Registered:</span> ${pt.reg_date||"—"}</div>
+        <div><span style="color:var(--muted)">By:</span> ${pt.registered_by||"—"}</div>
+      </div>
+    </div>
+    <div class="tab-panel" id="prof-timeline">
+      <div class="timeline">
+        ${[
+          ...visits.map(r=>({date:r.visit_date,type:r.visit_type+" visit",detail:r.visit_id+" · "+r.status,by:r.recorded_by,col:"#1D9E75"})),
+          ...consults.map(r=>({date:r.date,type:"Consultation",detail:r.chief_complaint||r.remedy||"—",by:r.recorded_by,col:"#7F77DD"})),
+          ...logs.map(r=>({date:r.log_date,type:"IP daily log",detail:r.main_complaint||r.progress||"—",by:r.logged_by,col:"#378ADD"})),
+          ...vitals.map(r=>({date:r.date,type:"Vitals recorded",detail:`BP:${r.bp||"—"} Wt:${r.weight||"—"}kg BMI:${r.bmi||"—"}`,by:r.recorded_by,col:"#C29B3B"}))
+        ].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20).map(item=>`
+          <div class="tl-item">
+            <div class="tl-dot" style="background:${item.col}"></div>
+            <div class="tl-date">${item.date}</div>
+            <div class="tl-content">
+              <div class="tl-type">${item.type}</div>
+              <div class="tl-detail">${item.detail}</div>
+              <div class="tl-by">${item.by||""}</div>
+            </div>
+          </div>`).join("")||`<div class="empty">No activity yet.</div>`}
+      </div>
+    </div>
+    <div class="tab-panel" id="prof-vitals">
+      ${vitals.length?`
+      <div class="tablewrap"><table class="vitals-hist">
+        <thead><tr><th>Date</th><th>BP</th><th>Weight</th><th>SpO2</th><th>Pulse</th><th>Temp</th><th>BMI</th></tr></thead>
+        <tbody>${vitals.slice().reverse().map(r=>`
+          <tr><td>${r.date}</td><td>${r.bp||"—"}</td><td>${r.weight||"—"}</td><td>${r.spo2||"—"}</td><td>${r.pulse||"—"}</td><td>${r.temp||"—"}</td><td>${r.bmi||"—"}</td></tr>`).join("")}
+        </tbody>
+      </table></div>`:`<div class="empty">No vitals recorded yet.</div>`}
+    </div>
+    <div class="tab-panel" id="prof-syms">
+      ${latestSym?`<div style="font-size:.7rem;color:var(--muted);margin-bottom:.5rem">Last assessed: ${latestSym.assessment_date} by ${latestSym.recorded_by}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem;font-size:.72rem">
+        ${Object.entries(latestSym).filter(([k])=>!["_id","_ts","patient_id","patient_name","assessment_date","recorded_by","is_baseline"].includes(k)&&latestSym[k]!=="").map(([k,val])=>{
+          const n=Number(val);
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:.25rem .4rem;border-radius:5px;background:${n>=4?"#fbe8e8":n===3?"#faeeda":"var(--tint)"}">
+            <span>${k.replace(/_/g," ")}</span>
+            <span class="${SEV_CLASS[n]||""}" style="font-size:.65rem;padding:1px 5px;border-radius:4px;font-weight:700">${n}</span>
+          </div>`;
+        }).join("")}
+      </div>`:`<div class="empty">No symptom assessment recorded yet.</div>`}
+    </div>
+  `);
+}
+
+/* ── VISITS ── */
+async function renderVisits(){
+  loading();
+  const canAdd=(USER.access||[]).includes("visits");
+  try{
+    const [vRes,ptRes]=await Promise.all([GET({action:"read_visits"}),GET({action:"read_patients"})]);
+    const rows=vRes.rows||[],pts=ptRes.rows||[];
+    window._visits=rows;window._pts=pts;
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openNewVisit()">+ Open visit</button>`:""}
+      <div class="panel">
+        <div class="panel-title">All visits <span>${rows.length} total</span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Visit ID</th><th>Date</th><th>Patient</th><th>Type</th><th>Status</th><th>File fee</th><th>Herbs</th><th>Discharged</th><th>Outcome</th><th>By</th><th></th></tr></thead>
+          <tbody>${rows.slice().reverse().map(r=>`
+            <tr>
+              <td><span class="tbl-link" onclick="openVisitDetail('${r.visit_id}')">${r.visit_id}</span></td>
+              <td>${r.visit_date||"—"}</td>
+              <td>${r.patient_name||"—"}</td>
+              <td><span class="pill ${r.visit_type==="IP"?"pill-p":r.visit_type==="HC"?"pill-o":"pill-g"}">${r.visit_type||"—"}</span></td>
+              <td>${r.status||"—"}</td>
+              <td>${r.file_fee_paid==="YES"?`<span class="pill pill-g">Paid</span>`:`<span class="pill pill-r">Unpaid</span>`}</td>
+              <td>${r.herbs_paid==="YES"?`<span class="pill pill-g">Paid</span>`:r.herbs_bill?`<span class="pill pill-o">TSh ${Number(r.herbs_bill).toLocaleString()}</span>`:"—"}</td>
+              <td>${r.discharged==="YES"?`<span class="pill pill-g">Yes</span>`:`<span class="pill pill-r">No</span>`}</td>
+              <td>${r.outcome||"—"}</td>
+              <td style="font-size:.67rem">${r.recorded_by||"—"}</td>
+              ${editDeleteCell(r._ts,"visits",`${r.visit_id} — ${r.patient_name}`,`openVisitDetail('${r.visit_id}')`)}
+            </tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted)">No visits yet.</td></tr>`}
+          </tbody>
+        </table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function openNewVisit(){
+  const pts=window._pts||[];
+  const by=byLine();
+  openModal("Open new visit",`
+    <div class="fg">
+      <div class="field"><label>Patient *</label>
+        <select id="vPat"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p.patient_id}||${p.title||""} ${p.name}">${p.title||""} ${p.name} (${p.patient_id})</option>`).join("")}</select>
+        <div class="hint">Search registered patients</div>
+      </div>
+      <div class="field"><label>Visit type *</label>
+        <select id="vType"><option value="OP">Outpatient (OP)</option><option value="IP">Inpatient (IP)</option><option value="HC">Herb only (HC)</option></select>
+        <div class="hint">Select the type of visit</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitVisit()">Open visit</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="vMsg"></div>
+  `);
+}
+
+async function submitVisit(){
+  const msg=document.getElementById("vMsg");
+  const patSel=v("vPat").split("||");
+  if(!patSel[0]){showMsg(msg,"err","Select a patient.");return;}
+  const payload={patient_id:patSel[0],patient_name:patSel[1]||"",visit_type:v("vType")};
+  const res=await POST({action:"open_visit",payload});
+  if(res.ok){showMsg(msg,"ok","Visit opened: "+res.visit_id);setTimeout(()=>{closeModal();renderVisits();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function openVisitDetail(vid){
+  const v2=(window._visits||[]).find(r=>r.visit_id===vid);
+  if(!v2) return;
+  const by=byLine();
+  openModal("Visit: "+vid,`
+    <div style="font-size:.78rem;margin-bottom:.75rem">
+      <div><b>Patient:</b> ${v2.patient_name} (${v2.patient_id})</div>
+      <div><b>Date:</b> ${v2.visit_date} · <b>Type:</b> ${v2.visit_type}</div>
+      <div><b>Status:</b> ${v2.status} · <b>Discharged:</b> ${v2.discharged}</div>
+    </div>
+    <div class="fg">
+      <div class="field"><label>File fee paid?</label><select id="vdFilePaid"><option value="YES" ${v2.file_fee_paid==="YES"?"selected":""}>Yes — paid</option><option value="NO" ${v2.file_fee_paid!=="YES"?"selected":""}>No</option></select></div>
+      <div class="field"><label>File fee receipt #</label><input type="text" id="vdFileReceipt" value="${v2.file_fee_receipt||""}" placeholder="Receipt number"></div>
+      <div class="field"><label>Herbs bill (TSh)</label><input type="number" id="vdHerbsBill" value="${v2.herbs_bill||""}" placeholder="0"><div class="hint">Total herb cost for this visit</div></div>
+      <div class="field"><label>Herbs paid?</label><select id="vdHerbsPaid"><option value="YES" ${v2.herbs_paid==="YES"?"selected":""}>Yes</option><option value="NO" ${v2.herbs_paid!=="YES"?"selected":""}>No</option></select></div>
+      <div class="field"><label>Herbs receipt #</label><input type="text" id="vdHerbsReceipt" value="${v2.herbs_receipt||""}" placeholder="Receipt number"></div>
+      <div class="field"><label>Discharged?</label><select id="vdDischarged"><option value="NO" ${v2.discharged!=="YES"?"selected":""}>No</option><option value="YES" ${v2.discharged==="YES"?"selected":""}>Yes — discharged</option></select></div>
+      <div class="field"><label>Outcome</label><select id="vdOutcome"><option value="">—</option><option ${v2.outcome==="Improved"?"selected":""}>Improved</option><option ${v2.outcome==="Stable"?"selected":""}>Stable</option><option ${v2.outcome==="Referred"?"selected":""}>Referred</option><option ${v2.outcome==="Did not complete"?"selected":""}>Did not complete</option></select><div class="hint">Record outcome at discharge</div></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="updateVisit('${vid}')">Save changes</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="vdMsg"></div>
+  `);
+}
+
+async function updateVisit(vid){
+  const msg=document.getElementById("vdMsg");
+  const payload={visit_id:vid,file_fee_paid:v("vdFilePaid"),file_fee_receipt:v("vdFileReceipt"),
+    herbs_bill:v("vdHerbsBill"),herbs_paid:v("vdHerbsPaid"),herbs_receipt:v("vdHerbsReceipt"),
+    discharged:v("vdDischarged"),discharge_date:v("vdDischarged")==="YES"?today():"",outcome:v("vdOutcome")};
+  const res=await POST({action:"update_visit",payload});
+  if(res.ok){showMsg(msg,"ok","Visit updated.");setTimeout(()=>{closeModal();renderVisits();},1000);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── PRACTITIONER ── */
+async function renderPractitioner(){
+  loading();
+  const canWork=(USER.access||[]).includes("consultations");
+  try{
+    const ptRes=await GET({action:"read_patients"});
+    const pts=ptRes.rows||[];
+    window._pts=pts;
+    set(`
+      <div class="panel">
+        <div class="panel-title">Select a patient to work with</div>
+        <div class="search-bar">
+          <input type="text" id="praQ" placeholder="Search by name or patient ID…" oninput="filterPraPts()">
+        </div>
+        <div class="pt-grid" id="praGrid">${renderPraCards(pts)}</div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function renderPraCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No patients found.</div>`;
+  return rows.slice().reverse().map(p=>`
+    <div class="pt-card" onclick="openPraWorkspace('${p.patient_id}')">
+      <div class="pt-av">${initials(p.title+" "+p.name)}</div>
+      <div><div class="pt-name">${p.title||""} ${p.name}</div>
+        <div class="pt-id">${p.patient_id}</div>
+        <div class="pt-meta">${p.age||"—"}yrs · ${p.gender||"—"} · BMI ${p.bmi||"—"}</div>
+      </div>
+    </div>`).join("");
+}
+
+function filterPraPts(){
+  const q=(document.getElementById("praQ").value||"").toLowerCase();
+  const f=(window._pts||[]).filter(p=>(p.name||"").toLowerCase().includes(q)||(p.patient_id||"").toLowerCase().includes(q));
+  document.getElementById("praGrid").innerHTML=renderPraCards(f);
+}
+
+async function openPraWorkspace(patientId){
+  const pts=window._pts||[];
+  const pt=pts.find(p=>p.patient_id===patientId);
+  if(!pt) return;
+  const [vRes,invRes]=await Promise.all([GET({action:"read_vitals"}),GET({action:"read_inventory"})]);
+  const vitals=(vRes.rows||[]).filter(r=>r.patient_id===patientId);
+  window._inventory=invRes.rows||[];
+  const by=byLine();
+
+  openModal(`Practitioner workspace — ${pt.title||""} ${pt.name}`,`
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:.7rem">${pt.patient_id} · ${pt.patient_type||"—"} · BMI ${pt.bmi||"—"}</div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'pra-vitals')">Vitals</div>
+      <div class="tab" onclick="switchTab(this,'pra-consult')">Consultation</div>
+      <div class="tab" onclick="switchTab(this,'pra-syms')">Symptoms</div>
+      <div class="tab" onclick="switchTab(this,'pra-lifestyle')">Lifestyle</div>
+    </div>
+
+    <div class="tab-panel active" id="pra-vitals">
+      <div class="fg">
+        <div class="field"><label>Date</label><input type="date" id="pvDate" value="${today()}"></div>
+        <div class="field"><label>Visit ID (optional)</label><input type="text" id="pvVid" placeholder="e.g. KWC-OP-2026/001"><div class="hint">Link to a specific visit</div></div>
+        <div class="field"><label>Blood pressure</label><input type="text" id="pvBP" placeholder="e.g. 120/80 mmHg"><div class="hint">Systolic/Diastolic</div></div>
+        <div class="field"><label>Weight (kg)</label><input type="number" id="pvWt" placeholder="e.g. 70" oninput="calcBMI('pvWt','pvHt','pvBmi')"><div class="hint">Current weight</div></div>
+        <div class="field"><label>Height (cm)</label><input type="number" id="pvHt" placeholder="e.g. 165" oninput="calcBMI('pvWt','pvHt','pvBmi')"><div class="hint">Current height</div></div>
+        <div class="bmi-display" id="pvBmi">BMI: —</div>
+        <div class="field"><label>SpO2 (%)</label><input type="number" id="pvSpo2" placeholder="e.g. 98"><div class="hint">Oxygen saturation</div></div>
+        <div class="field"><label>Pulse (bpm)</label><input type="number" id="pvPulse" placeholder="e.g. 72"><div class="hint">Heart rate per minute</div></div>
+        <div class="field"><label>Temperature (°C)</label><input type="number" id="pvTemp" placeholder="e.g. 36.5"><div class="hint">Body temperature</div></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitVitals('${patientId}','${pt.title||""} ${pt.name}')">Save vitals</button>
+      </div>
+      <div class="msg" id="pvMsg"></div>
+      ${vitals.length?`<div style="margin-top:.85rem"><b style="font-size:.76rem;color:var(--g)">Vitals history</b>
+        <div class="tablewrap"><table class="vitals-hist" style="margin-top:.4rem">
+          <thead><tr><th>Date</th><th>BP</th><th>Wt</th><th>SpO2</th><th>Pulse</th><th>Temp</th><th>BMI</th></tr></thead>
+          <tbody>${vitals.slice().reverse().slice(0,8).map(r=>`
+            <tr><td>${r.date}</td><td>${r.bp||"—"}</td><td>${r.weight||"—"}</td><td>${r.spo2||"—"}</td><td>${r.pulse||"—"}</td><td>${r.temp||"—"}</td><td>${r.bmi||"—"}</td></tr>`).join("")}
+          </tbody>
+        </table></div></div>`:""}
+    </div>
+
+    <div class="tab-panel" id="pra-consult">
+      <div class="fg">
+        <div class="field"><label>Date</label><input type="date" id="pcDate" value="${today()}"></div>
+        <div class="field"><label>Visit ID</label><input type="text" id="pcVid" placeholder="e.g. KWC-OP-2026/001"></div>
+        <div class="field full"><label>Chief complaint *</label><input type="text" id="pcComplaint" placeholder="Main reason for visit today"><div class="hint">Required — what brought the patient in</div></div>
+        <div class="field"><label>Duration of symptoms</label><input type="text" id="pcDuration" placeholder="e.g. 3 days, 2 weeks"><div class="hint">How long they have had this complaint</div></div>
+        <div class="field full"><label>Current medications / Dawa za sasa</label>
+          <div class="hint" style="margin-bottom:.4rem">Add each medication separately — name, dose, frequency, duration</div>
+          <div id="medsWrap" style="display:flex;flex-direction:column;gap:.4rem"></div>
+          <button type="button" class="add-need" id="addMedBtn" style="margin-top:.3rem">+ Add medication</button>
+        </div>
+        <div class="field"><label>Health problem needing lifestyle change</label><input type="text" id="pcIllness" placeholder="e.g. Hypertension, diabetes"><div class="hint">Main condition the lifestyle program targets</div></div>
+        <div class="field full"><label>Diagnosis / condition identified</label><input type="text" id="pcDiag" placeholder="e.g. Mild hypertension, obesity"><div class="hint">Your clinical assessment</div></div>
+        <div class="field full" id="pcRemedyWrap">
+          <label>Herb / remedy prescribed</label>
+          <input type="text" id="pcRemedy" placeholder="e.g. Ginger-lemon blend, Moringa tea" oninput="checkStock(this.value)">
+          <div class="hint">Check inventory before prescribing</div>
+          <div id="stockAlert" style="display:none;margin-top:.3rem"></div>
+        </div>
+        <div class="field"><label>Dosage &amp; preparation</label><input type="text" id="pcDosage" placeholder="e.g. 2 cups/day"><div class="hint">How to prepare and take</div></div>
+        <div class="field"><label>Treatment duration</label><input type="text" id="pcTdays" placeholder="e.g. 7 days, 30 days"><div class="hint">How long the course lasts</div></div>
+        <div class="field"><label>Follow-up needed?</label><select id="pcFollowup"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+        <div class="field"><label>Follow-up date</label><input type="date" id="pcFollowDate"><div class="hint">If follow-up is needed</div></div>
+        <div class="field full"><label>Notes &amp; observations</label><textarea id="pcNotes" placeholder="Additional clinical notes…"></textarea></div>
+        <div class="certify">
+          <input type="checkbox" id="pcCert">
+          <div><div class="cert-text">I hereby certify that the above consultation record is accurate and complete.</div>
+          <div class="cert-by">Recorded by: ${by}</div></div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitConsult('${patientId}','${pt.title||""} ${pt.name}')">Save consultation</button>
+      </div>
+      <div class="msg" id="pcMsg"></div>
+    </div>
+
+    <div class="tab-panel" id="pra-syms">
+      <div style="font-size:.74rem;color:var(--muted);margin-bottom:.6rem">
+        Rate each symptom: 0=Never · 1=Rarely · 2=Occasionally · 3=Sometimes · 4=Often · 5=Always<br>
+        <span style="color:var(--err)">Orange/Red = severity alert</span>
+      </div>
+      ${buildSymGrid()}
+      <div class="field" style="margin-top:.5rem"><label>Baseline assessment?</label><select id="symBaseline"><option value="YES">Yes — first assessment</option><option value="NO">No — follow-up update</option></select><div class="hint">Mark YES for the first time this form is filled</div></div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitSymptoms('${patientId}','${pt.title||""} ${pt.name}')">Save symptom assessment</button>
+      </div>
+      <div class="msg" id="symMsg"></div>
+    </div>
+
+    <div class="tab-panel" id="pra-lifestyle">
+      <div style="font-size:.74rem;color:var(--muted);margin-bottom:.6rem">8 Natural health laws assessment — Dodoso Section 3</div>
+      ${buildLifestyleForm()}
+      <div class="field" style="margin-top:.5rem"><label>Baseline assessment?</label><select id="lstBaseline"><option value="YES">Yes — first assessment</option><option value="NO">No — follow-up update</option></select></div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitLifestyle('${patientId}','${pt.title||""} ${pt.name}')">Save lifestyle assessment</button>
+      </div>
+      <div class="msg" id="lstMsg"></div>
+    </div>
+  `);
+}
+
+function checkStock(remedy){
+  const inv=window._inventory||[];
+  const alert=document.getElementById("stockAlert");
+  if(!remedy||!alert) return;
+  const match=inv.find(i=>(i.product_name||"").toLowerCase().includes(remedy.toLowerCase()));
+  if(match){
+    if(match.low_stock_alert==="YES"){
+      alert.style.display="block";
+      alert.innerHTML=`<span class="pill pill-o">⚠ Low stock: ${match.product_name} — ${match.quantity} ${match.unit} remaining</span>`;
+    } else if(Number(match.quantity)<=0){
+      alert.style.display="block";
+      alert.innerHTML=`<span class="pill pill-r">✗ Out of stock: ${match.product_name}. Notify Herbalist.</span>`;
+    } else {
+      alert.style.display="block";
+      alert.innerHTML=`<span class="pill pill-g">✓ In stock: ${match.product_name} — ${match.quantity} ${match.unit}</span>`;
+    }
+  } else {
+    alert.style.display="none";
+  }
+}
+
+async function submitVitals(patientId,patientName){
+  const msg=document.getElementById("pvMsg");
+  const w=v("pvWt"),h=v("pvHt");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const payload={patient_id:patientId,patient_name:patientName,visit_id:v("pvVid"),
+    date:v("pvDate"),bp:v("pvBP"),weight:w,height:h,bmi:bmiVal,
+    spo2:v("pvSpo2"),pulse:v("pvPulse"),temp:v("pvTemp")};
+  const res=await POST({action:"add_vitals",payload});
+  if(res.ok) showMsg(msg,"ok",`Vitals saved. BMI: ${res.bmi||"—"}`);
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function submitConsult(patientId,patientName){
+  const msg=document.getElementById("pcMsg");
+  if(!v("pcComplaint")){showMsg(msg,"err","Chief complaint is required.");return;}
+  if(!document.getElementById("pcCert").checked){showMsg(msg,"err","Please tick the certification checkbox.");return;}
+  const payload={patient_id:patientId,patient_name:patientName,visit_id:v("pcVid"),
+    date:v("pcDate"),chief_complaint:v("pcComplaint"),duration:v("pcDuration"),
+    current_illness:v("pcIllness"),current_meds:v("pcMeds"),med_duration:v("pcMedDur"),
+    diagnosis:v("pcDiag"),remedy:v("pcRemedy"),dosage:v("pcDosage"),
+    treatment_days:v("pcTdays"),followup_needed:v("pcFollowup"),followup_date:v("pcFollowDate"),
+    notes:v("pcNotes"),certified:true};
+  if(!v("pcRemedy")){
+    if(!confirm("No prescription/remedy recorded. Save anyway?")){return;}
+    payload.prescription_status="no_prescription";
+  }
+  const res=await POST({action:"add_consultation",payload});
+  if(res.ok) showMsg(msg,"ok","Consultation saved: "+res.consult_id);
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+const SYM_FIELDS=[
+  {section:"Head & Neck / Kichwa na Shingo",fields:[
+    {id:"head_headache",label:"Headache / Maumivu ya kichwa"},
+    {id:"head_forget",label:"Forgetfulness / Kusahau"},
+    {id:"head_eye_pain",label:"Eye pain / Maumivu ya macho"},
+    {id:"head_fever",label:"Fever / Homa"},
+    {id:"head_ear_noise",label:"Ear ringing / Kelele masikioni"},
+    {id:"head_eye_swelling",label:"Eye swelling / Kuvimba kwa macho"},
+    {id:"head_dizzy",label:"Dizziness / Kizunguzungu"},
+    {id:"head_ear_dirty",label:"Ear discharge / Uchafu masikioni"},
+    {id:"head_night_vision",label:"Poor night vision / Kutoona usiku"},
+    {id:"head_faint",label:"Fainting / Kupoteza fahamu"},
+    {id:"head_nose_bleed",label:"Nosebleed / Kutokwa damu puani"},
+    {id:"head_poor_vision",label:"Poor vision / Uono hafifu"},
+    {id:"head_seizure",label:"Seizure / Degedege"},
+    {id:"head_allergy",label:"Allergy / Mzio"},
+    {id:"head_neck_pain",label:"Neck pain / Maumivu ya shingo"},
+    {id:"head_fatigue",label:"Fatigue / Uchovu"},
+    {id:"head_weakness",label:"Weakness / Kukosa nguvu"},
+  ]},
+  {section:"Arms & Legs / Mikono na Miguu",fields:[
+    {id:"limb_hand_pain",label:"Hand pain / Maumivu ya mikono"},
+    {id:"limb_hand_numb",label:"Hand numbness / Ganzi mikononi"},
+    {id:"limb_feet_swell",label:"Feet swelling / Uvimbe wa miguu"},
+    {id:"limb_feet_pain",label:"Feet pain / Maumivu ya miguu"},
+    {id:"limb_feet_numb",label:"Feet numbness / Ganzi miguuni"},
+    {id:"limb_hand_swell",label:"Hand swelling / Uvimbe wa mikono"},
+    {id:"limb_sole_pain",label:"Sole pain / Maumivu ya nyayo"},
+    {id:"limb_hand_cold",label:"Cold hands / Mikono baridi"},
+    {id:"limb_feet_cold",label:"Cold feet / Miguu baridi"},
+  ]},
+  {section:"Mouth / Mdomo na Kinywa",fields:[
+    {id:"mouth_sores",label:"Mouth sores / Vidonda mdomoni"},
+    {id:"mouth_bad_breath",label:"Bad breath / Harufu mbaya"},
+    {id:"mouth_dry",label:"Dry mouth / Kinywa kukauka"},
+    {id:"mouth_lips_crack",label:"Cracked lips / Midomo kupasuka"},
+    {id:"mouth_tongue_dry",label:"Dry tongue / Ulimi kukauka"},
+    {id:"mouth_no_taste",label:"Loss of taste / Kukosa ladha"},
+  ]},
+  {section:"Central Body / Mwili wa Kati",fields:[
+    {id:"body_nausea",label:"Nausea / Kichefuchefu"},
+    {id:"body_stool_problem",label:"Stool difficulty / Shida haja kubwa"},
+    {id:"body_constipation",label:"Constipation / Kufunga choo"},
+    {id:"body_vomit",label:"Vomiting / Kutapika"},
+    {id:"body_bladder_pain",label:"Bladder pain / Maumivu ya kibofu"},
+    {id:"body_breathe_hard",label:"Breathlessness / Kupumua shida"},
+    {id:"body_heartburn",label:"Heartburn / Kiungulia"},
+    {id:"body_urinate_often",label:"Frequent urination / Kukojoa mara nyingi"},
+    {id:"body_sweat",label:"Excessive sweating / Jasho jingi"},
+    {id:"body_stomach_pain",label:"Stomach pain / Tumbo kuuma"},
+    {id:"body_bp",label:"BP issues / Shinikizo la damu"},
+    {id:"body_chest_pain",label:"Chest pain / Maumivu ya kifua"},
+    {id:"body_diarrhea",label:"Diarrhea / Kuharisha"},
+    {id:"body_heart_beat",label:"Irregular heartbeat / Mapigo ya moyo"},
+  ]},
+];
+
+const SYM_FEMALE=[
+  {id:"female_menstrual_pain",label:"Menstrual pain / Maumivu ya hedhi"},
+  {id:"female_irregular",label:"Irregular periods / Hedhi isiyo ya kawaida"},
+  {id:"female_heavy_bleed",label:"Heavy bleeding / Kutokwa damu nyingi"},
+  {id:"female_breast_swelling",label:"Breast swelling / Uvimbe wa titi"},
+  {id:"female_breast_pain",label:"Breast pain / Maumivu ya matiti"},
+  {id:"female_discharge",label:"Vaginal discharge / Kutokwa uchafu ukeni"},
+];
+const SYM_MALE=[
+  {id:"male_urine_problem",label:"Urinary problem / Shida ya kukojoa"},
+  {id:"male_pus",label:"Pus in urine / Usaha kwenye haja ndogo"},
+  {id:"male_low_libido",label:"Low libido / Kukosa hamu"},
+  {id:"male_prostate",label:"Prostate problem / Tatizo la tezi dume"},
+  {id:"male_testicle_pain",label:"Testicle pain / Maumivu ya korodani"},
+  {id:"male_testicle_swell",label:"Testicle swelling / Uvimbe wa korodani"},
+];
+
+function buildSymGrid(){
+  const selOpts=SEV_LABELS.map((l,i)=>`<option value="${i}">${l}</option>`).join("");
+  let html="";
+  SYM_FIELDS.forEach(sec=>{
+    html+=`<div class="sym-section"><h4>${sec.section}</h4><div class="sym-grid">`;
+    sec.fields.forEach(f=>{
+      html+=`<div class="sym-item"><label>${f.label}</label>
+        <select id="sym_${f.id}" onchange="colorSym(this)">${selOpts}</select></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  // gender sections
+  html+=`<div class="sym-section"><h4>Women only / Wanawake pekee</h4><div class="sym-grid">`;
+  SYM_FEMALE.forEach(f=>{html+=`<div class="sym-item"><label>${f.label}</label><select id="sym_${f.id}" onchange="colorSym(this)">${selOpts}</select></div>`;});
+  html+=`</div></div>`;
+  html+=`<div class="sym-section"><h4>Men only / Wanaume pekee</h4><div class="sym-grid">`;
+  SYM_MALE.forEach(f=>{html+=`<div class="sym-item"><label>${f.label}</label><select id="sym_${f.id}" onchange="colorSym(this)">${selOpts}</select></div>`;});
+  html+=`</div></div>`;
+  return html;
+}
+
+function colorSym(sel){
+  const n=Number(sel.value);
+  sel.className=SEV_CLASS[n]||"";
+}
+
+async function submitSymptoms(patientId,patientName){
+  const msg=document.getElementById("symMsg");
+  const payload={patient_id:patientId,patient_name:patientName,is_baseline:v("symBaseline")};
+  const allFields=[...SYM_FIELDS.flatMap(s=>s.fields),...SYM_FEMALE,...SYM_MALE];
+  allFields.forEach(f=>{payload["sym_"+f.id]=Number(document.getElementById("sym_"+f.id)?.value||0);});
+  const res=await POST({action:"add_symptoms",payload});
+  if(res.ok) showMsg(msg,"ok","Symptom assessment saved.");
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function buildLifestyleForm(){
+  return `<div class="fg">
+    <div class="field full"><label style="font-weight:700;color:var(--g)">A. Lishe / Nutrition</label></div>
+    <div class="field"><label>Meals per day / Milo kwa siku</label><select id="lst_meals"><option value="">—</option><option>1–2</option><option>3</option><option>3+ snacks</option><option>Irregular</option></select><div class="hint">How many meals daily</div></div>
+    <div class="field"><label>Fruits &amp; vegetables / Matunda/mboga</label><select id="lst_fv"><option value="">—</option><option>Daily</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Processed food / Vyakula vilivyosindikwa</label><select id="lst_proc"><option value="">—</option><option>Rarely</option><option>Weekly</option><option>Daily</option></select></div>
+    <div class="field"><label>Sugar foods / Vyakula vya sukari</label><select id="lst_sugar"><option value="">—</option><option>Rarely</option><option>Few times/week</option><option>Daily</option></select></div>
+    <div class="field"><label>Meat/fish / Nyama/samaki</label><select id="lst_meat"><option value="">—</option><option>Daily</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Breakfast / Kifungua kinywa</label><select id="lst_bfast"><option value="">—</option><option>Daily</option><option>Rarely</option><option>Never</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">B. Imani / Faith</label></div>
+    <div class="field"><label>Faith in God / Imani kwa Mungu</label><select id="lst_faith"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    <div class="field"><label>Bible reading / Kusoma Biblia</label><input type="text" id="lst_bible" placeholder="e.g. Daily, 3x/week"></div>
+    <div class="field"><label>Much stress / Msongo mwingi?</label><select id="lst_stress"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    <div class="field"><label>Stress source / Chanzo</label><select id="lst_stress_src"><option value="">—</option><option>Family</option><option>Health</option><option>Work</option><option>Church</option><option>Money</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">C. Hewa Safi / Fresh Air</label></div>
+    <div class="field"><label>Ventilation / Uingizaji hewa</label><select id="lst_vent"><option value="">—</option><option>Good</option><option>Moderate</option><option>Poor</option></select></div>
+    <div class="field"><label>Smoke/chemical exposure</label><select id="lst_smoke"><option value="">—</option><option>None</option><option>Rarely</option><option>Often</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">D. Mazoezi / Exercise</label></div>
+    <div class="field"><label>Exercise frequency</label><select id="lst_ex"><option value="">—</option><option>Daily</option><option>3–5/week</option><option>1–2/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Physical limitations?</label><select id="lst_exlim"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">E. Maji / Water</label></div>
+    <div class="field"><label>Glasses of water/day</label><select id="lst_water"><option value="">—</option><option>&lt;3</option><option>3–5</option><option>6–8</option><option>9+</option></select><div class="hint">Plain water only</div></div>
+    <div class="field"><label>Urine color / Rangi ya mkojo</label><select id="lst_urine"><option value="">—</option><option>Light/clear</option><option>Yellow</option><option>Orange</option><option>Other</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">F. Jua / Sunlight</label></div>
+    <div class="field"><label>Time outdoors / Muda nje</label><select id="lst_sun"><option value="">—</option><option>≥30 min/day</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">G. Pumziko / Rest</label></div>
+    <div class="field"><label>Hours of sleep / Masaa ya usingizi</label><select id="lst_sleep"><option value="">—</option><option>&lt;5</option><option>5–6</option><option>7–8</option><option>&gt;8</option></select></div>
+    <div class="field"><label>Sleep problems / Shida ya usingizi</label><select id="lst_sleepq"><option value="">—</option><option>Rarely</option><option>Sometimes</option><option>Often</option></select></div>
+    <div class="field"><label>Wake up tired / Unaamka umechoka?</label><select id="lst_waketired"><option value="">—</option><option>Often</option><option>Sometimes</option><option>Rarely</option></select></div>
+    <div class="field full"><label style="font-weight:700;color:var(--g)">Other / Mengineyo</label></div>
+    <div class="field"><label>Alcohol / Pombe</label><select id="lst_alc"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field"><label>Tea/Coffee / Chai/Kahawa</label><input type="text" id="lst_tc" placeholder="How often?"></div>
+    <div class="field"><label>Smoking / Kuvuta sigara</label><select id="lst_smoke2"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field"><label>Drugs / Dawa za kulevya</label><select id="lst_drugs"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field full"><label>3 main health goals / Malengo 3 ya afya</label><textarea id="lst_goals" placeholder="List 3 health goals…"></textarea><div class="hint">What the patient wants to achieve</div></div>
+    <div class="field full"><label>Readiness to change / Utayari wa kubadilika</label><select id="lst_ready"><option value="">—</option><option value="1">1 — Labda (Maybe)</option><option value="2">2 — Wastani (Moderate)</option><option value="3">3 — Tayari (Ready)</option><option value="4">4 — Tayari sana (Very ready)</option></select><div class="hint">Patient's motivation level</div></div>
+  </div>`;
+}
+
+async function submitLifestyle(patientId,patientName){
+  const msg=document.getElementById("lstMsg");
+  const payload={
+    patient_id:patientId,patient_name:patientName,is_baseline:v("lstBaseline"),
+    meals_per_day:v("lst_meals"),fruits_veg:v("lst_fv"),processed_food:v("lst_proc"),
+    sugar_food:v("lst_sugar"),meat_fish:v("lst_meat"),breakfast:v("lst_bfast"),
+    faith:v("lst_faith"),bible_reading:v("lst_bible"),stress:v("lst_stress"),
+    stress_source:v("lst_stress_src"),ventilation:v("lst_vent"),smoke_exposure:v("lst_smoke"),
+    exercise_freq:v("lst_ex"),physical_limits:v("lst_exlim"),
+    water_glasses:v("lst_water"),urine_color:v("lst_urine"),
+    sunlight_time:v("lst_sun"),sleep_hours:v("lst_sleep"),
+    sleep_problems:v("lst_sleepq"),wake_tired:v("lst_waketired"),
+    alcohol:v("lst_alc"),tea_coffee:v("lst_tc"),smoking:v("lst_smoke2"),drugs:v("lst_drugs"),
+    health_goals:v("lst_goals"),readiness_to_change:v("lst_ready")
+  };
+  const res=await POST({action:"add_lifestyle",payload});
+  if(res.ok) showMsg(msg,"ok","Lifestyle assessment saved.");
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── INPATIENT LOGS ── */
+async function renderInpatient(){
+  loading();
+  const canAdd=(USER.access||[]).includes("inpatient");
+  try{
+    const [logRes,ptRes]=await Promise.all([GET({action:"read_ip_logs"}),GET({action:"read_patients"})]);
+    const rows=logRes.rows||[],pts=ptRes.rows||[];
+    window._iplogs=rows;window._pts=pts;
+    const byPat={};rows.forEach(r=>{if(!byPat[r.patient_id])byPat[r.patient_id]=[];byPat[r.patient_id].push(r);});
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openIpLog()">+ Add daily log</button>`:""}
+      <div class="search-bar">
+        <select id="ipPatFilter" onchange="filterIp()"><option value="">All patients</option>${Object.keys(byPat).map(id=>{ const r=byPat[id][0]; return `<option value="${id}">${r.patient_name}</option>`;}).join("")}</select>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Inpatient daily logs <span>${rows.length} entries</span></div>
+        <div class="tablewrap" id="ipTable">${renderIpTable(rows)}</div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function renderIpTable(rows){
+  if(!rows.length) return `<div class="empty">No daily logs yet.</div>`;
+  return `<table><thead><tr><th>Log ID</th><th>Date</th><th>Patient</th><th>Wk</th><th>Complaint</th><th>BP</th><th>Wt</th><th>SpO2</th><th>Therapy</th><th>Food</th><th>Progress</th><th>By</th><th></th></tr></thead>
+  <tbody>${rows.slice().reverse().map(r=>`
+    <tr><td>${r.log_id||"—"}</td><td>${r.log_date||"—"}</td><td>${r.patient_name||"—"}</td><td>${r.week_number||"—"}</td>
+    <td>${(r.main_complaint||"—").slice(0,25)}</td><td>${r.vitals_bp||"—"}</td><td>${r.vitals_weight||"—"}</td><td>${r.vitals_spo2||"—"}</td>
+    <td>${(r.therapy||"—").slice(0,25)}</td><td>${(r.food_served||"—").slice(0,25)}</td><td>${(r.progress||"—").slice(0,25)}</td>
+    <td style="font-size:.65rem">${r.logged_by||"—"}</td>
+    ${editDeleteCell(r._ts,"ip_logs",`IP log ${r.log_id} — ${r.patient_name} ${r.log_date}`,"")}
+    </tr>`).join("")}</tbody></table>`;
+}
+
+function filterIp(){
+  const id=document.getElementById("ipPatFilter").value;
+  const f=(window._iplogs||[]).filter(r=>!id||r.patient_id===id);
+  document.getElementById("ipTable").innerHTML=renderIpTable(f);
+}
+
+function openIpLog(){
+  const pts=(window._pts||[]).filter(p=>p.patient_type==="IP");
+  const by=byLine();
+  openModal("Add inpatient daily log",`
+    <div class="fg">
+      <div class="field"><label>Patient *</label>
+        <select id="ilPat"><option value="">— Select IP patient —</option>${pts.map(p=>`<option value="${p.patient_id}||${p.title||""} ${p.name}">${p.title||""} ${p.name}</option>`).join("")}</select>
+        <div class="hint">Only inpatients shown</div>
+      </div>
+      <div class="field"><label>Date *</label><input type="date" id="ilDate" value="${today()}"></div>
+      <div class="field"><label>Week number</label><input type="number" id="ilWeek" placeholder="e.g. 1"><div class="hint">Week of the program</div></div>
+      <div class="field full"><label>Main complaint today</label><input type="text" id="ilComplaint" placeholder="e.g. No complaint / mild back pain"><div class="hint">What the patient reports today</div></div>
+      <div class="field"><label>Blood pressure</label><input type="text" id="ilBP" placeholder="e.g. 110/70 mmHg"></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="ilWt" placeholder="e.g. 64" oninput="calcBMI('ilWt','ilHt','ilBmi')"></div>
+      <div class="field"><label>Height (cm)</label><input type="number" id="ilHt" placeholder="e.g. 165" oninput="calcBMI('ilWt','ilHt','ilBmi')"></div>
+      <div class="bmi-display" id="ilBmi">BMI: —</div>
+      <div class="field"><label>SpO2 (%)</label><input type="number" id="ilSpo2" placeholder="e.g. 98"></div>
+      <div class="field"><label>Pulse (bpm)</label><input type="number" id="ilPulse" placeholder="e.g. 88"></div>
+      <div class="field"><label>Temperature (°C)</label><input type="number" id="ilTemp" placeholder="e.g. 36.5"></div>
+      <div class="field full"><label>Therapy activities</label><textarea id="ilTherapy" placeholder="e.g. Hot and cold fomentations, massage, exercise…"><div class="hint">All therapies done today</div></textarea></div>
+      <div class="field full"><label>Food served today</label><textarea id="ilFood" placeholder="e.g. Mango juice, green salad, oats porridge…"><div class="hint">Actual meals served — compare with meal plan</div></textarea></div>
+      <div class="field full"><label>Progress notes</label><textarea id="ilProgress" placeholder="e.g. Good progress. No pain reported."></textarea><div class="hint">Clinical observations and patient response to today's therapy and food</div></div>
+      <div class="certify">
+        <input type="checkbox" id="ilCert">
+        <div><div class="cert-text">I hereby certify that the above daily log is accurate and complete.</div>
+        <div class="cert-by">Logged by: ${by}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitIpLog()">Save daily log</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="ilMsg"></div>
+  `);
+}
+
+async function submitIpLog(){
+  const msg=document.getElementById("ilMsg");
+  const patSel=v("ilPat").split("||");
+  if(!patSel[0]){showMsg(msg,"err","Select a patient.");return;}
+  if(!document.getElementById("ilCert").checked){showMsg(msg,"err","Please tick the certification checkbox.");return;}
+  const w=v("ilWt"),h=v("ilHt");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const payload={patient_id:patSel[0],patient_name:patSel[1]||"",log_date:v("ilDate"),
+    week_number:v("ilWeek"),main_complaint:v("ilComplaint"),vitals_bp:v("ilBP"),
+    vitals_weight:w,height:h,vitals_bmi:bmiVal,vitals_spo2:v("ilSpo2"),
+    vitals_pulse:v("ilPulse"),vitals_temp:v("ilTemp"),
+    therapy:v("ilTherapy"),food_served:v("ilFood"),progress:v("ilProgress"),certified:true};
+  const res=await POST({action:"add_ip_log",payload});
+  if(res.ok){showMsg(msg,"ok","Daily log saved: "+res.log_id);setTimeout(()=>{closeModal();renderInpatient();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── HERBS ── */
+async function renderHerbs(){
+  loading();
+  const canAdd=(USER.access||[]).includes("herbs");
+  try{
+    const res=await GET({action:"read_herbs"});
+    const rows=res.rows||[];
+    window._herbs=rows;
+    const pending=rows.filter(r=>r.status==="pending_approval");
+    if(pending.length) document.getElementById("tbRight").innerHTML=`<span class="pill pill-o">${pending.length} pending approval</span>`;
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openAddHerb()">+ Add herb / product</button>`:""}
+      <div class="search-bar">
+        <input type="text" id="herbQ" placeholder="Search by name or condition…" oninput="filterHerbs()">
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.65rem" id="herbGrid">
+        ${renderHerbCards(rows)}
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function renderHerbCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No herbs in the guide yet.</div>`;
+  return rows.map(h=>`
+    <div style="background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;position:relative">
+      ${h.status==="pending_approval"?`<span class="pill pill-o" style="position:absolute;top:.5rem;right:.5rem">Pending</span>`:""}
+      <div style="font-size:.85rem;font-weight:700;color:var(--g);margin-bottom:.2rem">${h.product_name||"—"}</div>
+      <div style="font-size:.68rem;color:var(--muted);margin-bottom:.4rem">${h.condition||"—"}</div>
+      ${h.category?`<span style="font-size:.6rem;background:var(--tint);color:var(--g);border-radius:99px;padding:1px 6px">${h.category}</span>`:""}
+      <div style="font-size:.68rem;margin-top:.45rem"><b>Ingredients:</b> ${(h.ingredients||"—").slice(0,80)}</div>
+      <div style="font-size:.68rem;margin-top:.2rem"><b>Dose:</b> ${h.dosage||"—"}</div>
+      <div style="font-size:.68rem;margin-top:.2rem"><b>Preparation:</b> ${(h.preparation||"—").slice(0,80)}</div>
+      ${h.cautions?`<div style="font-size:.65rem;color:var(--err);margin-top:.2rem">⚠ ${h.cautions}</div>`:""}
+      <div style="font-size:.6rem;color:var(--muted);margin-top:.4rem">Added by: ${h.added_by||"—"}</div>
+      ${h.status==="pending_approval"&&((USER.roles||[]).includes("supervisor")||USER.herb_senior)?`
+        <div style="display:flex;gap:.3rem;margin-top:.5rem">
+          <button class="btn btn-sm btn-primary" onclick="approveHerb('${h._id}','approve')">Approve</button>
+          <button class="btn btn-sm btn-danger" onclick="approveHerb('${h._id}','reject')">Reject</button>
+        </div>`:""}
+    </div>`).join("");
+}
+
+function filterHerbs(){
+  const q=(document.getElementById("herbQ").value||"").toLowerCase();
+  const f=(window._herbs||[]).filter(h=>(h.product_name||"").toLowerCase().includes(q)||(h.condition||"").toLowerCase().includes(q));
+  document.getElementById("herbGrid").innerHTML=renderHerbCards(f);
+}
+
+function openAddHerb(){
+  openModal("Add herb / product to guide",`
+    <div class="fg">
+      <div class="field full"><label>Product name *</label><input type="text" id="hn" placeholder="e.g. Ginger-Lemon Blend, KWC Blend No.1"><div class="hint">Can be a single herb or a mixture</div></div>
+      <div class="field"><label>Category</label><input type="text" id="hcat" placeholder="e.g. Root, Leaf, Blend, Oil"><div class="hint">Type of product</div></div>
+      <div class="field full"><label>Condition(s) treated *</label><input type="text" id="hcond" placeholder="e.g. Nausea, indigestion, cold"><div class="hint">Separate multiple conditions with commas</div></div>
+      <div class="field full"><label>Ingredients</label><textarea id="hingr" placeholder="List all ingredients and proportions…"><div class="hint">For mixtures — list each herb and amount</div></textarea></div>
+      <div class="field full"><label>Preparation method</label><textarea id="hprep" placeholder="How to prepare this remedy…"><div class="hint">Step by step preparation instructions</div></textarea></div>
+      <div class="field"><label>Dosage</label><input type="text" id="hdose" placeholder="e.g. 2 cups/day × 7 days"><div class="hint">How much and how often</div></div>
+      <div class="field"><label>Cautions</label><input type="text" id="hcaut" placeholder="e.g. Avoid in pregnancy"><div class="hint">Side effects or contraindications</div></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitHerb()">Submit herb</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="hMsg"></div>
+  `);
+}
+
+async function submitHerb(){
+  const msg=document.getElementById("hMsg");
+  if(!v("hn")){showMsg(msg,"err","Product name is required.");return;}
+  const payload={product_name:v("hn"),category:v("hcat"),condition:v("hcond"),ingredients:v("hingr"),preparation:v("hprep"),dosage:v("hdose"),cautions:v("hcaut")};
+  const res=await POST({action:"add_herb",payload});
+  if(res.ok){
+    showMsg(msg,res.pending?"warn":"ok",res.pending?"Submitted — awaiting Supervisor/Senior Herbalist approval.":"Herb added to guide.");
+    setTimeout(()=>{closeModal();renderHerbs();},1500);
+  }else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function approveHerb(id,action){
+  const res=await POST({action:"approve_herb",payload:{_id:id,action}});
+  if(res.ok) renderHerbs();
+  else alert(res.error||"Failed.");
+}
+
+/* ── INVENTORY ── */
+async function renderInventory(){
+  loading();
+  const canAdd=(USER.access||[]).includes("inventory");
+  try{
+    const res=await GET({action:"read_inventory"});
+    const rows=res.rows||[];
+    window._inventory=rows;
+    const low=rows.filter(r=>r.low_stock_alert==="YES");
+    if(low.length) document.getElementById("tbRight").innerHTML=`<span class="pill pill-r">${low.length} low stock</span>`;
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openAddStock()">+ Add / restock</button>`:""}
+      <div class="panel">
+        <div class="panel-title">Herb inventory <span>${rows.length} records</span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Product</th><th>Qty</th><th>Unit</th><th>Price (TSh)</th><th>Last restocked</th><th>Low threshold</th><th>Status</th><th>Updated by</th></tr></thead>
+          <tbody>${rows.slice().reverse().map(r=>`
+            <tr>
+              <td>${r.product_name||"—"}</td>
+              <td class="r">${r.quantity||0}</td>
+              <td>${r.unit||"—"}</td>
+              <td class="r">${r.price_tzs?Number(r.price_tzs).toLocaleString():"—"}</td>
+              <td>${r.last_restocked||"—"}</td>
+              <td class="r">${r.low_stock_threshold||10}</td>
+              <td>${r.low_stock_alert==="YES"?`<span class="pill pill-r">Low stock</span>`:`<span class="pill pill-g">OK</span>`}</td>
+              <td style="font-size:.65rem">${r.updated_by||"—"}</td>
+            </tr>`).join("")||`<tr><td colspan="8" style="text-align:center;color:var(--muted)">No inventory records.</td></tr>`}
+          </tbody>
+        </table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function openAddStock(){
+  const herbs=window._herbs||[];
+  openModal("Add / restock herb inventory",`
+    <div class="fg">
+      <div class="field full"><label>Product name *</label>
+        <select id="invProd"><option value="">— Select product —</option>${herbs.filter(h=>h.status==="approved").map(h=>`<option>${h.product_name}</option>`).join("")}</select>
+        <div class="hint">Only approved herbs shown</div>
+      </div>
+      <div class="field"><label>Quantity *</label><input type="number" id="invQty" placeholder="e.g. 500"><div class="hint">Amount being added to stock</div></div>
+      <div class="field"><label>Unit *</label><select id="invUnit"><option>Grams</option><option>Kilograms</option><option>Bottles</option><option>Sachets</option><option>Litres</option><option>Pieces</option></select></div>
+      <div class="field"><label>Price per unit (TSh)</label><input type="number" id="invPrice" placeholder="e.g. 2000"><div class="hint">Selling price per unit</div></div>
+      <div class="field"><label>Low stock threshold</label><input type="number" id="invThresh" placeholder="10"><div class="hint">Alert when stock falls below this</div></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitStock()">Save stock</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="invMsg"></div>
+  `);
+}
+
+async function submitStock(){
+  const msg=document.getElementById("invMsg");
+  if(!v("invProd")){showMsg(msg,"err","Select a product.");return;}
+  if(!v("invQty")){showMsg(msg,"err","Quantity is required.");return;}
+  const payload={product_name:v("invProd"),quantity:v("invQty"),unit:v("invUnit"),price_tzs:v("invPrice"),low_stock_threshold:v("invThresh")||10};
+  const res=await POST({action:"add_inventory",payload});
+  if(res.ok){showMsg(msg,"ok","Stock saved.");setTimeout(()=>{closeModal();renderInventory();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── SALES ── */
+async function renderSales(){
+  loading();
+  const canAdd=(USER.access||[]).includes("sales");
+  try{
+    const [sRes,hRes,ptRes]=await Promise.all([GET({action:"read_sales"}),GET({action:"read_herbs"}),GET({action:"read_patients"})]);
+    const rows=sRes.rows||[],herbs=hRes.rows||[],pts=ptRes.rows||[];
+    window._salesRows=rows;window._herbs=herbs;window._pts=pts;
+    const total=rows.reduce((a,r)=>a+Number(r.amount_tzs||0),0);
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openSale()">+ Record sale</button>`:""}
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi gold"><div class="kpi-n">${rows.length}</div><div class="kpi-l">Total sales</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--g)">${total.toLocaleString()}</div><div class="kpi-l">Revenue (TSh)</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--g)">${[...new Set(rows.map(r=>r.product_name))].length}</div><div class="kpi-l">Products sold</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Sales records</div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Sale ID</th><th>Date</th><th>Product</th><th>Qty</th><th>Unit</th><th>Amount (TSh)</th><th>Patient</th><th>Bill status</th><th>By</th><th></th></tr></thead>
+          <tbody>${rows.slice().reverse().map(r=>`
+            <tr><td>${r.sale_id||"—"}</td><td>${r.date||"—"}</td><td>${r.product_name||"—"}</td>
+            <td class="r">${r.quantity||"—"}</td><td>${r.unit||"—"}</td>
+            <td class="r">${r.amount_tzs?Number(r.amount_tzs).toLocaleString():"—"}</td>
+            <td>${r.patient_name||"—"}</td>
+            <td>${r.bill_status==="paid"?`<span class="pill pill-g">Paid</span>`:`<span class="pill pill-r">Unpaid</span>`}</td>
+            <td style="font-size:.65rem">${r.recorded_by||"—"}</td>
+            ${editDeleteCell(r._ts,"sales",`Sale ${r.sale_id} — ${r.product_name}`,"")}
+            </tr>`).join("")||`<tr><td colspan="10" style="text-align:center;color:var(--muted)">No sales yet.</td></tr>`}
+          </tbody>
+        </table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function openSale(){
+  const herbs=(window._herbs||[]).filter(h=>h.status==="approved");
+  const pts=window._pts||[];
+  const by=byLine();
+  openModal("Record herb sale",`
+    <div class="fg">
+      <div class="field"><label>Date *</label><input type="date" id="salDate" value="${today()}"></div>
+      <div class="field"><label>Product *</label>
+        <select id="salProd"><option value="">— Select product —</option>${herbs.map(h=>`<option>${h.product_name}</option>`).join("")}</select>
+      </div>
+      <div class="field"><label>Quantity *</label><input type="number" id="salQty" placeholder="e.g. 100"></div>
+      <div class="field"><label>Unit</label><select id="salUnit"><option>Grams</option><option>Kilograms</option><option>Bottles</option><option>Sachets</option><option>Pieces</option></select></div>
+      <div class="field"><label>Amount (TSh) *</label><input type="number" id="salAmt" placeholder="e.g. 5000"></div>
+      <div class="field"><label>Patient (optional)</label>
+        <select id="salPat"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p.title||""} ${p.name}">${p.title||""} ${p.name} (${p.patient_id})</option>`).join("")}</select>
+      </div>
+      <div class="certify">
+        <input type="checkbox" id="salCert">
+        <div><div class="cert-text">I hereby certify that the above sale record is accurate and complete.</div>
+        <div class="cert-by">Recorded by: ${by}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitSale()">Save sale</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="salMsg"></div>
+  `);
+}
+
+async function submitSale(){
+  const msg=document.getElementById("salMsg");
+  if(!v("salProd")){showMsg(msg,"err","Select a product.");return;}
+  if(!v("salAmt")){showMsg(msg,"err","Amount is required.");return;}
+  if(!document.getElementById("salCert").checked){showMsg(msg,"err","Please tick certification.");return;}
+  const payload={date:v("salDate"),product_name:v("salProd"),quantity:v("salQty"),unit:v("salUnit"),amount_tzs:v("salAmt"),patient_name:v("salPat"),certified:true};
+  const res=await POST({action:"add_sale",payload});
+  if(res.ok){showMsg(msg,"ok","Sale recorded: "+res.sale_id);setTimeout(()=>{closeModal();renderSales();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── BILLING ── */
+async function renderBilling(){
+  loading();
+  const canAdd=(USER.access||[]).includes("billing");
+  try{
+    const [bRes,ptRes]=await Promise.all([GET({action:"read_billing"}),GET({action:"read_patients"})]);
+    const rows=bRes.rows||[],pts=ptRes.rows||[];
+    window._bills=rows;window._pts=pts;
+    const totalPaid=rows.filter(r=>r.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    const totalUnpaid=rows.filter(r=>r.status!=="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    set(`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openBill()">+ Generate invoice</button>`:""}
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi gold"><div class="kpi-n">${rows.length}</div><div class="kpi-l">Total bills</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--ok)">${totalPaid.toLocaleString()}</div><div class="kpi-l">Collected (TSh)</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--err)">${totalUnpaid.toLocaleString()}</div><div class="kpi-l">Outstanding (TSh)</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Invoices</div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Bill ID</th><th>Date</th><th>Patient</th><th>Type</th><th>File fee</th><th>Herbs</th><th>Program</th><th>Total (TSh)</th><th>Status</th><th>Receipt</th><th>Action</th><th></th></tr></thead>
+          <tbody>${rows.slice().reverse().map(r=>`
+            <tr>
+              <td>${r.bill_id||"—"}</td><td>${r.date||"—"}</td><td>${r.patient_name||"—"}</td>
+              <td>${r.visit_type||"—"}</td>
+              <td class="r">${r.file_fee?Number(r.file_fee).toLocaleString():"—"}</td>
+              <td class="r">${r.herbs_total?Number(r.herbs_total).toLocaleString():"—"}</td>
+              <td class="r">${r.program_cost?Number(r.program_cost).toLocaleString():"—"}</td>
+              <td class="r"><b>${r.total?Number(r.total).toLocaleString():"—"}</b></td>
+              <td>${r.status==="paid"?`<span class="pill pill-g">Paid</span>`:`<span class="pill pill-r">Unpaid</span>`}</td>
+              <td>${r.receipt_number||"—"}</td>
+              <td>${r.status!=="paid"?`<button class="btn btn-sm btn-primary" onclick="markPaid('${r.bill_id}')">Mark paid</button>`:""}</td>
+              ${editDeleteCell(r._ts,"billing",`Bill ${r.bill_id} — ${r.patient_name} TSh ${r.total}`,"")}
+            </tr>`).join("")||`<tr><td colspan="12" style="text-align:center;color:var(--muted)">No bills yet.</td></tr>`}
+          </tbody>
+        </table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function openBill(){
+  const pts=window._pts||[];
+  openModal("Generate invoice",`
+    <div class="fg">
+      <div class="field"><label>Patient *</label>
+        <select id="blPat"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p.patient_id}||${p.title||""} ${p.name}||${p.patient_type||"OP"}">${p.title||""} ${p.name} (${p.patient_id})</option>`).join("")}</select>
+      </div>
+      <div class="field"><label>Visit ID</label><input type="text" id="blVid" placeholder="e.g. KWC-OP-2026/001"></div>
+      <div class="field"><label>Visit type</label><select id="blType"><option value="OP">Outpatient (OP)</option><option value="IP">Inpatient (IP)</option><option value="HC">Herb only (HC)</option></select></div>
+      <div class="field"><label>File opening fee (TSh)</label><input type="number" id="blFile" value="2000"><div class="hint">Default TSh 2,000 — update if changed</div></div>
+      <div class="field"><label>Herbs total (TSh)</label><input type="number" id="blHerbs" placeholder="0"><div class="hint">Total cost of herbs prescribed</div></div>
+      <div class="field"><label>Program cost (TSh)</label><input type="number" id="blProg" placeholder="0"><div class="hint">IP program cost if applicable</div></div>
+      <div class="field"><label>Laundry (TSh)</label><input type="number" id="blLaundry" placeholder="0"><div class="hint">For inpatients</div></div>
+      <div class="field"><label>Other charges (TSh)</label><input type="number" id="blOther" placeholder="0"></div>
+      <div class="field full" style="background:var(--tint);border-radius:8px;padding:.6rem .75rem">
+        <div style="font-size:.75rem;color:var(--muted)">Payment to:</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--g)">AGDI · National Microfinance Bank</div>
+        <div style="font-size:.72rem;color:var(--muted)">Patient pays at bank or mobile money, then brings receipt.</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitBill()">Generate invoice</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="blMsg"></div>
+  `);
+}
+
+async function submitBill(){
+  const msg=document.getElementById("blMsg");
+  const patSel=v("blPat").split("||");
+  if(!patSel[0]){showMsg(msg,"err","Select a patient.");return;}
+  const file=Number(v("blFile"))||0,herbs=Number(v("blHerbs"))||0,
+        prog=Number(v("blProg"))||0,laun=Number(v("blLaundry"))||0,other=Number(v("blOther"))||0;
+  const total=file+herbs+prog+laun+other;
+  const payload={patient_id:patSel[0],patient_name:patSel[1]||"",visit_id:v("blVid"),
+    visit_type:v("blType"),file_fee:file,herbs_total:herbs,
+    program_cost:prog,laundry:laun,other};
+  const res=await POST({action:"add_billing",payload});
+  if(res.ok){
+    showMsg(msg,"ok",`Invoice generated: ${res.bill_id} · Total: TSh ${total.toLocaleString()} · Pay to: ${res.agdi_account}`);
+    setTimeout(()=>{closeModal();renderBilling();},2000);
+  }else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function markPaid(billId){
+  openModal("Mark invoice as paid — "+billId,`
+    <div class="fg">
+      <div class="field full"><label>Receipt / Transaction number *</label>
+        <input type="text" id="rcptNum" placeholder="Bank receipt or mobile money transaction number">
+        <div class="hint">Enter the receipt number from AGDI bank/mobile money</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitMarkPaid('${billId}')">Confirm payment</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="rcptMsg"></div>
+  `);
+}
+
+async function submitMarkPaid(billId){
+  const msg=document.getElementById("rcptMsg");
+  if(!v("rcptNum")){showMsg(msg,"err","Receipt number is required.");return;}
+  const res=await POST({action:"mark_paid",payload:{bill_id:billId,receipt_number:v("rcptNum")}});
+  if(res.ok){showMsg(msg,"ok","Payment confirmed.");setTimeout(()=>{closeModal();renderBilling();},1000);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── STAFF ── */
+async function renderStaff(){
+  loading();
+  try{
+    const res=await GET({action:"read_staff"});
+    const rows=res.rows||[];
+    window._staff=rows;
+    const active=rows.filter(r=>r.status==="active").length;
+    const revoked=rows.filter(r=>r.status==="revoked").length;
+    document.getElementById("tbRight").innerHTML=`<span class="pill pill-g">${active} active</span>${revoked?`<span class="pill pill-r">${revoked} revoked</span>`:""}`;
+    set(`
+      <button class="btn btn-primary" style="margin-bottom:.8rem" onclick="openAddStaff()">+ Add staff account</button>
+      <div class="staff-grid" id="staffGrid">${renderStaffCards(rows)}</div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function renderStaffCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No staff accounts yet.</div>`;
+  return rows.map(s=>{
+    const roles=s.roles?String(s.roles).split(",").map(r=>r.trim()).filter(Boolean):[];
+    return `<div class="staff-card">
+      <div class="sc-head">
+        <div class="sc-av">${initials((s.title||"")+" "+(s.name||""))}</div>
+        <div><div class="sc-name">${s.title||""} ${s.name||"—"}</div>
+        <div class="sc-user">@${s.username||"—"}</div></div>
+      </div>
+      <div class="sc-roles">${roles.map(r=>`<span class="sr sr-${r}">${cap(r)}</span>`).join("")}
+        ${s.herb_senior==="YES"?`<span class="sr" style="background:#163A2B;color:#C29B3B">Senior Herbalist</span>`:""}
+      </div>
+      <div class="sc-foot">
+        <span class="sc-status ${s.status==="active"?"sc-active":"sc-revoked"}">${cap(s.status||"active")}</span>
+        <div class="sc-btns">
+          <button class="sc-btn" onclick="openEditStaff('${s._id}')">Edit</button>
+          ${s.status==="active"
+            ?`<button class="sc-btn danger" onclick="toggleStaff('${s._id}','${s.name}','revoked')">Revoke</button>`
+            :`<button class="sc-btn" onclick="toggleStaff('${s._id}','${s.name}','active')">Restore</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openAddStaff(){
+  openModal("Add staff account",`
+    <div class="fg">
+      <div class="field"><label>Title</label><select id="stT"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select></div>
+      <div class="field"><label>Full name *</label><input type="text" id="stN" placeholder="Full name"><div class="hint">As used professionally</div></div>
+      <div class="field"><label>Username *</label><input type="text" id="stU" placeholder="e.g. grace.mwamba"><div class="hint">Not case-sensitive when logging in</div></div>
+      <div class="field"><label>Password *</label><input type="text" id="stP" placeholder="Set a password"><div class="hint">Case-sensitive — share securely</div></div>
+      <div class="field full"><label>Roles (select one or more) *</label>
+        <div class="role-checks">
+          <label class="rc"><input type="checkbox" name="stRole" value="receptionist">Receptionist</label>
+          <label class="rc"><input type="checkbox" name="stRole" value="practitioner">Practitioner</label>
+          <label class="rc"><input type="checkbox" name="stRole" value="herbalist">Herbalist</label>
+          <label class="rc"><input type="checkbox" name="stRole" value="administrator">Administrator</label>
+          <label class="rc"><input type="checkbox" name="stRole" value="supervisor">Supervisor</label>
+        </div>
+        <div class="hint">Select all roles this person holds</div>
+      </div>
+      <div class="field full"><label>Senior Herbalist?</label>
+        <label class="rc"><input type="checkbox" id="stHS">Yes — can approve/reject herb additions and manage pricing</label>
+        <div class="hint">Only applicable if Herbalist role is selected</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitStaff()">Create account</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="stMsg"></div>
+  `);
+}
+
+async function submitStaff(){
+  const msg=document.getElementById("stMsg");
+  const roles=[...document.querySelectorAll('input[name="stRole"]:checked')].map(c=>c.value);
+  if(!v("stN")){showMsg(msg,"err","Full name is required.");return;}
+  if(!v("stU")){showMsg(msg,"err","Username is required.");return;}
+  if(!v("stP")){showMsg(msg,"err","Password is required.");return;}
+  if(!roles.length){showMsg(msg,"err","Select at least one role.");return;}
+  const payload={title:v("stT"),name:v("stN"),username:v("stU"),password:v("stP"),roles,
+    herb_senior:document.getElementById("stHS").checked};
+  const res=await POST({action:"add_staff",payload});
+  if(res.ok){showMsg(msg,"ok","Account created.");setTimeout(()=>{closeModal();renderStaff();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function openEditStaff(id){
+  const s=(window._staff||[]).find(r=>r._id===id);
+  if(!s) return;
+  const existing=s.roles?String(s.roles).split(",").map(r=>r.trim()):[];
+  openModal("Edit — "+(s.title||"")+" "+s.name,`
+    <div class="fg">
+      <div class="field"><label>Title</label><select id="edT"><option value="">—</option><option ${s.title==="Mr."?"selected":""}>Mr.</option><option ${s.title==="Mrs."?"selected":""}>Mrs.</option><option ${s.title==="Ms."?"selected":""}>Ms.</option><option ${s.title==="Dr."?"selected":""}>Dr.</option><option ${s.title==="Prof."?"selected":""}>Prof.</option></select></div>
+      <div class="field"><label>Full name</label><input type="text" id="edN" value="${s.name||""}"></div>
+      <div class="field"><label>Username</label><input type="text" id="edU" value="${s.username||""}"></div>
+      <div class="field"><label>New password (blank = keep)</label><input type="text" id="edP" placeholder="Leave blank to keep current"></div>
+      <div class="field full"><label>Roles</label>
+        <div class="role-checks">
+          ${["receptionist","practitioner","herbalist","administrator","supervisor"].map(r=>`
+            <label class="rc"><input type="checkbox" name="edRole" value="${r}" ${existing.includes(r)?"checked":""}>${cap(r)}</label>`).join("")}
+        </div>
+      </div>
+      <div class="field full"><label>Senior Herbalist?</label>
+        <label class="rc"><input type="checkbox" id="edHS" ${s.herb_senior==="YES"?"checked":""}>Yes — Senior Herbalist</label>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitEditStaff('${id}')">Save changes</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="edMsg"></div>
+  `);
+}
+
+async function submitEditStaff(id){
+  const msg=document.getElementById("edMsg");
+  const roles=[...document.querySelectorAll('input[name="edRole"]:checked')].map(c=>c.value);
+  if(!roles.length){showMsg(msg,"err","Select at least one role.");return;}
+  const payload={_id:id,title:v("edT"),name:v("edN"),username:v("edU"),roles,herb_senior:document.getElementById("edHS").checked};
+  if(v("edP")) payload.password=v("edP");
+  const res=await POST({action:"update_staff",payload});
+  if(res.ok){showMsg(msg,"ok","Account updated.");setTimeout(()=>{closeModal();renderStaff();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function toggleStaff(id,name,status){
+  if(!confirm(`${status==="revoked"?"Revoke":"Restore"} account for ${name}?`)) return;
+  const res=await POST({action:"update_staff",payload:{_id:id,status}});
+  if(res.ok) renderStaff();
+  else alert(res.error||"Failed.");
+}
+
+/* ── DELETE REQUESTS ── */
+async function renderDeleteReq(){
+  loading();
+  const isSup=(USER.roles||[]).includes("supervisor");
+  try{
+    const res=await GET({action:"read_delete_req"});
+    const rows=res.rows||[];
+    const pending=rows.filter(r=>r.status==="pending");
+    if(pending.length) document.getElementById("tbRight").innerHTML=`<span class="pill pill-o">${pending.length} pending</span>`;
+    set(`
+      <button class="btn btn-ghost" style="margin-bottom:.8rem" onclick="openReqDelete()">+ Request deletion</button>
+      <div class="panel">
+        <div class="panel-title">Delete requests <span>${rows.length} total</span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Request ID</th><th>Date</th><th>Sheet</th><th>Record</th><th>Reason</th><th>Requested by</th><th>Status</th><th>Reviewed by</th>${isSup?"<th>Action</th>":""}</tr></thead>
+          <tbody>${rows.slice().reverse().map(r=>`
+            <tr>
+              <td>${r.request_id||"—"}</td>
+              <td>${r._ts?r._ts.slice(0,10):"—"}</td>
+              <td>${r.sheet_name||"—"}</td>
+              <td style="max-width:120px;white-space:normal;font-size:.7rem">${r.record_summary||"—"}</td>
+              <td style="max-width:150px;white-space:normal;font-size:.7rem">${r.reason||"—"}</td>
+              <td style="font-size:.67rem">${r.requested_by||"—"}</td>
+              <td><span class="pill ${r.status==="approved"?"pill-g":r.status==="rejected"?"pill-r":"pill-o"}">${r.status||"pending"}</span></td>
+              <td style="font-size:.67rem">${r.reviewed_by||"—"}</td>
+              ${isSup&&r.status==="pending"?`<td>
+                <button class="btn btn-sm btn-primary" style="margin-right:.25rem" onclick="reviewDelete('${r.request_id}','approve')">Approve</button>
+                <button class="btn btn-sm btn-danger" onclick="reviewDelete('${r.request_id}','reject')">Reject</button>
+              </td>`:isSup?"<td>—</td>":""}
+            </tr>`).join("")||`<tr><td colspan="${isSup?9:8}" style="text-align:center;color:var(--muted)">No requests yet.</td></tr>`}
+          </tbody>
+        </table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function openReqDelete(){
+  openModal("Request record deletion",`
+    <div class="fg">
+      <div class="field full"><label>Sheet / Module *</label>
+        <select id="drSheet"><option value="">—</option>
+          <option value="patients">Patients</option>
+          <option value="visits">Visits</option>
+          <option value="ip_logs">Inpatient logs</option>
+          <option value="vitals">Vitals</option>
+          <option value="symptoms">Symptoms</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="consultations">Consultations</option>
+          <option value="herbs">Herb guide</option>
+          <option value="inventory">Inventory</option>
+          <option value="prescriptions">Prescriptions</option>
+          <option value="sales">Sales</option>
+          <option value="billing">Billing</option>
+        </select>
+        <div class="hint">Which module does the record belong to?</div>
+      </div>
+      <div class="field full"><label>Record ID / timestamp *</label>
+        <input type="text" id="drRecId" placeholder="e.g. KWC-OP-2026/001 or the _ts timestamp">
+        <div class="hint">The ID or timestamp of the record to delete</div>
+      </div>
+      <div class="field full"><label>Record summary</label>
+        <input type="text" id="drSummary" placeholder="Brief description of the record (e.g. patient name, date)">
+        <div class="hint">Help the Supervisor identify the record</div>
+      </div>
+      <div class="field full"><label>Reason for deletion *</label>
+        <textarea id="drReason" placeholder="Explain clearly why this record should be deleted…"></textarea>
+        <div class="hint">Required — Supervisor will review this reason before approving</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitDeleteReq()">Submit request</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="drMsg"></div>
+  `);
+}
+
+async function submitDeleteReq(){
+  const msg=document.getElementById("drMsg");
+  if(!v("drSheet")||!v("drRecId")||!v("drReason")){showMsg(msg,"err","Sheet, record ID and reason are required.");return;}
+  const payload={sheet_name:v("drSheet"),record_id:v("drRecId"),record_ts:v("drRecId"),record_summary:v("drSummary"),reason:v("drReason")};
+  const res=await POST({action:"request_delete",payload});
+  if(res.ok){showMsg(msg,"ok","Request submitted: "+res.request_id+" — Supervisor will review.");setTimeout(()=>{closeModal();renderDeleteReq();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function reviewDelete(reqId,action){
+  const note=action==="reject"?prompt("Enter reason for rejection (required):"):null;
+  if(action==="reject"&&!note) return;
+  if(!confirm(`${action==="approve"?"Approve and delete":"Reject"} this request?`)) return;
+  const res=await POST({action:"review_delete",payload:{request_id:reqId,action,review_note:note||"Approved by Supervisor"}});
+  if(res.ok) renderDeleteReq();
+  else alert(res.error||"Failed.");
+}
+
+/* ── REPORTS ── */
+async function renderReports(){
+  loading();
+  try{
+    const [ptRes,vRes,bRes,sRes]=await Promise.all([
+      GET({action:"read_patients"}),GET({action:"read_visits"}),
+      GET({action:"read_billing"}),GET({action:"read_sales"})
+    ]);
+    const pts=ptRes.rows||[],visits=vRes.rows||[],bills=bRes.rows||[],sales=sRes.rows||[];
+    const byCondition={};
+    pts.forEach(p=>{if(p.patient_type) byCondition[p.patient_type]=(byCondition[p.patient_type]||0)+1;});
+    set(`
+      <div class="panel">
+        <div class="panel-title">Summary report <span>all time</span></div>
+        <div class="kpis">
+          <div class="kpi gold"><div class="kpi-n">${pts.length}</div><div class="kpi-l">Patients registered</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--g)">${pts.filter(p=>p.patient_type==="OP").length}</div><div class="kpi-l">Outpatients</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--g)">${pts.filter(p=>p.patient_type==="IP").length}</div><div class="kpi-l">Inpatients</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--g)">${visits.filter(v=>v.discharged==="YES").length}</div><div class="kpi-l">Discharged</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--gold)">${bills.filter(b=>b.status==="paid").reduce((a,r)=>a+Number(r.total||0),0).toLocaleString()}</div><div class="kpi-l">Revenue (TSh)</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--g)">${sales.length}</div><div class="kpi-l">Herb sales</div></div>
+        </div>
+        <div style="margin-top:.75rem">
+          <b style="font-size:.8rem;color:var(--g)">Outcomes</b>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem">
+            ${["Improved","Stable","Referred","Did not complete"].map(o=>{
+              const n=visits.filter(v=>v.outcome===o).length;
+              return `<div style="background:var(--tint);border-radius:8px;padding:.5rem .75rem;font-size:.76rem">
+                <div style="font-weight:700;color:var(--g)">${n}</div>
+                <div style="color:var(--muted)">${o}</div>
+              </div>`;
+            }).join("")}
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Export data</div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="exportCSV(${JSON.stringify(pts)},'KWC_Patients')">⬇ Patients CSV</button>
+          <button class="btn btn-ghost" onclick="exportCSV(${JSON.stringify(visits)},'KWC_Visits')">⬇ Visits CSV</button>
+          <button class="btn btn-ghost" onclick="exportCSV(${JSON.stringify(bills)},'KWC_Billing')">⬇ Billing CSV</button>
+          <button class="btn btn-ghost" onclick="exportCSV(${JSON.stringify(sales)},'KWC_HerbSales')">⬇ Herb Sales CSV</button>
+        </div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function exportCSV(rows,name){
+  if(!rows||!rows.length){alert("No data to export.");return;}
+  const keys=Object.keys(rows[0]);
+  const esc=v=>{v=(v===undefined||v===null)?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const csv=keys.join(",")+"\n"+rows.map(r=>keys.map(k=>esc(r[k])).join(",")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));
+  a.download=name+"_"+new Date().toISOString().slice(0,10)+".csv";a.click();
+}
+
+/* ── CHANGE PASSWORD ── */
+function openChangePw(){
+  openModal("Change password",`
+    <div class="fg">
+      <div class="field full"><label>Current password</label><input type="password" id="cpCur" placeholder="Current password"><div class="hint">Enter your current password to verify</div></div>
+      <div class="field full"><label>New password *</label><input type="password" id="cpNew" placeholder="New password"><div class="hint">Case-sensitive — share new password securely</div></div>
+      <div class="field full"><label>Confirm new password *</label><input type="password" id="cpConf" placeholder="Repeat new password"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitChangePw()">Change password</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="cpMsg"></div>
+  `);
+}
+
+async function submitChangePw(){
+  const msg=document.getElementById("cpMsg");
+  if(v("cpCur")!==USER.password){showMsg(msg,"err","Current password is incorrect.");return;}
+  if(!v("cpNew")){showMsg(msg,"err","New password is required.");return;}
+  if(v("cpNew")!==v("cpConf")){showMsg(msg,"err","Passwords do not match.");return;}
+  const res=await POST({action:"change_password",new_password:v("cpNew")});
+  if(res.ok){USER.password=v("cpNew");showMsg(msg,"ok","Password changed successfully.");setTimeout(closeModal,1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── TANZANIA REGIONS & DISTRICTS ── */
+const TZ_REGIONS={"Arusha":["Arusha","Karatu","Longido","Meru","Monduli","Ngorongoro"],"Dar es Salaam":["Ilala","Kinondoni","Kigamboni","Temeke","Ubungo"],"Dodoma":["Bahi","Chamwino","Chemba","Dodoma","Kongwa","Kondoa","Mpwapwa"],"Geita":["Bukombe","Chato","Geita","Mbogwe","Nyanghwale"],"Iringa":["Iringa","Kilolo","Mafinga","Mufindi"],"Kagera":["Biharamulo","Bukoba","Karagwe","Kyerwa","Missenyi","Muleba","Ngara"],"Katavi":["Mlele","Mpanda","Nsimbo"],"Kigoma":["Buhigwe","Kakonko","Kasulu","Kibondo","Kigoma","Uvinza"],"Kilimanjaro":["Hai","Moshi","Mwanga","Rombo","Same","Siha","Vunjo"],"Lindi":["Kilwa","Lindi","Liwale","Nachingwea","Ruangwa"],"Manyara":["Babati","Hanang","Kiteto","Mbulu","Simanjiro"],"Mara":["Bunda","Butiama","Musoma","Rorya","Serengeti","Tarime"],"Mbeya":["Busokelo","Chunya","Kyela","Mbarali","Mbeya","Rungwe"],"Morogoro":["Gairo","Kilombero","Kilosa","Morogoro","Mvomero","Ulanga"],"Mtwara":["Masasi","Mtwara","Nanyumbu","Newala","Tandahimba"],"Mwanza":["Ilemela","Kwimba","Magu","Misungwi","Nyamagana","Sengerema","Ukerewe"],"Njombe":["Ludewa","Makete","Njombe","Wangingombe"],"Pwani":["Bagamoyo","Kibaha","Kisarawe","Mafia","Mkuranga","Rufiji"],"Rukwa":["Kalambo","Nkasi","Sumbawanga"],"Ruvuma":["Madaba","Mbinga","Namtumbo","Nyasa","Songea","Tunduru"],"Shinyanga":["Kahama","Kishapu","Shinyanga"],"Simiyu":["Bariadi","Busega","Itilima","Maswa","Meatu"],"Singida":["Ikungi","Iramba","Manyoni","Mkalama","Singida"],"Songwe":["Ileje","Mbozi","Momba","Songwe"],"Tabora":["Igunga","Kaliua","Nzega","Sikonge","Tabora","Urambo","Uyui"],"Tanga":["Handeni","Kilindi","Korogwe","Lushoto","Mkinga","Muheza","Pangani","Tanga"],"Pemba North":["Micheweni","Wete"],"Pemba South":["Chake Chake","Mkoani"],"Unguja North":["Kaskazini A","Kaskazini B"],"Unguja South":["Kati","Kusini"],"Zanzibar Urban":["Magharibi","Mjini"]};
+
+function populateRegions(selId){
+  const sel=document.getElementById(selId);
+  if(!sel) return;
+  const cur=sel.value;
+  sel.innerHTML=`<option value="">— Select region —</option>`+Object.keys(TZ_REGIONS).sort().map(r=>`<option value="${r}" ${r===cur?"selected":""}>${r}</option>`).join("");
+}
+
+function loadDistricts(regionSelId,districtSelId){
+  const reg=document.getElementById(regionSelId)?.value;
+  const dSel=document.getElementById(districtSelId);
+  if(!dSel) return;
+  const districts=TZ_REGIONS[reg]||[];
+  dSel.innerHTML=`<option value="">— Select district —</option>`+districts.map(d=>`<option value="${d}">${d}</option>`).join("");
+}
+
+const _origOpenRegPt=openRegPt;
+function openRegPt(){
+  _origOpenRegPt();
+  setTimeout(()=>populateRegions("ptRegion"),60);
+}
+
+/* ── MEDICATION DYNAMIC LIST ── */
+let medCount=0;
+function addMedRow(name="",dose="",freq="",dur=""){
+  medCount++;
+  const wrap=document.getElementById("medsWrap");
+  if(!wrap) return;
+  const div=document.createElement("div");
+  div.style.cssText="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:.3rem;align-items:center;background:var(--tint);border-radius:8px;padding:.4rem .5rem";
+  div.dataset.mid=medCount;
+  div.innerHTML=`
+    <input type="text" class="med-name" placeholder="Medication name" value="${name}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;font:inherit;font-size:.74rem">
+    <input type="text" class="med-dose" placeholder="Dose e.g. 500mg" value="${dose}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;font:inherit;font-size:.74rem">
+    <input type="text" class="med-freq" placeholder="Frequency e.g. 3x/day" value="${freq}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;font:inherit;font-size:.74rem">
+    <input type="text" class="med-dur" placeholder="Duration e.g. 6mo" value="${dur}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;font:inherit;font-size:.74rem">
+    <button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.3rem .45rem;cursor:pointer;font-size:.78rem" onclick="this.parentElement.remove()">✕</button>`;
+  div.querySelector(".med-dur").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addMedRow();}});
+  wrap.appendChild(div);
+  div.querySelector(".med-name").focus();
+}
+
+function collectMeds(){
+  return [...document.querySelectorAll("#medsWrap [data-mid]")].map(r=>({
+    name:r.querySelector(".med-name").value.trim(),
+    dose:r.querySelector(".med-dose").value.trim(),
+    freq:r.querySelector(".med-freq").value.trim(),
+    duration:r.querySelector(".med-dur").value.trim()
+  })).filter(m=>m.name);
+}
+
+document.addEventListener("click",e=>{if(e.target&&e.target.id==="addMedBtn")addMedRow();});
+
+/* ── EDIT & DELETE ICONS ── */
+function editDeleteCell(ts,sheetKey,summary,editFn){
+  const isSup=(USER.roles||[]).includes("supervisor");
+  return `<td style="white-space:nowrap;text-align:center">
+    ${editFn?`<button class="btn btn-sm btn-ghost" style="padding:.22rem .4rem;margin-right:.2rem" onclick="${editFn}" title="Edit">✏️</button>`:""}
+    <button class="btn btn-sm" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);padding:.22rem .4rem"
+      onclick="requestOrDelete('${ts}','${sheetKey}','${(summary||"").replace(/'/g,"\\'")}','${isSup}')" title="Delete">🗑</button>
+  </td>`;
+}
+
+async function requestOrDelete(ts,sheetKey,summary,isSup){
+  if(isSup==="true"){
+    if(!confirm(`Delete permanently?\n${summary}`)) return;
+    const res=await POST({action:"direct_delete",sheet:sheetKey,ts});
+    if(res.ok){const p=document.querySelector(".ni.active")?.dataset.page||"overview";navigate(p);}
+    else alert(res.error||"Failed.");
+  } else {
+    const reason=prompt(`Request deletion of:\n${summary}\n\nReason (required):`);
+    if(!reason) return;
+    const res=await POST({action:"request_delete",payload:{sheet_name:sheetKey,record_id:ts,record_ts:ts,record_summary:summary,reason}});
+    if(res.ok) alert("Delete request submitted — Supervisor will review.");
+    else alert(res.error||"Failed.");
+  }
+}
+
+/* ── TARGETED COMMENTS ── */
+async function openComments(refType,refId,refName){
+  const [cRes,sRes]=await Promise.all([GET({action:"read_comments"}),GET({action:"read_staff"})]);
+  const all=(cRes.rows||[]).filter(r=>r.ref_id===refId);
+  const staff=(sRes.rows||[]).filter(r=>r.status==="active");
+  openModal(`Comments — ${refName}`,`
+    <div style="margin-bottom:.75rem;max-height:260px;overflow-y:auto">
+      ${all.length?all.map(c=>`
+        <div style="background:${c.status==="resolved"?"var(--tint)":"#fff8e6"};border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem;margin-bottom:.4rem">
+          <div style="font-size:.73rem;font-weight:600;color:var(--g)">${c.comment}</div>
+          <div style="font-size:.63rem;color:var(--muted);margin-top:2px">
+            By: ${c.commented_by} → <b>${c.assigned_to||"General"}</b>${c.assigned_role?" ("+c.assigned_role+")":""} · ${c.date}
+            <span class="pill ${c.status==="resolved"?"pill-g":"pill-o"}" style="margin-left:.3rem">${c.status==="resolved"?"Resolved":"Open"}</span>
+          </div>
+          ${c.reply?`<div style="background:#fff;border-radius:6px;padding:.35rem .5rem;margin-top:.35rem;font-size:.7rem"><b>Reply:</b> ${c.reply} <span style="font-size:.6rem;color:var(--muted)">— ${c.replied_by} · ${c.reply_date}</span></div>`:""}
+          ${c.status!=="resolved"?`<div style="margin-top:.35rem;display:flex;gap:.3rem">
+            <input type="text" id="rep_${c._id}" placeholder="Type reply…" style="flex:1;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.28rem .45rem;font:inherit;font-size:.71rem">
+            <button class="btn btn-sm btn-primary" onclick="submitReply('${c._id}')">Reply</button>
+          </div>`:""}
+        </div>`).join(""):`<div class="empty" style="padding:1rem 0">No comments yet.</div>`}
+    </div>
+    <div style="border-top:1px solid var(--line);padding-top:.65rem">
+      <div style="font-size:.76rem;font-weight:700;color:var(--g);margin-bottom:.5rem">Add comment</div>
+      <div class="fg">
+        <div class="field full"><label>Comment *</label><textarea id="newComment" placeholder="Write your observation or instruction…" style="min-height:50px"></textarea></div>
+        <div class="field"><label>Assign to *</label>
+          <select id="assignTo">
+            <option value="">— General (no assignment) —</option>
+            ${staff.map(s=>`<option value="${(s.title||"")} ${s.name}||${s.roles||""}">${s.title||""} ${s.name}</option>`).join("")}
+          </select>
+          <div class="hint">Who must read and respond</div>
+        </div>
+        <div class="field"><label>Record</label><input type="text" value="${refName}" readonly style="background:var(--tint);font-size:.76rem"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitTargetedComment('${refType}','${refId}','${refName.replace(/'/g,"\\'")}')">Send comment</button>
+      </div>
+      <div class="msg" id="commentModalMsg"></div>
+    </div>
+  `);
+}
+
+async function submitTargetedComment(refType,refId,refName){
+  const msg=document.getElementById("commentModalMsg");
+  const txt=document.getElementById("newComment")?.value.trim();
+  if(!txt){showMsg(msg,"err","Write a comment first.");return;}
+  const assignSel=(document.getElementById("assignTo")?.value||"").split("||");
+  const res=await POST({action:"add_comment",payload:{
+    ref_type:refType,ref_id:refId,ref_name:refName,
+    comment:txt,assigned_to:assignSel[0]||"",assigned_role:assignSel[1]||""
+  }});
+  if(res.ok){showMsg(msg,"ok","Comment sent.");setTimeout(()=>openComments(refType,refId,refName),800);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function submitReply(commentId){
+  const txt=document.getElementById("rep_"+commentId)?.value.trim();
+  if(!txt){alert("Write a reply first.");return;}
+  const res=await POST({action:"reply_comment",payload:{_id:commentId,reply:txt}});
+  if(res.ok) alert("Reply saved. Refresh comments to see it.");
+  else alert(res.error||"Failed.");
+}
+
+function commentBtn(refType,refId,refName){
+  return `<button class="btn btn-sm btn-ghost" style="padding:.22rem .45rem" onclick="openComments('${refType}','${refId}','${(refName||"").replace(/'/g,"\\'")}')" title="Comments">💬</button>`;
+}
+
+/* ── UTILITIES ── */
+function v(id){const el=document.getElementById(id);return el?el.value.trim():"";}
+function today(){return new Date().toISOString().slice(0,10);}
+function initials(str){return (str||"").split(" ").filter(Boolean).map(w=>w[0]).join("").slice(0,2).toUpperCase()||"—";}
+function byLine(){return (USER.title?USER.title+" ":"")+USER.name+" ("+(USER.roles||[]).join(", ")+")";}
+function showMsg(el,type,msg){if(!el)return;el.className="msg msg-"+(type==="ok"?"ok":type==="warn"?"warn":"err")+" show";el.textContent=msg;}
+
+function openModal(title,body){
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalBody").innerHTML=body;
+  document.getElementById("modalBg").classList.add("open");
+  document.getElementById("modalBg").scrollTop=0;
+}
+function closeModal(){document.getElementById("modalBg").classList.remove("open");}
+
+function switchTab(tabEl,panelId){
+  const modal=tabEl.closest(".modal")||document.getElementById("pageContent");
+  modal.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  modal.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  tabEl.classList.add("active");
+  const panel=document.getElementById(panelId);
+  if(panel) panel.classList.add("active");
+}
+
+function calcBMI(wtId,htId,displayId){
+  const w=parseFloat(document.getElementById(wtId)?.value||0);
+  const h=parseFloat(document.getElementById(htId)?.value||0)/100;
+  const el=document.getElementById(displayId);
+  if(!el) return;
+  if(w&&h&&h>0){
+    const bmi=(w/(h*h)).toFixed(1);
+    let cat=bmi<18.5?"Underweight":bmi<25?"Normal":bmi<30?"Overweight":"Obese";
+    el.textContent=`BMI: ${bmi} — ${cat}`;
+    el.className="bmi-display show";
+    el.style.color=bmi<18.5?"#0C447C":bmi<25?"#085041":bmi<30?"#633806":"#8c2828";
+  }else{
+    el.className="bmi-display";
+  }
+}
+</script>
+</body>
+</html>
