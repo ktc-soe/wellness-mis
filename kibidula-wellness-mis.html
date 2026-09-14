@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kibidula Wellness MIS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --green:#163A2B;--green2:#1f4f3a;--green3:#0d2419;
+  --gold:#C29B3B;--gold2:#e7d3a1;--gold3:#fdf8ee;
+  --paper:#f4f3ee;--card:#ffffff;--tint:#edf2ec;
+  --ink:#1a231d;--muted:#5a6b5e;--line:#dde3d8;
+  --ok:#2a7a4b;--err:#b03030;--warn:#854F0B;
+  --r:12px;--sh:0 1px 3px rgba(22,58,43,.07),0 6px 18px rgba(22,58,43,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--green)}
+/* ── login ── */
+.login-wrap{min-height:100vh;display:grid;place-items:center;background:var(--green);padding:1rem}
+.login-card{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.login-logo{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.login-badge{width:44px;height:44px;border-radius:11px;background:var(--green);display:grid;place-items:center;font-weight:900;font-size:.85rem;color:var(--gold)}
+.login-title{font-size:1.05rem;font-weight:700;color:var(--green);line-height:1.2}
+.login-sub{font-size:.72rem;color:var(--muted)}
+.lf{margin-bottom:.85rem}
+.lf label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+.lf input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.6rem .75rem;font:inherit;color:var(--ink)}
+.lf input:focus{outline:none;border-color:var(--gold)}
+.login-btn{width:100%;background:var(--green);color:var(--gold);border:none;border-radius:10px;padding:.75rem;font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;margin-top:.3rem}
+.login-btn:hover{background:var(--green2)}
+.login-btn:disabled{opacity:.6;cursor:progress}
+.login-err{margin-top:.65rem;padding:.55rem .75rem;background:#fbe8e8;color:#8c2828;border-radius:8px;font-size:.8rem;display:none}
+.login-err.show{display:block}
+/* ── shell ── */
+.shell{display:none;height:100vh;overflow:hidden;flex-direction:row}
+.shell.active{display:flex}
+/* ── sidebar ── */
+.sidebar{width:210px;flex:0 0 210px;background:var(--green);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:14px 13px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo{display:flex;align-items:center;gap:.65rem}
+.sb-badge{width:32px;height:32px;border-radius:8px;background:var(--gold);color:var(--green);display:grid;place-items:center;font-weight:900;font-size:.75rem;flex:0 0 auto}
+.sb-name{color:#fff;font-size:.82rem;font-weight:700;line-height:1.2}
+.sb-dept{color:rgba(255,255,255,.5);font-size:.62rem}
+.sb-user{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--green);display:grid;place-items:center;font-size:.65rem;font-weight:800;flex:0 0 auto}
+.sb-urow{display:flex;align-items:center;gap:.6rem}
+.sb-uname{color:#fff;font-size:.75rem;font-weight:600;line-height:1.2}
+.sb-roles{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.srole{font-size:.55rem;padding:1px 5px;border-radius:99px;font-weight:700}
+.srole-supervisor{background:var(--gold);color:var(--green)}
+.srole-administrator{background:#378ADD;color:#042C53}
+.srole-receptionist{background:#1D9E75;color:#04342C}
+.srole-practitioner{background:#7F77DD;color:#26215C}
+.srole-herbalist{background:#D85A30;color:#4A1B0C}
+.sb-nav{flex:1;padding:6px 0;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:.6rem;padding:8px 13px;color:rgba(255,255,255,.6);font-size:.77rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.ni:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.ni.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--gold)}
+.ni i{font-size:15px;width:16px;flex:0 0 auto}
+.sb-foot{padding:10px 13px;border-top:1px solid rgba(255,255,255,.1)}
+.signout{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.45);font-size:.72rem;cursor:pointer}
+.signout:hover{color:rgba(255,255,255,.75)}
+/* ── main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--line);padding:.7rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.page-title{font-size:1rem;font-weight:700;color:var(--green)}
+.tb-pills{display:flex;gap:.4rem;align-items:center}
+.pill{font-size:.65rem;padding:2px 8px;border-radius:99px;font-weight:600}
+.pill-g{background:#e1f5ee;color:#085041}
+.pill-b{background:#e6f1fb;color:#0C447C}
+.pill-o{background:#faeeda;color:#633806}
+.pill-r{background:#fbe8e8;color:#8c2828}
+.content{flex:1;overflow-y:auto;padding:1rem 1.25rem 2rem}
+/* ── cards & panels ── */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:1rem 1.1rem;margin-bottom:.85rem}
+.panel-title{font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between}
+.panel-title span{font-weight:400;color:var(--muted);font-size:.72rem}
+/* ── kpis ── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-bottom:.85rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:.85rem 1rem}
+.kpi-n{font-size:1.6rem;font-weight:800;color:var(--green);line-height:1}
+.kpi-l{font-size:.68rem;color:var(--muted);margin-top:.25rem}
+.kpi.gold{background:var(--green)}
+.kpi.gold .kpi-n{color:var(--gold2)}
+.kpi.gold .kpi-l{color:rgba(255,255,255,.7)}
+/* ── tables ── */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.78rem}
+th,td{border:1px solid var(--line);padding:.42rem .55rem;text-align:left;white-space:nowrap}
+th{background:var(--green);color:#fff;font-weight:600;border-color:var(--green2)}
+tbody tr:nth-child(even){background:var(--tint)}
+td.right{text-align:right}
+/* ── forms ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.field{display:flex;flex-direction:column;gap:.28rem}
+.field label{font-size:.72rem;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.52rem .65rem;font:inherit;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,155,59,.12)}
+.field textarea{min-height:64px;resize:vertical}
+.field.full{grid-column:1/-1}
+.certify{grid-column:1/-1;display:flex;align-items:flex-start;gap:.5rem;background:var(--tint);border-radius:9px;padding:.65rem .75rem;margin-top:.25rem}
+.certify input[type=checkbox]{margin-top:3px;flex:0 0 auto;accent-color:var(--green)}
+.cert-text{font-size:.72rem;color:var(--green);font-weight:600}
+.cert-by{font-size:.65rem;color:var(--muted);margin-top:2px}
+.form-actions{margin-top:.85rem;display:flex;gap:.5rem;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:10px;padding:.65rem 1.1rem;font-size:.85rem}
+.btn-primary{background:var(--gold);color:var(--green)}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-primary:disabled{opacity:.55;cursor:progress}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--green)}
+.btn-danger{background:#fbe8e8;border:1.5px solid #eec3c3;color:var(--err)}
+.msg{padding:.6rem .8rem;border-radius:9px;font-size:.82rem;display:none;margin-top:.5rem}
+.msg.show{display:block}
+.msg-ok{background:#e5f3eb;color:#1b5e38;border:1px solid #b8dfc8}
+.msg-err{background:#fbe8e8;color:#8c2828;border:1px solid #edc0c0}
+/* ── search bar ── */
+.search-bar{display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap;align-items:center}
+.search-bar input,.search-bar select{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.5rem .7rem;font:inherit;font-size:.82rem;color:var(--ink)}
+.search-bar input{flex:1;min-width:180px}
+/* ── staff cards ── */
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.7rem}
+.staff-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:.9rem 1rem}
+.sc-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.sc-av{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--green);display:grid;place-items:center;font-size:.72rem;font-weight:800;flex:0 0 auto}
+.sc-name{font-size:.82rem;font-weight:700;color:var(--ink)}
+.sc-user{font-size:.66rem;color:var(--muted)}
+.sc-roles{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.6rem}
+.sc-foot{display:flex;justify-content:space-between;align-items:center}
+.sc-status{font-size:.62rem;padding:2px 7px;border-radius:99px;font-weight:600}
+.sc-active{background:#e1f5ee;color:#085041}
+.sc-revoked{background:#fbe8e8;color:#8c2828}
+.sc-actions{display:flex;gap:.3rem}
+.sc-btn{font-size:.65rem;padding:3px 8px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--green);cursor:pointer}
+.sc-btn:hover{background:var(--tint)}
+.sc-btn.danger{color:var(--err);border-color:#eec3c3}
+/* ── herb cards ── */
+.herb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem}
+.herb-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:.85rem 1rem}
+.herb-name{font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:.2rem}
+.herb-cond{font-size:.68rem;color:var(--muted);margin-bottom:.4rem}
+.herb-tag{display:inline-block;font-size:.62rem;background:var(--tint);color:var(--green);border-radius:99px;padding:1px 6px;margin-right:2px}
+.herb-price{font-size:.68rem;color:var(--muted);margin-top:.4rem}
+.low-stock-badge{float:right;font-size:.6rem;background:#fbe8e8;color:#8c2828;border-radius:99px;padding:1px 6px}
+/* ── patient list rows ── */
+.pt-row{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:1px solid var(--line)}
+.pt-row:last-child{border:none}
+.pt-av{width:30px;height:30px;border-radius:50%;background:var(--tint);color:var(--green);display:grid;place-items:center;font-size:.68rem;font-weight:700;flex:0 0 auto}
+.pt-name{font-size:.8rem;font-weight:600;flex:1}
+.pt-meta{font-size:.66rem;color:var(--muted)}
+.pt-badge{font-size:.62rem;padding:2px 6px;border-radius:99px;font-weight:600;background:var(--tint);color:var(--green)}
+/* ── read-only banner ── */
+.ro-pill{font-size:.65rem;padding:2px 8px;border-radius:99px;background:#faeeda;color:#633806;font-weight:600}
+/* ── activity log ── */
+.activity-row{padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.75rem}
+.activity-row:last-child{border:none}
+.activity-time{font-size:.64rem;color:var(--muted)}
+.activity-by{font-size:.63rem;color:var(--muted);margin-top:1px}
+/* ── comment ── */
+.comment-item{padding:.5rem 0;border-bottom:1px solid var(--line)}
+.comment-item:last-child{border:none}
+.comment-text{font-size:.78rem;color:var(--ink)}
+.comment-meta{font-size:.64rem;color:var(--muted);margin-top:2px}
+/* ── modal overlay ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:1.4rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--line)}
+.modal-close{float:right;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);line-height:1}
+/* ── empty state ── */
+.empty{text-align:center;color:var(--muted);padding:2.5rem 1rem;font-size:.85rem}
+.loading-state{text-align:center;color:var(--muted);padding:2rem;font-size:.85rem}
+/* ── roles checkboxes ── */
+.role-checks{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.25rem}
+.role-check{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border:1.5px solid var(--line);border-radius:99px;cursor:pointer;font-size:.74rem;background:#fff}
+.role-check:has(input:checked){background:var(--tint);border-color:var(--gold);color:var(--green);font-weight:600}
+.role-check input{width:auto;accent-color:var(--green)}
+@media(max-width:640px){
+  .sidebar{width:180px;flex:0 0 180px}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+  .certify{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-badge">KW</div>
+      <div>
+        <div class="login-title">Kibidula Wellness MIS</div>
+        <div class="login-sub">Kibidula Wellness Department</div>
+      </div>
+    </div>
+    <div class="lf">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username">
+    </div>
+    <div class="lf">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="loginBtn">Sign in</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ══════════ APP SHELL ══════════ -->
+<div class="shell" id="appShell">
+
+  <!-- sidebar -->
+  <div class="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="sb-badge">KW</div>
+        <div>
+          <div class="sb-name">Kibidula Wellness</div>
+          <div class="sb-dept">Management Information System</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-urow">
+        <div class="sb-avatar" id="sbAvatar">--</div>
+        <div>
+          <div class="sb-uname" id="sbName">--</div>
+          <div class="sb-roles" id="sbRoles"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-nav" id="sbNav">
+      <div class="ni" data-page="overview" data-access="overview"><i class="ti ti-chart-bar" aria-hidden="true"></i>Overview</div>
+      <div class="ni" data-page="patients" data-access="patients"><i class="ti ti-users" aria-hidden="true"></i>Patients</div>
+      <div class="ni" data-page="outpatient" data-access="outpatient"><i class="ti ti-stethoscope" aria-hidden="true"></i>Outpatient</div>
+      <div class="ni" data-page="inpatient" data-access="inpatient"><i class="ti ti-bed" aria-hidden="true"></i>Inpatient</div>
+      <div class="ni" data-page="herbs" data-access="herbs"><i class="ti ti-leaf" aria-hidden="true"></i>Natural herbs</div>
+      <div class="ni" data-page="inventory" data-access="inventory"><i class="ti ti-package" aria-hidden="true"></i>Herb inventory</div>
+      <div class="ni" data-page="sales" data-access="sales"><i class="ti ti-shopping-cart" aria-hidden="true"></i>Herb sales</div>
+      <div class="ni" data-page="staff" data-access="staff"><i class="ti ti-users-group" aria-hidden="true"></i>Staff accounts</div>
+    </div>
+    <div class="sb-foot">
+      <div class="signout" id="signoutBtn"><i class="ti ti-logout" aria-hidden="true"></i>Sign out</div>
+    </div>
+  </div>
+
+  <!-- main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Overview</div>
+      <div class="tb-pills" id="tbPills"></div>
+    </div>
+    <div class="content" id="pageContent">
+      <div class="loading-state">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title" id="modalTitle">Modal</div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   CONFIG
+   ================================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHl6x0oWy-BxOvmizuNMWEBlNuDecL9USz5d1tDJ6GvF_d3Dx9ZXNHtnFD5gd-HfyXow/exec";
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let USER = null;
+let CACHE = {};
+
+/* ================================================================
+   API
+   ================================================================ */
+async function apiGet(params){
+  const q = new URLSearchParams({...params, username:USER.username, password:USER.password});
+  const res = await fetch(SCRIPT_URL+"?"+q);
+  return res.json();
+}
+async function apiPost(body){
+  const res = await fetch(SCRIPT_URL, {
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify({...body, username:USER.username, password:USER.password})
+  });
+  return res.json();
+}
+
+/* ================================================================
+   AUTH
+   ================================================================ */
+document.getElementById("loginBtn").addEventListener("click", doLogin);
+document.getElementById("loginPass").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+
+async function doLogin(){
+  const btn = document.getElementById("loginBtn");
+  const err = document.getElementById("loginErr");
+  const u = document.getElementById("loginUser").value.trim();
+  const p = document.getElementById("loginPass").value;
+  if(!u||!p){ showErr(err,"Enter username and password."); return; }
+  btn.disabled=true; btn.textContent="Signing in…";
+  err.classList.remove("show");
+  try{
+    const q = new URLSearchParams({action:"login",username:u,password:p});
+    const res = await fetch(SCRIPT_URL+"?"+q);
+    const data = await res.json();
+    if(data.ok){
+      USER = data;
+      USER.username = u;
+      USER.password = p;
+      bootApp();
+    } else {
+      showErr(err, data.error||"Sign-in failed.");
+    }
+  }catch(e){
+    showErr(err,"Could not connect. Check your internet connection.");
+  }finally{
+    btn.disabled=false; btn.textContent="Sign in";
+  }
+}
+
+function showErr(el,msg){ el.textContent=msg; el.classList.add("show"); }
+
+function bootApp(){
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("appShell").classList.add("active");
+  // sidebar user info
+  const initials = (USER.title+" "+USER.name).split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+  document.getElementById("sbAvatar").textContent=initials;
+  document.getElementById("sbName").textContent=(USER.title?USER.title+" ":"")+USER.name;
+  const rolesEl=document.getElementById("sbRoles");
+  rolesEl.innerHTML=(USER.roles||[]).map(r=>`<span class="srole srole-${r}">${cap(r)}</span>`).join("");
+  // show only accessible nav items
+  document.querySelectorAll(".ni").forEach(ni=>{
+    const acc=ni.dataset.access;
+    ni.style.display=(USER.access||[]).includes(acc)?"flex":"none";
+  });
+  // nav click
+  document.querySelectorAll(".ni").forEach(ni=>{
+    ni.addEventListener("click",()=>navigate(ni.dataset.page));
+  });
+  document.getElementById("signoutBtn").addEventListener("click",()=>{
+    if(confirm("Sign out?")){ location.reload(); }
+  });
+  // go to first accessible page
+  const first = document.querySelector(".ni[style='display: flex;']")||document.querySelector(".ni");
+  if(first) navigate(first.dataset.page);
+}
+
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+function navigate(page){
+  document.querySelectorAll(".ni").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+  document.getElementById("tbPills").innerHTML="";
+  const titles={
+    overview:"Overview",patients:"Patients",outpatient:"Outpatient",
+    inpatient:"Inpatient daily log",herbs:"Natural herbs",
+    inventory:"Herb inventory",sales:"Herb sales",staff:"Staff accounts"
+  };
+  document.getElementById("pageTitle").textContent=titles[page]||page;
+  const renders={
+    overview:renderOverview,patients:renderPatients,outpatient:renderOutpatient,
+    inpatient:renderInpatient,herbs:renderHerbs,inventory:renderInventory,
+    sales:renderSales,staff:renderStaff
+  };
+  const fn=renders[page];
+  if(fn) fn();
+  else document.getElementById("pageContent").innerHTML=`<div class="empty">Page not available.</div>`;
+}
+
+/* ================================================================
+   OVERVIEW
+   ================================================================ */
+async function renderOverview(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading overview…</div>`;
+  const isAdmin=(USER.roles||[]).includes("administrator");
+  if(isAdmin){
+    document.getElementById("tbPills").innerHTML=`<span class="ro-pill">Read only</span>`;
+  }
+  try{
+    const [pRes,ipRes,opRes] = await Promise.all([
+      apiGet({action:"read_patients"}),
+      apiGet({action:"read_inpatient"}),
+      apiGet({action:"read_outpatient"})
+    ]);
+    const pts=pRes.rows||[], ip=ipRes.rows||[], op=opRes.rows||[];
+    // active inpatients = patients with at least one log
+    const ipPats=[...new Set(ip.map(r=>r.patient_id))];
+    const today=new Date().toISOString().slice(0,10);
+    const todayOp=op.filter(r=>r.date===today);
+    c.innerHTML=`
+      <div class="kpis">
+        <div class="kpi gold"><div class="kpi-n">${pts.length}</div><div class="kpi-l">Total patients</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--green)">${ipPats.length}</div><div class="kpi-l">Inpatient records</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--green)">${op.length}</div><div class="kpi-l">Outpatient visits</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--gold)">${todayOp.length}</div><div class="kpi-l">Visits today</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+        <div class="panel">
+          <div class="panel-title">Recent patients <span>latest 5</span></div>
+          ${pts.slice(-5).reverse().map(p=>`
+            <div class="pt-row">
+              <div class="pt-av">${initials2(p.title+" "+p.name)}</div>
+              <div><div class="pt-name">${p.title||""} ${p.name}</div>
+              <div class="pt-meta">${p.age||"—"}yrs · ${p.gender||"—"} · ${p.date||""}</div></div>
+            </div>`).join("")||`<div class="empty">No patients yet.</div>`}
+        </div>
+        <div class="panel">
+          <div class="panel-title">Recent activity <span>audit trail</span></div>
+          ${[...ip.slice(-3).reverse().map(r=>({time:r._ts,text:`Daily log — ${r.patient_name}`,by:r.logged_by})),
+             ...op.slice(-3).reverse().map(r=>({time:r._ts,text:`Outpatient — ${r.patient_name}`,by:r.recorded_by})),
+             ...pts.slice(-3).reverse().map(r=>({time:r._ts,text:`Registered — ${r.title||""} ${r.name}`,by:r.registered_by}))
+            ].sort((a,b)=>b.time.localeCompare(a.time)).slice(0,6)
+            .map(a=>`<div class="activity-row">
+              <div class="activity-time">${a.time.slice(0,16).replace("T"," ")}</div>
+              <div>${a.text}</div>
+              <div class="activity-by">${a.by||"—"}</div>
+            </div>`).join("")||`<div class="empty">No activity yet.</div>`}
+        </div>
+      </div>
+      ${isAdmin?`
+      <div class="panel" style="margin-top:.85rem">
+        <div class="panel-title">Leave a comment</div>
+        <div id="commentsList"></div>
+        <div style="margin-top:.7rem">
+          <textarea id="commentText" class="field" style="width:100%;min-height:60px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.5rem .7rem;font:inherit" placeholder="Add an observation or comment…"></textarea>
+          <button class="btn btn-primary" style="margin-top:.4rem" onclick="submitComment()">Add comment</button>
+          <div class="msg" id="commentMsg"></div>
+        </div>
+      </div>`:""}`;
+    if(isAdmin) loadComments();
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load overview. ${e.message}</div>`;
+  }
+}
+
+async function loadComments(){
+  const res=await apiGet({action:"read_comments"});
+  const rows=res.rows||[];
+  document.getElementById("commentsList").innerHTML=rows.slice(-10).reverse().map(r=>`
+    <div class="comment-item">
+      <div class="comment-text">${r.comment}</div>
+      <div class="comment-meta">${r.commented_by} · ${r.date}</div>
+    </div>`).join("")||`<div style="color:var(--muted);font-size:.78rem">No comments yet.</div>`;
+}
+
+async function submitComment(){
+  const txt=document.getElementById("commentText").value.trim();
+  const msg=document.getElementById("commentMsg");
+  if(!txt){ showMsg(msg,"err","Write a comment first."); return; }
+  const res=await apiPost({action:"add_comment",payload:{comment:txt,ref_type:"overview",ref_id:"",ref_name:"Overview"}});
+  if(res.ok){ document.getElementById("commentText").value=""; showMsg(msg,"ok","Comment added."); loadComments(); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   PATIENTS
+   ================================================================ */
+async function renderPatients(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading patients…</div>`;
+  const canAdd=(USER.access||[]).includes("patients");
+  try{
+    const res=await apiGet({action:"read_patients"});
+    const rows=res.rows||[];
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openRegisterPatient()">+ Register patient</button>`:""}
+      <div class="search-bar">
+        <input type="text" id="ptSearch" placeholder="Search by name…" oninput="filterPatients()">
+      </div>
+      <div class="panel">
+        <div class="panel-title">All patients <span>${rows.length} total</span></div>
+        <div id="ptList">${renderPatientList(rows)}</div>
+      </div>`;
+    window._ptRows=rows;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function renderPatientList(rows){
+  if(!rows.length) return `<div class="empty">No patients registered yet.</div>`;
+  return rows.slice().reverse().map(p=>`
+    <div class="pt-row">
+      <div class="pt-av">${initials2((p.title||"")+" "+(p.name||""))}</div>
+      <div style="flex:1">
+        <div class="pt-name">${p.title||""} ${p.name}</div>
+        <div class="pt-meta">${p.age||"—"}yrs · ${p.gender||"—"} · ${p.address||"—"} · ${p.phone||"—"}</div>
+      </div>
+      <div class="pt-meta">${p.date||""}</div>
+    </div>`).join("");
+}
+
+function filterPatients(){
+  const q=(document.getElementById("ptSearch").value||"").toLowerCase();
+  const filtered=(window._ptRows||[]).filter(p=>(p.name||"").toLowerCase().includes(q));
+  document.getElementById("ptList").innerHTML=renderPatientList(filtered);
+}
+
+function openRegisterPatient(){
+  const byLine=(USER.title?USER.title+" ":"")+USER.name+" ("+USER.roles.join(", ")+") · "+new Date().toLocaleDateString();
+  openModal("Register patient",`
+    <div class="form-grid">
+      <div class="field"><label>Title</label><select id="rTitle"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select></div>
+      <div class="field"><label>Full name *</label><input type="text" id="rName" placeholder="Full name"></div>
+      <div class="field"><label>Age</label><input type="number" id="rAge" placeholder="e.g. 45"></div>
+      <div class="field"><label>Gender</label><select id="rGender"><option value="">—</option><option>Female</option><option>Male</option><option>Other</option></select></div>
+      <div class="field"><label>Marital status</label><select id="rMarital"><option value="">—</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div>
+      <div class="field"><label>Occupation</label><input type="text" id="rOccupation" placeholder="e.g. Teacher"></div>
+      <div class="field"><label>Religion</label><input type="text" id="rReligion" placeholder="e.g. Christian"></div>
+      <div class="field"><label>Phone</label><input type="text" id="rPhone" placeholder="+255 7xx xxx xxx"></div>
+      <div class="field"><label>Email</label><input type="email" id="rEmail" placeholder="email@example.com"></div>
+      <div class="field"><label>Emergency contact</label><input type="text" id="rEmergency" placeholder="Name & number"></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="rWeight" placeholder="e.g. 70"></div>
+      <div class="field"><label>Height (cm)</label><input type="number" id="rHeight" placeholder="e.g. 155"></div>
+      <div class="field full"><label>Address</label><input type="text" id="rAddress" placeholder="Town, Region"></div>
+      <div class="field full"><label>Medical history</label><textarea id="rHistory" placeholder="Previous conditions, medications, allergies…"></textarea></div>
+      <div class="certify">
+        <input type="checkbox" id="rCert">
+        <div><div class="cert-text">I hereby certify that the above information for this patient is accurate and complete to the best of my knowledge.</div>
+        <div class="cert-by">Registered by: ${byLine}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitPatient()">Register patient</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="patMsg"></div>`);
+}
+
+async function submitPatient(){
+  const msg=document.getElementById("patMsg");
+  const name=document.getElementById("rName").value.trim();
+  if(!name){ showMsg(msg,"err","Full name is required."); return; }
+  if(!document.getElementById("rCert").checked){ showMsg(msg,"err","Please tick the certification checkbox."); return; }
+  const payload={
+    date:new Date().toISOString().slice(0,10),
+    title:v("rTitle"),name,age:v("rAge"),gender:v("rGender"),
+    marital_status:v("rMarital"),occupation:v("rOccupation"),religion:v("rReligion"),
+    address:v("rAddress"),phone:v("rPhone"),email:v("rEmail"),
+    emergency_contact:v("rEmergency"),weight:v("rWeight"),height:v("rHeight"),
+    medical_history:v("rHistory"),certified:true
+  };
+  const res=await apiPost({action:"add_patient",payload});
+  if(res.ok){ showMsg(msg,"ok","Patient registered."); setTimeout(()=>{closeModal();renderPatients();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   OUTPATIENT
+   ================================================================ */
+async function renderOutpatient(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  const canAdd=(USER.access||[]).includes("outpatient");
+  try{
+    const [opRes,ptRes]=await Promise.all([apiGet({action:"read_outpatient"}),apiGet({action:"read_patients"})]);
+    const rows=opRes.rows||[], pts=ptRes.rows||[];
+    window._opRows=rows; window._ptList=pts;
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openOutpatient()">+ New consultation</button>`:""}
+      <div class="panel">
+        <div class="panel-title">Outpatient consultations <span>${rows.length} total</span></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Date</th><th>Patient</th><th>Complaint</th><th>Diagnosis</th><th>Remedy</th><th>Follow-up</th><th>Recorded by</th></tr></thead>
+            <tbody>${rows.slice().reverse().map(r=>`
+              <tr>
+                <td>${r.date||"—"}</td>
+                <td>${r.patient_name||"—"}</td>
+                <td>${r.chief_complaint||"—"}</td>
+                <td>${r.diagnosis||"—"}</td>
+                <td>${r.remedy||"—"}</td>
+                <td>${r.followup_needed==="Yes"?`<span class="pill pill-o">Yes · ${r.followup_date||""}</span>`:"No"}</td>
+                <td>${r.recorded_by||"—"}</td>
+              </tr>`).join("")||`<tr><td colspan="7" style="text-align:center;color:var(--muted)">No records yet.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function openOutpatient(){
+  const pts=window._ptList||[];
+  const byLine=(USER.title?USER.title+" ":"")+USER.name+" ("+USER.roles.join(", ")+") · "+new Date().toLocaleDateString();
+  openModal("New outpatient consultation",`
+    <div class="form-grid">
+      <div class="field"><label>Date *</label><input type="date" id="opDate" value="${today()}"></div>
+      <div class="field"><label>Patient *</label><select id="opPatient"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p._id}||${p.title||""} ${p.name}">${p.title||""} ${p.name}</option>`).join("")}</select></div>
+      <div class="field full"><label>Chief complaint *</label><input type="text" id="opComplaint" placeholder="Main reason for visit"></div>
+      <div class="field"><label>Duration of symptoms</label><input type="text" id="opDuration" placeholder="e.g. 3 days"></div>
+      <div class="field"><label>Blood pressure</label><input type="text" id="opBP" placeholder="e.g. 120/80 mmHg"></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="opWeight" placeholder="e.g. 65"></div>
+      <div class="field"><label>Temperature (°C)</label><input type="number" id="opTemp" placeholder="e.g. 36.5"></div>
+      <div class="field"><label>Pulse (bpm)</label><input type="number" id="opPulse" placeholder="e.g. 72"></div>
+      <div class="field full"><label>Diagnosis / condition identified</label><input type="text" id="opDiag" placeholder="e.g. Hypertension"></div>
+      <div class="field full"><label>Herb / remedy prescribed</label><input type="text" id="opRemedy" placeholder="e.g. Ginger tea + garlic infusion"></div>
+      <div class="field"><label>Dosage &amp; preparation</label><input type="text" id="opDosage" placeholder="e.g. 2 cups/day"></div>
+      <div class="field"><label>Treatment duration (days)</label><input type="number" id="opDays" placeholder="e.g. 7"></div>
+      <div class="field"><label>Follow-up needed?</label><select id="opFollowup"><option>No</option><option>Yes</option></select></div>
+      <div class="field"><label>Follow-up date</label><input type="date" id="opFollowDate"></div>
+      <div class="field full"><label>Notes</label><textarea id="opNotes" placeholder="Additional observations…"></textarea></div>
+      <div class="certify">
+        <input type="checkbox" id="opCert">
+        <div><div class="cert-text">I hereby certify that the above consultation record is accurate and complete.</div>
+        <div class="cert-by">Recorded by: ${byLine}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitOutpatient()">Save consultation</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="opMsg"></div>`);
+}
+
+async function submitOutpatient(){
+  const msg=document.getElementById("opMsg");
+  const patSel=v("opPatient").split("||");
+  const patId=patSel[0], patName=patSel[1]||"";
+  if(!patId){ showMsg(msg,"err","Select a patient."); return; }
+  if(!v("opComplaint")){ showMsg(msg,"err","Chief complaint is required."); return; }
+  if(!document.getElementById("opCert").checked){ showMsg(msg,"err","Please tick the certification checkbox."); return; }
+  const payload={
+    patient_id:patId,patient_name:patName,date:v("opDate"),
+    chief_complaint:v("opComplaint"),duration:v("opDuration"),
+    vitals_bp:v("opBP"),vitals_weight:v("opWeight"),
+    vitals_temp:v("opTemp"),vitals_pulse:v("opPulse"),
+    diagnosis:v("opDiag"),remedy:v("opRemedy"),
+    dosage:v("opDosage"),treatment_days:v("opDays"),
+    followup_needed:v("opFollowup"),followup_date:v("opFollowDate"),
+    notes:v("opNotes"),certified:true
+  };
+  const res=await apiPost({action:"add_outpatient",payload});
+  if(res.ok){ showMsg(msg,"ok","Consultation saved."); setTimeout(()=>{closeModal();renderOutpatient();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   INPATIENT
+   ================================================================ */
+async function renderInpatient(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  const canAdd=(USER.access||[]).includes("inpatient");
+  try{
+    const [ipRes,ptRes]=await Promise.all([apiGet({action:"read_inpatient"}),apiGet({action:"read_patients"})]);
+    const rows=ipRes.rows||[], pts=ptRes.rows||[];
+    window._ipRows=rows; window._ptList=pts;
+    // group by patient
+    const byPat={};
+    rows.forEach(r=>{ if(!byPat[r.patient_id]) byPat[r.patient_id]=[]; byPat[r.patient_id].push(r); });
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openInpatient()">+ Add daily log</button>`:""}
+      <div class="panel">
+        <div class="panel-title">Inpatient logs <span>${rows.length} entries · ${Object.keys(byPat).length} patients</span></div>
+        <div class="search-bar"><select id="ipFilter" onchange="filterInpatient()"><option value="">All patients</option>${Object.keys(byPat).map(id=>{const r=byPat[id][0];return `<option value="${id}">${r.patient_name}</option>`;}).join("")}</select></div>
+        <div class="tablewrap" id="ipTable">
+          ${renderInpatientTable(rows)}
+        </div>
+      </div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function renderInpatientTable(rows){
+  if(!rows.length) return `<div class="empty">No daily logs yet.</div>`;
+  return `<table>
+    <thead><tr><th>Date</th><th>Patient</th><th>Complaint</th><th>BP</th><th>Weight</th><th>SpO2</th><th>Therapy</th><th>Progress</th><th>Logged by</th></tr></thead>
+    <tbody>${rows.slice().reverse().map(r=>`
+      <tr>
+        <td>${r.date||"—"}</td>
+        <td>${r.patient_name||"—"}</td>
+        <td>${r.main_complaint||"—"}</td>
+        <td>${r.vitals_bp||"—"}</td>
+        <td>${r.vitals_weight||"—"}</td>
+        <td>${r.vitals_spo2||"—"}</td>
+        <td>${(r.therapy||"").slice(0,40)}${(r.therapy||"").length>40?"…":""}</td>
+        <td>${(r.progress||"").slice(0,40)}${(r.progress||"").length>40?"…":""}</td>
+        <td>${r.logged_by||"—"}</td>
+      </tr>`).join("")}
+    </tbody></table>`;
+}
+
+function filterInpatient(){
+  const id=document.getElementById("ipFilter").value;
+  const rows=(window._ipRows||[]).filter(r=>!id||r.patient_id===id);
+  document.getElementById("ipTable").innerHTML=renderInpatientTable(rows);
+}
+
+function openInpatient(){
+  const pts=window._ptList||[];
+  const byLine=(USER.title?USER.title+" ":"")+USER.name+" ("+USER.roles.join(", ")+") · "+new Date().toLocaleDateString();
+  openModal("Add inpatient daily log",`
+    <div class="form-grid">
+      <div class="field"><label>Patient *</label><select id="ipPat"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p._id}||${p.title||""} ${p.name}">${p.title||""} ${p.name}</option>`).join("")}</select></div>
+      <div class="field"><label>Date *</label><input type="date" id="ipDate" value="${today()}"></div>
+      <div class="field"><label>Week number</label><input type="number" id="ipWeek" placeholder="e.g. 1"></div>
+      <div class="field full"><label>Main complaint today</label><input type="text" id="ipComplaint" placeholder="e.g. No complaint / mild back pain"></div>
+      <div class="field"><label>Blood pressure</label><input type="text" id="ipBP" placeholder="e.g. 110/70 mmHg"></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="ipWeight" placeholder="e.g. 64"></div>
+      <div class="field"><label>SpO2 (%)</label><input type="number" id="ipSpo2" placeholder="e.g. 98"></div>
+      <div class="field"><label>Pulse (bpm)</label><input type="number" id="ipPulse" placeholder="e.g. 88"></div>
+      <div class="field"><label>Temperature (°C)</label><input type="number" id="ipTemp" placeholder="e.g. 36.5"></div>
+      <div class="field full"><label>Therapy activities</label><textarea id="ipTherapy" placeholder="e.g. Hot and cold fomentations, massage…"></textarea></div>
+      <div class="field full"><label>Food</label><textarea id="ipFood" placeholder="e.g. Mango juice, green salad, oats…"></textarea></div>
+      <div class="field full"><label>Progress notes</label><textarea id="ipProgress" placeholder="e.g. Good progress. No pain reported."></textarea></div>
+      <div class="certify">
+        <input type="checkbox" id="ipCert">
+        <div><div class="cert-text">I hereby certify that the above daily log is accurate and complete.</div>
+        <div class="cert-by">Logged by: ${byLine}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitInpatient()">Save daily log</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="ipMsg"></div>`);
+}
+
+async function submitInpatient(){
+  const msg=document.getElementById("ipMsg");
+  const patSel=v("ipPat").split("||");
+  const patId=patSel[0], patName=patSel[1]||"";
+  if(!patId){ showMsg(msg,"err","Select a patient."); return; }
+  if(!document.getElementById("ipCert").checked){ showMsg(msg,"err","Please tick the certification checkbox."); return; }
+  const payload={
+    patient_id:patId,patient_name:patName,date:v("ipDate"),
+    week_number:v("ipWeek"),main_complaint:v("ipComplaint"),
+    vitals_bp:v("ipBP"),vitals_weight:v("ipWeight"),
+    vitals_spo2:v("ipSpo2"),vitals_pulse:v("ipPulse"),vitals_temp:v("ipTemp"),
+    therapy:v("ipTherapy"),food:v("ipFood"),progress:v("ipProgress"),certified:true
+  };
+  const res=await apiPost({action:"add_inpatient",payload});
+  if(res.ok){ showMsg(msg,"ok","Daily log saved."); setTimeout(()=>{closeModal();renderInpatient();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   NATURAL HERBS
+   ================================================================ */
+async function renderHerbs(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  const canAdd=(USER.access||[]).includes("herbs");
+  try{
+    const res=await apiGet({action:"read_herbs"});
+    const rows=res.rows||[];
+    window._herbRows=rows;
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openAddHerb()">+ Add herb</button>`:""}
+      <div class="search-bar">
+        <input type="text" id="herbSearch" placeholder="Search by herb or condition…" oninput="filterHerbs()">
+      </div>
+      <div id="herbGrid" class="herb-grid">${renderHerbCards(rows)}</div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function renderHerbCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No herbs in the guide yet.</div>`;
+  return rows.map(h=>`
+    <div class="herb-card">
+      <div class="herb-name">${h.name||"—"}</div>
+      <div class="herb-cond">${h.condition||"—"}</div>
+      ${h.category?`<span class="herb-tag">${h.category}</span>`:""}
+      <div class="herb-price" style="margin-top:.4rem"><strong>Preparation:</strong> ${(h.preparation||"—").slice(0,60)}${(h.preparation||"").length>60?"…":""}</div>
+      <div class="herb-price"><strong>Dosage:</strong> ${h.dosage||"—"}</div>
+      ${h.cautions?`<div class="herb-price" style="color:var(--err)"><strong>Caution:</strong> ${h.cautions}</div>`:""}
+      <div class="herb-price" style="color:var(--muted);font-size:.62rem;margin-top:.3rem">Added by: ${h.added_by||"—"}</div>
+    </div>`).join("");
+}
+
+function filterHerbs(){
+  const q=(document.getElementById("herbSearch").value||"").toLowerCase();
+  const filtered=(window._herbRows||[]).filter(h=>(h.name||"").toLowerCase().includes(q)||(h.condition||"").toLowerCase().includes(q));
+  document.getElementById("herbGrid").innerHTML=renderHerbCards(filtered);
+}
+
+function openAddHerb(){
+  const byLine=(USER.title?USER.title+" ":"")+USER.name;
+  openModal("Add herb to guide",`
+    <div class="form-grid">
+      <div class="field"><label>Herb name *</label><input type="text" id="hName" placeholder="e.g. Ginger (Tangawizi)"></div>
+      <div class="field"><label>Category</label><input type="text" id="hCat" placeholder="e.g. Root, Leaf, Oil"></div>
+      <div class="field full"><label>Condition(s) treated *</label><input type="text" id="hCond" placeholder="e.g. Nausea, indigestion, cold"></div>
+      <div class="field full"><label>Ingredients</label><textarea id="hIngr" placeholder="List ingredients or parts used…"></textarea></div>
+      <div class="field full"><label>Preparation method</label><textarea id="hPrep" placeholder="How to prepare this remedy…"></textarea></div>
+      <div class="field"><label>Dosage</label><input type="text" id="hDose" placeholder="e.g. 2 cups/day for 7 days"></div>
+      <div class="field"><label>Cautions / side effects</label><input type="text" id="hCaut" placeholder="e.g. Avoid in pregnancy"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitHerb()">Save herb</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="hMsg"></div>`);
+}
+
+async function submitHerb(){
+  const msg=document.getElementById("hMsg");
+  if(!v("hName")){ showMsg(msg,"err","Herb name is required."); return; }
+  const payload={name:v("hName"),category:v("hCat"),condition:v("hCond"),ingredients:v("hIngr"),preparation:v("hPrep"),dosage:v("hDose"),cautions:v("hCaut")};
+  const res=await apiPost({action:"add_herb",payload});
+  if(res.ok){ showMsg(msg,"ok","Herb added to guide."); setTimeout(()=>{closeModal();renderHerbs();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   INVENTORY
+   ================================================================ */
+async function renderInventory(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  const canAdd=(USER.access||[]).includes("inventory");
+  try{
+    const [invRes,hRes]=await Promise.all([apiGet({action:"read_inventory"}),apiGet({action:"read_herbs"})]);
+    const rows=invRes.rows||[], herbs=hRes.rows||[];
+    window._invRows=rows; window._herbList=herbs;
+    const lowStock=rows.filter(r=>r.low_stock_alert==="YES");
+    if(lowStock.length) document.getElementById("tbPills").innerHTML=`<span class="pill pill-o">${lowStock.length} low stock</span>`;
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openAddStock()">+ Add / restock</button>`:""}
+      <div class="panel">
+        <div class="panel-title">Herb inventory <span>${rows.length} records</span></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Herb</th><th>Quantity</th><th>Unit</th><th>Price (TZS)</th><th>Last restocked</th><th>Status</th><th>Updated by</th></tr></thead>
+            <tbody>${rows.slice().reverse().map(r=>`
+              <tr>
+                <td>${r.herb_name||"—"}</td>
+                <td class="right">${r.quantity||0}</td>
+                <td>${r.unit||"—"}</td>
+                <td class="right">${r.price_tzs?Number(r.price_tzs).toLocaleString():"—"}</td>
+                <td>${r.last_restocked||"—"}</td>
+                <td>${r.low_stock_alert==="YES"?`<span class="pill pill-r">Low stock</span>`:`<span class="pill pill-g">OK</span>`}</td>
+                <td>${r.updated_by||"—"}</td>
+              </tr>`).join("")||`<tr><td colspan="7" style="text-align:center;color:var(--muted)">No inventory records yet.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function openAddStock(){
+  const herbs=window._herbList||[];
+  openModal("Add / restock herb inventory",`
+    <div class="form-grid">
+      <div class="field"><label>Herb *</label><select id="invHerb"><option value="">— Select herb —</option>${herbs.map(h=>`<option>${h.name}</option>`).join("")}</select></div>
+      <div class="field"><label>Quantity *</label><input type="number" id="invQty" placeholder="e.g. 500"></div>
+      <div class="field"><label>Unit *</label><select id="invUnit"><option>Grams</option><option>Kilograms</option><option>Bottles</option><option>Sachets</option><option>Litres</option><option>Pieces</option></select></div>
+      <div class="field"><label>Price per unit (TZS)</label><input type="number" id="invPrice" placeholder="e.g. 2000"></div>
+      <div class="field full"><label>Notes</label><input type="text" id="invNotes" placeholder="e.g. New batch from Iringa"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitStock()">Save stock</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="invMsg"></div>`);
+}
+
+async function submitStock(){
+  const msg=document.getElementById("invMsg");
+  if(!v("invHerb")){ showMsg(msg,"err","Select a herb."); return; }
+  if(!v("invQty")){ showMsg(msg,"err","Quantity is required."); return; }
+  const payload={herb_name:v("invHerb"),quantity:v("invQty"),unit:v("invUnit"),price_tzs:v("invPrice"),notes:v("invNotes")};
+  const res=await apiPost({action:"add_inventory",payload});
+  if(res.ok){ showMsg(msg,"ok","Stock saved."); setTimeout(()=>{closeModal();renderInventory();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   HERB SALES
+   ================================================================ */
+async function renderSales(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  const canAdd=(USER.access||[]).includes("sales");
+  try{
+    const [sRes,hRes,ptRes]=await Promise.all([
+      apiGet({action:"read_sales"}),apiGet({action:"read_herbs"}),apiGet({action:"read_patients"})
+    ]);
+    const rows=sRes.rows||[], herbs=hRes.rows||[], pts=ptRes.rows||[];
+    window._salesRows=rows; window._herbList=herbs; window._ptList=pts;
+    const total=rows.reduce((a,r)=>a+Number(r.amount_tzs||0),0);
+    c.innerHTML=`
+      ${canAdd?`<button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openSale()">+ Record sale</button>`:""}
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi gold"><div class="kpi-n">${rows.length}</div><div class="kpi-l">Total sales</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--green)">${total.toLocaleString()}</div><div class="kpi-l">Total revenue (TZS)</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--green)">${[...new Set(rows.map(r=>r.herb_name))].length}</div><div class="kpi-l">Herbs sold</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Sales records</div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Date</th><th>Herb</th><th>Qty</th><th>Unit</th><th>Amount (TZS)</th><th>Patient</th><th>Recorded by</th></tr></thead>
+            <tbody>${rows.slice().reverse().map(r=>`
+              <tr>
+                <td>${r.date||"—"}</td>
+                <td>${r.herb_name||"—"}</td>
+                <td class="right">${r.quantity||"—"}</td>
+                <td>${r.unit||"—"}</td>
+                <td class="right">${r.amount_tzs?Number(r.amount_tzs).toLocaleString():"—"}</td>
+                <td>${r.patient_name||"—"}</td>
+                <td>${r.recorded_by||"—"}</td>
+              </tr>`).join("")||`<tr><td colspan="7" style="text-align:center;color:var(--muted)">No sales recorded yet.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load. ${e.message}</div>`;
+  }
+}
+
+function openSale(){
+  const herbs=window._herbList||[], pts=window._ptList||[];
+  const byLine=(USER.title?USER.title+" ":"")+USER.name+" ("+USER.roles.join(", ")+") · "+new Date().toLocaleDateString();
+  openModal("Record herb sale",`
+    <div class="form-grid">
+      <div class="field"><label>Date *</label><input type="date" id="salDate" value="${today()}"></div>
+      <div class="field"><label>Herb *</label><select id="salHerb"><option value="">— Select herb —</option>${herbs.map(h=>`<option>${h.name}</option>`).join("")}</select></div>
+      <div class="field"><label>Quantity *</label><input type="number" id="salQty" placeholder="e.g. 100"></div>
+      <div class="field"><label>Unit</label><select id="salUnit"><option>Grams</option><option>Kilograms</option><option>Bottles</option><option>Sachets</option><option>Pieces</option></select></div>
+      <div class="field"><label>Amount (TZS) *</label><input type="number" id="salAmt" placeholder="e.g. 5000"></div>
+      <div class="field"><label>Patient (optional)</label><select id="salPat"><option value="">— Select patient —</option>${pts.map(p=>`<option value="${p.title||""} ${p.name}">${p.title||""} ${p.name}</option>`).join("")}</select></div>
+      <div class="certify">
+        <input type="checkbox" id="salCert">
+        <div><div class="cert-text">I hereby certify that the above sale record is accurate and complete.</div>
+        <div class="cert-by">Recorded by: ${byLine}</div></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitSale()">Save sale</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="salMsg"></div>`);
+}
+
+async function submitSale(){
+  const msg=document.getElementById("salMsg");
+  if(!v("salHerb")){ showMsg(msg,"err","Select a herb."); return; }
+  if(!v("salAmt")){ showMsg(msg,"err","Amount is required."); return; }
+  if(!document.getElementById("salCert").checked){ showMsg(msg,"err","Please tick the certification checkbox."); return; }
+  const payload={date:v("salDate"),herb_name:v("salHerb"),quantity:v("salQty"),unit:v("salUnit"),amount_tzs:v("salAmt"),patient_name:v("salPat"),certified:true};
+  const res=await apiPost({action:"add_sale",payload});
+  if(res.ok){ showMsg(msg,"ok","Sale recorded."); setTimeout(()=>{closeModal();renderSales();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ================================================================
+   STAFF ACCOUNTS
+   ================================================================ */
+async function renderStaff(){
+  const c=document.getElementById("pageContent");
+  c.innerHTML=`<div class="loading-state">Loading…</div>`;
+  try{
+    const res=await apiGet({action:"read_staff"});
+    const rows=res.rows||[];
+    window._staffRows=rows;
+    const active=rows.filter(r=>r.status==="active").length;
+    const revoked=rows.filter(r=>r.status==="revoked").length;
+    document.getElementById("tbPills").innerHTML=`<span class="pill pill-g">${active} active</span>${revoked?`<span class="pill pill-r">${revoked} revoked</span>`:""}`;
+    c.innerHTML=`
+      <button class="btn btn-primary" style="margin-bottom:.85rem" onclick="openAddStaff()">+ Add staff account</button>
+      <div class="staff-grid" id="staffGrid">${renderStaffCards(rows)}</div>`;
+  }catch(e){
+    c.innerHTML=`<div class="empty">Could not load staff. ${e.message}</div>`;
+  }
+}
+
+function renderStaffCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No staff accounts yet.</div>`;
+  return rows.map(s=>{
+    const roles=s.roles?String(s.roles).split(",").map(r=>r.trim()).filter(Boolean):[];
+    const init=initials2((s.title||"")+" "+(s.name||""));
+    return `<div class="staff-card">
+      <div class="sc-head">
+        <div class="sc-av">${init}</div>
+        <div><div class="sc-name">${s.title||""} ${s.name||"—"}</div><div class="sc-user">@${s.username||"—"}</div></div>
+      </div>
+      <div class="sc-roles">${roles.map(r=>`<span class="srole srole-${r}">${cap(r)}</span>`).join("")}</div>
+      <div class="sc-foot">
+        <span class="sc-status ${s.status==="active"?"sc-active":"sc-revoked"}">${cap(s.status||"active")}</span>
+        <div class="sc-actions">
+          <button class="sc-btn" onclick="openEditStaff('${s._id}')">Edit</button>
+          ${s.status==="active"
+            ?`<button class="sc-btn danger" onclick="revokeStaff('${s._id}','${s.name}')">Revoke</button>`
+            :`<button class="sc-btn" onclick="restoreStaff('${s._id}','${s.name}')">Restore</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openAddStaff(){
+  openModal("Add staff account",`
+    <div class="form-grid">
+      <div class="field"><label>Title</label><select id="stTitle"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select></div>
+      <div class="field"><label>Full name *</label><input type="text" id="stName" placeholder="Full name"></div>
+      <div class="field"><label>Username *</label><input type="text" id="stUser" placeholder="e.g. grace.mwamba"></div>
+      <div class="field"><label>Password *</label><input type="text" id="stPass" placeholder="Set a password"></div>
+      <div class="field full">
+        <label>Roles (select one or more) *</label>
+        <div class="role-checks">
+          <label class="role-check"><input type="checkbox" name="stRole" value="receptionist">Receptionist</label>
+          <label class="role-check"><input type="checkbox" name="stRole" value="practitioner">Practitioner</label>
+          <label class="role-check"><input type="checkbox" name="stRole" value="herbalist">Herbalist</label>
+          <label class="role-check"><input type="checkbox" name="stRole" value="administrator">Administrator</label>
+          <label class="role-check"><input type="checkbox" name="stRole" value="supervisor">Supervisor</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitStaff()">Create account</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="stMsg"></div>`);
+}
+
+async function submitStaff(){
+  const msg=document.getElementById("stMsg");
+  const name=v("stName"), user=v("stUser"), pass=v("stPass");
+  const roles=[...document.querySelectorAll('input[name="stRole"]:checked')].map(c=>c.value);
+  if(!name){ showMsg(msg,"err","Full name is required."); return; }
+  if(!user){ showMsg(msg,"err","Username is required."); return; }
+  if(!pass){ showMsg(msg,"err","Password is required."); return; }
+  if(!roles.length){ showMsg(msg,"err","Select at least one role."); return; }
+  const payload={title:v("stTitle"),name,username:user,password:pass,roles};
+  const res=await apiPost({action:"add_staff",payload});
+  if(res.ok){ showMsg(msg,"ok","Account created."); setTimeout(()=>{closeModal();renderStaff();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function openEditStaff(id){
+  const s=(window._staffRows||[]).find(r=>r._id===id);
+  if(!s) return;
+  const existing=s.roles?String(s.roles).split(",").map(r=>r.trim()):[];
+  openModal("Edit staff account — "+s.name,`
+    <div class="form-grid">
+      <div class="field"><label>Title</label><select id="edTitle"><option value="">—</option><option ${s.title==="Mr."?"selected":""}>Mr.</option><option ${s.title==="Mrs."?"selected":""}>Mrs.</option><option ${s.title==="Ms."?"selected":""}>Ms.</option><option ${s.title==="Dr."?"selected":""}>Dr.</option><option ${s.title==="Prof."?"selected":""}>Prof.</option></select></div>
+      <div class="field"><label>Full name</label><input type="text" id="edName" value="${s.name||""}"></div>
+      <div class="field"><label>Username</label><input type="text" id="edUser" value="${s.username||""}"></div>
+      <div class="field"><label>New password (leave blank to keep)</label><input type="text" id="edPass" placeholder="New password"></div>
+      <div class="field full">
+        <label>Roles</label>
+        <div class="role-checks">
+          ${["receptionist","practitioner","herbalist","administrator","supervisor"].map(r=>`
+            <label class="role-check"><input type="checkbox" name="edRole" value="${r}" ${existing.includes(r)?"checked":""}>${cap(r)}</label>`).join("")}
+        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitEditStaff('${id}')">Save changes</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="msg" id="edMsg"></div>`);
+}
+
+async function submitEditStaff(id){
+  const msg=document.getElementById("edMsg");
+  const roles=[...document.querySelectorAll('input[name="edRole"]:checked')].map(c=>c.value);
+  if(!roles.length){ showMsg(msg,"err","Select at least one role."); return; }
+  const payload={_id:id,title:v("edTitle"),name:v("edName"),username:v("edUser"),roles};
+  const pass=v("edPass");
+  if(pass) payload.password=pass;
+  const res=await apiPost({action:"update_staff",payload});
+  if(res.ok){ showMsg(msg,"ok","Account updated."); setTimeout(()=>{closeModal();renderStaff();},1200); }
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function revokeStaff(id,name){
+  if(!confirm(`Revoke account for ${name}? They will no longer be able to log in.`)) return;
+  const res=await apiPost({action:"update_staff",payload:{_id:id,status:"revoked"}});
+  if(res.ok) renderStaff();
+  else alert(res.error||"Failed to revoke.");
+}
+
+async function restoreStaff(id,name){
+  if(!confirm(`Restore account for ${name}?`)) return;
+  const res=await apiPost({action:"update_staff",payload:{_id:id,status:"active"}});
+  if(res.ok) renderStaff();
+  else alert(res.error||"Failed to restore.");
+}
+
+/* ================================================================
+   MODAL HELPERS
+   ================================================================ */
+function openModal(title, body){
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalBody").innerHTML=body;
+  document.getElementById("modalBg").classList.add("open");
+}
+function closeModal(){
+  document.getElementById("modalBg").classList.remove("open");
+}
+document.getElementById("modalClose").addEventListener("click",closeModal);
+document.getElementById("modalBg").addEventListener("click",e=>{ if(e.target===document.getElementById("modalBg")) closeModal(); });
+
+/* ================================================================
+   UTILS
+   ================================================================ */
+function v(id){ const el=document.getElementById(id); return el?el.value.trim():""; }
+function today(){ return new Date().toISOString().slice(0,10); }
+function initials2(str){ return (str||"").split(" ").filter(Boolean).map(w=>w[0]).join("").slice(0,2).toUpperCase()||"—"; }
+function showMsg(el,type,msg){
+  el.className="msg msg-"+(type==="ok"?"ok":"err")+" show";
+  el.textContent=msg;
+}
+</script>
+</body>
+</html>
