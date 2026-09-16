@@ -1,0 +1,32 @@
+{
+  "name": "KWC · MIS — Kibidula Wellness Centre",
+  "short_name": "KWC · MIS",
+  "description": "Kibidula Wellness Centre Management Information System — Kituo cha Ustawi wa Afya",
+  "start_url": "./kwc-mis.html",
+  "display": "standalone",
+  "background_color": "#C29B3B",
+  "theme_color": "#163A2B",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "kwc-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "kwc-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "kwc-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "productivity"],
+  "lang": "en"
+}
