@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KWC · MIS — Kibidula Wellness Centre</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="kwc-icon.png">
+<meta name="theme-color" content="#163A2B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KWC · MIS">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--g:#163A2B;--g2:#1f4f3a;--gold:#C29B3B;--gold2:#e7d3a1;--paper:#f4f3ee;--card:#fff;--tint:#edf2ec;--ink:#1a231d;--muted:#5a6b5e;--line:#dde3d8;--ok:#2a7a4b;--err:#b03030;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.lw{min-height:100vh;display:grid;place-items:center;background:var(--g);padding:1rem}
+.lc{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:360px}
+.ll{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.lb2{width:44px;height:44px;border-radius:11px;background:var(--g);display:grid;place-items:center;font-weight:900;font-size:.85rem;color:var(--gold)}
+.lt{font-size:1.05rem;font-weight:700;color:var(--g)}.ls{font-size:.72rem;color:var(--muted)}
+.lf{margin-bottom:.85rem}.lf label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+.lf input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:.6rem .75rem;font:inherit;color:var(--ink)}
+.lf input:focus{outline:none;border-color:var(--gold)}
+.lf .hint{font-size:.63rem;color:var(--muted);margin-top:.2rem}
+.lbtn{width:100%;background:var(--g);color:var(--gold);border:none;border-radius:10px;padding:.75rem;font:inherit;font-weight:700;font-size:.95rem;cursor:pointer}
+.lbtn:disabled{opacity:.6;cursor:progress}
+.lerr{margin-top:.65rem;padding:.55rem .75rem;background:#fbe8e8;color:#8c2828;border-radius:8px;font-size:.8rem;display:none}
+.lerr.show{display:block}
+.shell{display:none;height:100vh;overflow:hidden}.shell.active{display:flex}
+.sb{width:215px;flex:0 0 215px;background:var(--g);display:flex;flex-direction:column;overflow:hidden}
+.sbh{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sblogo{display:flex;align-items:center;gap:.65rem}
+.sbbadge{width:32px;height:32px;border-radius:8px;background:var(--gold);color:var(--g);display:grid;place-items:center;font-weight:900;font-size:.75rem;flex:0 0 auto}
+.sbname{color:#fff;font-size:.82rem;font-weight:700;line-height:1.2}.sbsub{color:rgba(255,255,255,.4);font-size:.58rem;line-height:1.3}
+.sbu{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sbav{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--g);display:grid;place-items:center;font-size:.65rem;font-weight:800;flex:0 0 auto}
+.sburow{display:flex;align-items:center;gap:.6rem}
+.sbun{color:#fff;font-size:.75rem;font-weight:600}
+.sbrl{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.sr{font-size:.55rem;padding:1px 5px;border-radius:99px;font-weight:700}
+.sr-supervisor{background:var(--gold);color:var(--g)}.sr-administrator{background:#378ADD;color:#042C53}
+.sr-receptionist{background:#1D9E75;color:#04342C}.sr-practitioner{background:#7F77DD;color:#26215C}
+.sr-herbalist{background:#D85A30;color:#4A1B0C}
+.sbnav{flex:1;padding:5px 0;overflow-y:auto}
+.ns{font-size:.6rem;color:rgba(255,255,255,.3);padding:8px 12px 2px;text-transform:uppercase;letter-spacing:.08em}
+.ni{display:flex;align-items:center;gap:.6rem;padding:8px 12px;color:rgba(255,255,255,.6);font-size:.77rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.ni:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.ni.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--gold)}
+.ni svg{width:15px;height:15px;flex:0 0 auto;opacity:.75}
+.ni.active svg{opacity:1}
+.sbft{padding:10px 12px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:4px}
+.sbfb{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.45);font-size:.72rem;cursor:pointer;background:none;border:none;padding:3px 0;width:100%;text-align:left}
+.sbfb:hover{color:rgba(255,255,255,.75)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--line);padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.ptitle{font-size:1rem;font-weight:700;color:var(--g)}
+.tbr{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.content{flex:1;overflow-y:auto;padding:1rem 1.2rem 3rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.95rem 1.05rem;margin-bottom:.8rem}
+.pnt{font-size:.85rem;font-weight:700;color:var(--g);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
+.pnt span{font-weight:400;color:var(--muted);font-size:.7rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:.65rem;margin-bottom:.8rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.8rem .95rem}
+.kpin{font-size:1.55rem;font-weight:800;color:var(--g);line-height:1}.kpil{font-size:.66rem;color:var(--muted);margin-top:.2rem}
+.kpi.gold{background:var(--g)}.kpi.gold .kpin{color:var(--gold2)}.kpi.gold .kpil{color:rgba(255,255,255,.65)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.77rem}
+th{background:var(--g);color:#fff;font-weight:600;border-color:var(--g2);padding:.4rem .52rem;text-align:left;white-space:nowrap;cursor:pointer}
+th:hover{background:var(--g2)}
+th .sort-icon{margin-left:.3rem;opacity:.5;font-size:.65rem}
+th.asc .sort-icon::after{content:"▲"}
+th.desc .sort-icon::after{content:"▼"}
+th:not(.asc):not(.desc) .sort-icon::after{content:"⇅"}
+td{border:1px solid var(--line);padding:.4rem .52rem;text-align:left;white-space:nowrap}
+tbody tr:nth-child(even){background:var(--tint)}
+tbody tr:hover{background:#e8f0e6}
+td.r{text-align:right}
+.tlink{color:var(--g);cursor:pointer;text-decoration:underline;font-size:.75rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.field{display:flex;flex-direction:column;gap:.25rem}
+.field label{font-size:.7rem;font-weight:600;color:var(--muted)}
+.field .hint{font-size:.62rem;color:var(--muted);font-style:italic}
+.field input,.field select,.field textarea{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.5rem .62rem;font:inherit;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,155,59,.1)}
+.field textarea{min-height:58px;resize:vertical}
+.field.full{grid-column:1/-1}
+.ac-wrap{position:relative}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--gold);border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;display:none}
+.ac-list.open{display:block}
+.ac-item{padding:.4rem .65rem;font-size:.78rem;cursor:pointer;border-bottom:.5px solid var(--line)}
+.ac-item:hover{background:var(--tint)}
+.bmid{background:var(--tint);border-radius:7px;padding:.4rem .65rem;font-size:.8rem;font-weight:700;color:var(--g);margin-top:.2rem;display:none}
+.bmid.show{display:block}
+.certify{grid-column:1/-1;display:flex;align-items:flex-start;gap:.5rem;background:var(--tint);border-radius:8px;padding:.6rem .7rem;margin-top:.2rem}
+.certify input[type=checkbox]{margin-top:3px;flex:0 0 auto;accent-color:var(--g)}
+.ct{font-size:.7rem;color:var(--g);font-weight:600}.cb{font-size:.63rem;color:var(--muted);margin-top:2px}
+.fa{margin-top:.8rem;display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:9px;padding:.6rem 1rem;font-size:.82rem}
+.bp{background:var(--gold);color:var(--g)}.bp:hover{filter:brightness(1.04)}.bp:disabled{opacity:.55;cursor:progress}
+.bg{background:#fff;border:1.5px solid var(--line);color:var(--g)}
+.bd{background:#fbe8e8;border:1.5px solid #eec3c3;color:var(--err)}
+.bsm{padding:.35rem .65rem;font-size:.72rem;border-radius:7px}
+.pill{font-size:.63rem;padding:2px 7px;border-radius:99px;font-weight:600}
+.pg{background:#e1f5ee;color:#085041}.pb{background:#e6f1fb;color:#0C447C}
+.po{background:#faeeda;color:#633806}.pr{background:#fbe8e8;color:#8c2828}
+.pp{background:#EEEDFE;color:#3C3489}.prol{background:#faeeda;color:#633806}
+.msg{padding:.55rem .75rem;border-radius:8px;font-size:.8rem;display:none;margin-top:.45rem}
+.msg.show{display:block}.mok{background:#e5f3eb;color:#1b5e38;border:1px solid #b8dfc8}
+.merr{background:#fbe8e8;color:#8c2828;border:1px solid #edc0c0}
+.mwarn{background:#faeeda;color:#633806;border:1px solid #e7d3a1}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto}
+.mbg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:1.35rem;width:100%;max-width:640px;position:relative}
+.modal.wide{max-width:820px}
+.mt2{font-size:.98rem;font-weight:700;color:var(--g);margin-bottom:1rem;padding-bottom:.55rem;border-bottom:1px solid var(--line);padding-right:1.5rem}
+.mc{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)}
+.tabs{display:flex;gap:0;margin-bottom:1rem;border-bottom:1.5px solid var(--line);flex-wrap:wrap}
+.tab{padding:.55rem .9rem;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px}
+.tab.active{color:var(--g);border-bottom-color:var(--gold)}
+.tpanel{display:none}.tpanel.active{display:block}
+.s0{background:#f1efea;color:#5f6b62}.s1{background:#e1f5ee;color:#085041}
+.s2{background:#e6f1fb;color:#0C447C}.s3{background:#faeeda;color:#633806}
+.s4{background:#fde8d8;color:#7a3010}.s5{background:#fbe8e8;color:#8c2828}
+.ptg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.65rem}
+.ptcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:border-color .15s}
+.ptcard:hover{border-color:var(--gold)}
+.ptav{width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--g);display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:0 0 auto}
+.ptn{font-size:.85rem;font-weight:700;color:var(--ink)}
+.ptid{font-size:.68rem;color:var(--muted);font-family:monospace}
+.ptmeta{font-size:.68rem;color:var(--muted);margin-top:2px}
+.ptbs{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
+.scg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.65rem}
+.scrd{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem;cursor:pointer;transition:border-color .15s}
+.scrd:hover{border-color:var(--gold)}
+.scav{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--g);display:grid;place-items:center;font-size:.7rem;font-weight:800;flex:0 0 auto}
+.hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.65rem}
+.hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;position:relative}
+.sbar{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap;align-items:center}
+.sbar input,.sbar select{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.48rem .65rem;font:inherit;font-size:.8rem;color:var(--ink)}
+.sbar input{flex:1;min-width:160px}
+.medrow,.cmprow,.dxrow,.rxrow{display:grid;gap:.3rem;align-items:center;background:var(--tint);border-radius:8px;padding:.4rem .5rem;margin-bottom:.3rem}
+.medrow{grid-template-columns:2fr 1fr 1fr 1fr auto}
+.cmprow{grid-template-columns:3fr 1fr auto}
+.dxrow{grid-template-columns:3fr auto}
+.rxrow{grid-template-columns:2fr 1fr 1fr 1fr 1fr auto}
+.medrow input,.cmprow input,.dxrow input,.rxrow input,.rxrow select{background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem;width:100%}
+.rcs{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.2rem}
+.rc{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .62rem;border:1.5px solid var(--line);border-radius:99px;cursor:pointer;font-size:.72rem;background:#fff}
+.rc:has(input:checked){background:var(--tint);border-color:var(--gold);color:var(--g);font-weight:600}
+.rc input{width:auto;accent-color:var(--g)}
+.aicons{display:flex;gap:.2rem;align-items:center}
+.aicon{font-size:.7rem;padding:.2rem .38rem;border-radius:5px;border:.5px solid var(--line);background:var(--card);cursor:pointer;line-height:1}
+.aicon.del{background:#fbe8e8;border-color:#eec3c3;color:var(--err)}
+.tl{padding:.5rem 0}
+.tli{display:flex;gap:.75rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.tli:last-child{border:none}
+.tldot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;margin-top:.35rem}
+.tldate{font-size:.65rem;color:var(--muted);min-width:75px}
+.tltype{font-size:.7rem;font-weight:700;color:var(--g)}.tldetail{font-size:.72rem;color:var(--ink);margin-top:1px}.tlby{font-size:.63rem;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:2.5rem 1rem;font-size:.84rem}
+.loading{text-align:center;color:var(--muted);padding:2rem;font-size:.84rem;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wacard{font-family:monospace;white-space:pre-wrap;background:#0d1117;color:#00e676;border-radius:10px;padding:1rem;font-size:.75rem;line-height:1.6}
+.bank-box{background:var(--tint);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.55rem .75rem;font-size:.78rem;margin-top:.5rem}
+.sthint{font-size:.65rem;color:var(--muted);font-style:italic;margin-top:.15rem}
+@media(max-width:640px){
+.sb{width:52px;flex:0 0 52px}.sbname,.sbsub,.sbun,.sbrl,.ni span,.ns,.sbft .sbfb span{display:none}
+.sbbadge{margin:auto}.fg{grid-template-columns:1fr}.field.full{grid-column:1}.certify{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="lw" id="loginWrap">
+  <div class="lc">
+    <div class="ll"><div class="lb2">KW</div><div><div class="lt">KWC · MIS</div><div class="ls">Kibidula Wellness Centre · Kituo cha Ustawi wa Afya — Kibidula</div></div></div>
+    <div class="lf"><label>Username</label><input type="text" id="lUser" placeholder="Your username" autocomplete="username"><div class="hint">Not case-sensitive</div></div>
+    <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="Your password" autocomplete="current-password"><div class="hint">Case-sensitive</div></div>
+    <button class="lbtn" id="lBtn">Sign in</button>
+    <div class="lerr" id="lErr"></div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="appShell">
+  <div class="sb">
+    <div class="sbh"><div class="sblogo"><div class="sbbadge">KW</div><div><div class="sbname">KWC · MIS</div><div class="sbsub">Kituo cha Ustawi wa Afya — Kibidula</div></div></div></div>
+    <div class="sbu"><div class="sburow"><div class="sbav" id="sbAv">--</div><div><div class="sbun" id="sbName">--</div><div class="sbrl" id="sbRoles"></div></div></div></div>
+    <div class="sbnav" id="sbNav">
+      <div class="ns">Main</div>
+      <div class="ni" data-page="overview" data-acc="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Overview</span></div>
+      <div class="ns">Patients</div>
+      <div class="ni" data-page="patients" data-acc="patients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Patients</span></div>
+      <div class="ni" data-page="visits" data-acc="visits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Visits</span></div>
+      <div class="ns">Clinical</div>
+      <div class="ni" data-page="practitioner" data-acc="consultations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Practitioner</span></div>
+      <div class="ni" data-page="inpatient" data-acc="inpatient"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Inpatient logs</span></div>
+      <div class="ns">Herbs</div>
+      <div class="ni" data-page="herbs" data-acc="herbs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M12 12C12 7 17 4 20 2c0 6-3 10-8 10z"/><path d="M12 12C12 7 7 4 4 2c0 6 3 10 8 10z"/></svg><span>Herb guide</span></div>
+      <div class="ni" data-page="inventory" data-acc="inventory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span>Inventory</span></div>
+      <div class="ni" data-page="sales" data-acc="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Herb sales</span></div>
+      <div class="ns">Finance</div>
+      <div class="ni" data-page="billing" data-acc="billing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>Billing</span></div>
+      <div class="ns">Admin</div>
+      <div class="ni" data-page="staff" data-acc="staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Staff accounts</span></div>
+      <div class="ni" data-page="delete_req" data-acc="delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg><span>Delete requests</span></div>
+      <div class="ni" data-page="reports" data-acc="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></div>
+    </div>
+    <div class="sbft">
+      <button class="sbfb" id="cpBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Change password</span></button>
+      <button class="sbfb" id="soBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Sign out</span></button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar"><div class="ptitle" id="pTitle">Overview</div><div class="tbr" id="tbr"></div></div>
+    <div class="content" id="pc"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="mBg"><div class="modal" id="mBox"><button class="mc" id="mClose">✕</button><div class="mt2" id="mTitle"></div><div id="mBody"></div></div></div>
+
+<script>
+const URL_="https://script.google.com/macros/s/AKfycbyHl6x0oWy-BxOvmizuNMWEBlNuDecL9USz5d1tDJ6GvF_d3Dx9ZXNHtnFD5gd-HfyXow/exec";
+const BANK="CRDB Bank · A/C: 0150492421200 · Family Devl International";
+const FILE_FEE_NEW=3000,FILE_FEE_VISIT=2000;
+
+const TZ={"Arusha":["Arusha","Karatu","Longido","Meru","Monduli","Ngorongoro"],"Dar es Salaam":["Ilala","Kinondoni","Kigamboni","Temeke","Ubungo"],"Dodoma":["Bahi","Chamwino","Chemba","Dodoma","Kongwa","Kondoa","Mpwapwa"],"Geita":["Bukombe","Chato","Geita","Mbogwe","Nyanghwale"],"Iringa":["Iringa","Kilolo","Mafinga","Mufindi"],"Kagera":["Biharamulo","Bukoba","Karagwe","Kyerwa","Missenyi","Muleba","Ngara"],"Katavi":["Mlele","Mpanda","Nsimbo"],"Kigoma":["Buhigwe","Kakonko","Kasulu","Kibondo","Kigoma","Uvinza"],"Kilimanjaro":["Hai","Moshi","Mwanga","Rombo","Same","Siha","Vunjo"],"Lindi":["Kilwa","Lindi","Liwale","Nachingwea","Ruangwa"],"Manyara":["Babati","Hanang","Kiteto","Mbulu","Simanjiro"],"Mara":["Bunda","Butiama","Musoma","Rorya","Serengeti","Tarime"],"Mbeya":["Busokelo","Chunya","Kyela","Mbarali","Mbeya","Rungwe"],"Morogoro":["Gairo","Kilombero","Kilosa","Morogoro","Mvomero","Ulanga"],"Mtwara":["Masasi","Mtwara","Nanyumbu","Newala","Tandahimba"],"Mwanza":["Ilemela","Kwimba","Magu","Misungwi","Nyamagana","Sengerema","Ukerewe"],"Njombe":["Ludewa","Makete","Njombe","Wangingombe"],"Pwani":["Bagamoyo","Kibaha","Kisarawe","Mafia","Mkuranga","Rufiji"],"Rukwa":["Kalambo","Nkasi","Sumbawanga"],"Ruvuma":["Madaba","Mbinga","Namtumbo","Nyasa","Songea","Tunduru"],"Shinyanga":["Kahama","Kishapu","Shinyanga"],"Simiyu":["Bariadi","Busega","Itilima","Maswa","Meatu"],"Singida":["Ikungi","Iramba","Manyoni","Mkalama","Singida"],"Songwe":["Ileje","Mbozi","Momba","Songwe"],"Tabora":["Igunga","Kaliua","Nzega","Sikonge","Tabora","Urambo","Uyui"],"Tanga":["Handeni","Kilindi","Korogwe","Lushoto","Mkinga","Muheza","Pangani","Tanga"],"Pemba North":["Micheweni","Wete"],"Pemba South":["Chake Chake","Mkoani"],"Unguja North":["Kaskazini A","Kaskazini B"],"Unguja South":["Kati","Kusini"],"Zanzibar Urban":["Magharibi","Mjini"]};
+
+const HERB_CONDITIONS={
+  "Hypertension":["Garlic blend","Hibiscus tea","Moringa leaf","Ginger lemon"],
+  "Diabetes":["Moringa","Bitter melon blend","Cinnamon tea","Neem leaf"],
+  "Malaria":["Artemisia blend","Neem-lemon","Papaya leaf extract"],
+  "Digestive issues":["Ginger blend","Aloe vera","Peppermint tea","Fennel blend"],
+  "Arthritis":["Turmeric blend","Ginger-pepper","Aloe vera gel"],
+  "Respiratory":["Eucalyptus blend","Thyme-honey","Ginger-lemon-honey"],
+  "Obesity":["Moringa-lemon","Green tea blend","Cinnamon-ginger"],
+  "Anemia":["Moringa-iron blend","Beetroot blend","Spirulina"],
+  "Stress / Anxiety":["Chamomile blend","Lavender tea","Passionflower"],
+  "Skin conditions":["Aloe vera","Neem blend","Turmeric paste"],
+  "UTI":["Cranberry blend","Parsley tea","Dandelion"],
+  "Back pain":["Ginger compress","Turmeric-pepper","Willow bark blend"],
+  "Headache":["Peppermint blend","Feverfew","Ginger tea"],
+  "Insomnia":["Chamomile","Valerian blend","Passionflower tea"],
+  "Low immunity":["Moringa","Echinacea blend","Elderberry"]
+};
+
+let USER=null;
+const CACHE={},CACHE_TS={};
+const TTL=120000;
+function isFresh(k){return CACHE[k]&&(Date.now()-CACHE_TS[k])<TTL;}
+function setCache(k,v){CACHE[k]=v;CACHE_TS[k]=Date.now();}
+function clearCache(){Object.keys(CACHE).forEach(k=>{delete CACHE[k];delete CACHE_TS[k];});}
+
+async function GET(params){
+  const q=new URLSearchParams({...params,username:USER.username,password:USER.password});
+  try{
+    const res=await fetch(URL_+"?"+q);
+    const text=await res.text();
+    if(text.trim().startsWith("<")){console.error("GAS returned HTML",text.slice(0,200));return {ok:false,error:"Server error — try again"};}
+    return JSON.parse(text);
+  }catch(e){return {ok:false,error:e.message};}
+}
+async function POST(body){
+  try{
+    const res=await fetch(URL_,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,username:USER.username,password:USER.password})});
+    const text=await res.text();
+    if(text.trim().startsWith("<")){return {ok:false,error:"Server error — try again"};}
+    return JSON.parse(text);
+  }catch(e){return {ok:false,error:e.message};}
+}
+async function getBatch(sheets){
+  const key="batch_"+sheets.join(",");
+  if(isFresh(key)) return CACHE[key];
+  const res=await GET({action:"read_batch",sheets:sheets.join(",")});
+  if(res.ok) setCache(key,res);
+  return res;
+}
+async function getSheet(name){
+  if(isFresh(name)) return CACHE[name];
+  const res=await GET({action:"read_"+name});
+  if(res.ok) setCache(name,res.rows);
+  return res.ok?res.rows:[];
+}
+
+/* SESSION PERSIST */
+function saveSession(user){try{sessionStorage.setItem("kwc_user",JSON.stringify(user));}catch(e){}}
+function loadSession(){try{const s=sessionStorage.getItem("kwc_user");return s?JSON.parse(s):null;}catch(e){return null;}}
+function clearSession(){try{sessionStorage.removeItem("kwc_user");}catch(e){}}
+
+/* LOGIN */
+document.getElementById("lBtn").addEventListener("click",doLogin);
+document.getElementById("lPass").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+window.addEventListener("load",()=>{const s=loadSession();if(s){USER=s;bootApp();}});
+
+async function doLogin(){
+  const btn=document.getElementById("lBtn"),err=document.getElementById("lErr");
+  const u=document.getElementById("lUser").value.trim(),p=document.getElementById("lPass").value;
+  if(!u||!p){showE(err,"Enter username and password.");return;}
+  btn.disabled=true;btn.textContent="Signing in…";err.classList.remove("show");
+  try{
+    const q=new URLSearchParams({action:"login",username:u,password:p});
+    const text=await (await fetch(URL_+"?"+q)).text();
+    if(text.trim().startsWith("<")){showE(err,"Server error. Try again in a moment.");btn.disabled=false;btn.textContent="Sign in";return;}
+    const data=JSON.parse(text);
+    if(data.ok){USER=data;USER.username=u;USER.password=p;saveSession(USER);bootApp();}
+    else showE(err,data.error||"Sign-in failed.");
+  }catch(e){showE(err,"Cannot connect. Check internet.");}
+  finally{btn.disabled=false;btn.textContent="Sign in";}
+}
+function showE(el,m){el.textContent=m;el.classList.add("show");}
+
+function bootApp(){
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("appShell").classList.add("active");
+  const init=initials((USER.title||"")+" "+USER.name);
+  document.getElementById("sbAv").textContent=init;
+  document.getElementById("sbName").textContent=(USER.title?USER.title+" ":"")+USER.name;
+  document.getElementById("sbRoles").innerHTML=(USER.roles||[]).map(r=>`<span class="sr sr-${r}">${cap(r)}</span>`).join("");
+  // Role toggle for multi-role users
+  USER._activeRole=null;
+  if((USER.roles||[]).length>1){
+    const toggleWrap=document.createElement("div");
+    toggleWrap.style.cssText="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center";
+    const roleColors={supervisor:"#C29B3B",administrator:"#378ADD",receptionist:"#1D9E75",practitioner:"#7F77DD",herbalist:"#D85A30"};
+    toggleWrap.innerHTML=`<div style="font-size:.65rem;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;font-weight:700">Acting as</div><div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center" id="roleToggleBar">${(USER.roles||[]).map(r=>`<button onclick="setActiveRole('${r}')" id="rtog_${r}" style="font-size:.68rem;padding:3px 9px;border-radius:99px;border:1.5px solid ${roleColors[r]||"rgba(255,255,255,.3)"};background:transparent;color:rgba(255,255,255,.55);cursor:pointer;font-weight:600;transition:all .15s">${cap(r)}</button>`).join("")}<button onclick="setActiveRole(null)" id="rtog_all" style="font-size:.68rem;padding:3px 9px;border-radius:99px;border:1.5px solid var(--gold);background:var(--gold);color:var(--g);cursor:pointer;font-weight:800">All</button></div>`;
+    document.querySelector(".sbnav").before(toggleWrap);
+  }
+  document.querySelectorAll(".ni[data-acc]").forEach(ni=>{ni.style.display=(USER.access||[]).includes(ni.dataset.acc)?"flex":"none";});
+  document.querySelectorAll(".ni").forEach(ni=>ni.addEventListener("click",()=>navigate(ni.dataset.page)));
+  document.getElementById("soBtn").addEventListener("click",()=>{if(confirm("Sign out?")){clearSession();location.reload();}});
+  document.getElementById("cpBtn").addEventListener("click",openCPw);
+  document.getElementById("mClose").addEventListener("click",closeMod);
+  document.getElementById("mBg").addEventListener("click",e=>{
+    // Only close if click is directly on backdrop AND no text is selected
+    if(e.target===document.getElementById("mBg")&&!window.getSelection().toString()) closeMod();
+  });
+  navigate("overview");
+}
+const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):"";
+const PAGE_TITLES={overview:"Overview",patients:"Patients",visits:"Visits",practitioner:"Practitioner Workspace",inpatient:"Inpatient Daily Logs",herbs:"Natural Herb Guide",inventory:"Herb Inventory",sales:"Herb Sales",billing:"Billing",staff:"Staff Accounts",delete_req:"Delete Requests",reports:"Reports"};
+
+const ROLE_ACCESS={
+  supervisor:["overview","patients","visits","inpatient","vitals","symptoms","lifestyle","consultations","herbs","inventory","prescriptions","sales","billing","staff","delete","reports","comments","documents","outcomes","programs","discharge"],
+  administrator:["overview"],
+  receptionist:["patients","visits","billing","documents"],
+  practitioner:["vitals","symptoms","lifestyle","consultations","prescriptions","inpatient","documents","outcomes","programs","discharge"],
+  herbalist:["herbs","inventory","prescriptions","sales","billing"]
+};
+
+const _roleColors={supervisor:"#C29B3B",administrator:"#378ADD",receptionist:"#1D9E75",practitioner:"#7F77DD",herbalist:"#D85A30"};
+
+function setActiveRole(role){
+  USER._activeRole=role;
+  const effectiveAccess=role?ROLE_ACCESS[role]||[]:(USER.access||[]);
+  document.querySelectorAll(".ni[data-acc]").forEach(ni=>{ni.style.display=effectiveAccess.includes(ni.dataset.acc)?"flex":"none";});
+  // Style toggle buttons
+  (USER.roles||[]).forEach(r=>{
+    const btn=document.getElementById("rtog_"+r);
+    if(!btn) return;
+    const isActive=r===role;
+    const col=_roleColors[r]||"rgba(255,255,255,.3)";
+    btn.style.background=isActive?col:"transparent";
+    btn.style.color=isActive?"#fff":"rgba(255,255,255,.55)";
+    btn.style.borderColor=col;
+    btn.style.fontWeight=isActive?"800":"600";
+    btn.style.fontSize=isActive?".72rem":".68rem";
+  });
+  const allBtn=document.getElementById("rtog_all");
+  if(allBtn){
+    const isAll=!role;
+    allBtn.style.background=isAll?"var(--gold)":"transparent";
+    allBtn.style.color=isAll?"var(--g)":"rgba(255,255,255,.55)";
+    allBtn.style.borderColor="var(--gold)";
+    allBtn.style.fontWeight=isAll?"800":"600";
+  }
+  navigate(effectiveAccess[0]||"overview");
+}
+
+function navigate(page){
+  if(!page)return;
+  document.querySelectorAll(".ni").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+  document.getElementById("pTitle").textContent=PAGE_TITLES[page]||page;
+  document.getElementById("tbr").innerHTML="";
+  ({overview:renderOverview,patients:renderPatients,visits:renderVisits,practitioner:renderPractitioner,inpatient:renderInpatient,herbs:renderHerbs,inventory:renderInventory,sales:renderSales,billing:renderBilling,staff:renderStaff,delete_req:renderDeleteReq,reports:renderReports}[page]||function(){set(`<div class="empty">Coming soon.</div>`);})();
+}
+function set(html){document.getElementById("pc").innerHTML=html;}
+function loading(){set(`<div class="loading"><div class="spinner"></div>Loading…</div>`);}
+
+/* ── OVERVIEW ── */
+async function renderOverview(){
+  loading();
+  const isSup=(USER.roles||[]).includes("supervisor");
+  const isAdm=(USER.roles||[]).includes("administrator");
+
+  if(isAdm&&!isSup){
+    try{
+      const d=await getBatch(["patients","visits","billing","consultations","sales"]);
+      const pts=d.patients||[],visits=d.visits||[],bills=d.billing||[],consults=d.consultations||[];
+      const paid=bills.filter(b=>b.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+      const unpaid=bills.filter(b=>b.status!=="paid").reduce((a,r)=>a+Number(r.total||0),0);
+      const opC=pts.filter(p=>p.patient_type==="OP").length;
+      const ipC=pts.filter(p=>p.patient_type==="IP").length;
+      const hcC=pts.filter(p=>p.patient_type==="HC").length;
+      const outcomes=["Improved","Stable","Referred","Did not complete"];
+      const outCounts=outcomes.map(o=>visits.filter(v=>v.outcome===o).length);
+      const now=new Date();const months=[];const monthlyCounts=[];
+      for(let i=5;i>=0;i--){const d2=new Date(now.getFullYear(),now.getMonth()-i,1);months.push(d2.toLocaleString("default",{month:"short"}));monthlyCounts.push(pts.filter(p=>{const r=new Date(p.reg_date||"");return r.getFullYear()===d2.getFullYear()&&r.getMonth()===d2.getMonth();}).length);}
+      const dxMap={};
+      consults.forEach(c=>{try{const dxs=JSON.parse(c.diagnoses_json||"[]");dxs.forEach(d2=>{if(d2)dxMap[d2]=(dxMap[d2]||0)+1;});}catch(e){if(c.remedy)dxMap[c.remedy]=(dxMap[c.remedy]||0)+1;}});
+      const topDx=Object.entries(dxMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      window._pts=pts;window._ovPts=pts;
+      set(`
+        <div class="kpis">
+          <div class="kpi gold"><div class="kpin">${pts.length}</div><div class="kpil">Total patients</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--g)">${visits.filter(v=>v.discharged==="YES").length}</div><div class="kpil">Discharged</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--ok)">${paid.toLocaleString()}</div><div class="kpil">Revenue (TSh)</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--err)">${unpaid.toLocaleString()}</div><div class="kpil">Outstanding (TSh)</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+          <div class="panel"><div class="pnt">Patients by type</div><canvas id="chartPtType" height="180"></canvas></div>
+          <div class="panel"><div class="pnt">Outcomes breakdown</div><canvas id="chartOutcomes" height="180"></canvas></div>
+        </div>
+        <div class="panel" style="margin-bottom:.8rem"><div class="pnt">Monthly registrations <span>last 6 months</span></div><canvas id="chartMonthly" height="100"></canvas></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+          <div class="panel"><div class="pnt">Revenue vs Outstanding (TSh)</div><canvas id="chartRevenue" height="160"></canvas></div>
+          <div class="panel"><div class="pnt">Top conditions treated</div><canvas id="chartDx" height="160"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pnt">All patients <span>Click to view summary</span></div>
+          <div class="sbar"><input type="text" id="ovPtQ" placeholder="Search patients..." oninput="filterOvPts()"><select id="ovPtType" onchange="filterOvPts()"><option value="">All types</option><option>OP</option><option>IP</option><option>HC</option></select></div>
+          <div id="ovPtList">${renderOvPtList(pts)}</div>
+        </div>
+      `);
+      setTimeout(()=>{
+        new Chart(document.getElementById("chartPtType"),{type:"doughnut",data:{labels:["OP","IP","HC"],datasets:[{data:[opC,ipC,hcC],backgroundColor:["#1D9E75","#7F77DD","#D85A30"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,plugins:{legend:{position:"bottom"}}}});
+        new Chart(document.getElementById("chartOutcomes"),{type:"doughnut",data:{labels:outcomes,datasets:[{data:outCounts,backgroundColor:["#1D9E75","#378ADD","#C29B3B","#D85A30"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,plugins:{legend:{position:"bottom"}}}});
+        new Chart(document.getElementById("chartMonthly"),{type:"line",data:{labels:months,datasets:[{label:"New patients",data:monthlyCounts,borderColor:"#163A2B",backgroundColor:"rgba(22,58,43,.12)",tension:.4,pointBackgroundColor:"#C29B3B",fill:true}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+        new Chart(document.getElementById("chartRevenue"),{type:"bar",data:{labels:["Collected","Outstanding"],datasets:[{data:[paid,unpaid],backgroundColor:["#1D9E75","#D85A30"],borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+        if(topDx.length){new Chart(document.getElementById("chartDx"),{type:"bar",data:{labels:topDx.map(d=>d[0].slice(0,18)),datasets:[{label:"Cases",data:topDx.map(d=>d[1]),backgroundColor:"#163A2B",borderRadius:4}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1}}}}});}
+        else{const el=document.getElementById("chartDx");if(el)el.parentElement.innerHTML+='<div class="empty" style="padding:.5rem">No diagnoses yet.</div>';}
+      },120);
+    }catch(e){set(`<div class="empty">Could not load. ${e.message}</div>`);}
+    return;
+  }
+
+  if(!isSup){
+    set(`<div class="empty" style="padding:3rem 1rem;text-align:center">
+      <div style="font-size:2rem;margin-bottom:.5rem">🌿</div>
+      <div style="font-size:1rem;font-weight:700;color:var(--g)">Welcome to KWC · MIS</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:.35rem">Select a module from the sidebar to begin.</div>
+    </div>`);
+    return;
+  }
+
+  try{
+    const d=await getBatch(["patients","visits","billing"]);
+    const pts=d.patients||[],visits=d.visits||[],bills=d.billing||[];
+    const today_=today();
+    const openIP=visits.filter(r=>r.visit_type==="IP"&&r.discharged!=="YES");
+    const rev=bills.filter(r=>r.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    window._pts=pts;window._ovPts=pts;
+    set(`
+      <div class="kpis">
+        <div class="kpi gold"><div class="kpin">${pts.length}</div><div class="kpil">Total patients</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--g)">${openIP.length}</div><div class="kpil">Active inpatients</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--g)">${visits.filter(r=>r.visit_type==="OP").length}</div><div class="kpil">OP visits (all)</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--g)">${visits.filter(r=>r.visit_date===today_).length}</div><div class="kpil">Visits today</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--gold)">${rev.toLocaleString()}</div><div class="kpil">Revenue (TSh)</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+        <div class="panel">
+          <div class="pnt">Active inpatients</div>
+          ${openIP.slice(0,5).map(v=>`<div style="padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.75rem"><b>${v.patient_name||"—"}</b><br><span style="color:var(--muted);font-size:.67rem">${v.visit_id} · Admitted ${v.visit_date}</span></div>`).join("")||`<div class="empty" style="padding:1rem">None active.</div>`}
+        </div>
+        <div class="panel">
+          <div class="pnt">Recent registrations</div>
+          ${pts.slice(-5).reverse().map(p=>`<div style="padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.75rem"><b>${p.title||""} ${p.name}</b> <span class="pill pb" style="font-size:.57rem">${p.patient_id}</span><br><span style="color:var(--muted);font-size:.67rem">${p.patient_type||"—"} · ${p.reg_date||"—"}</span></div>`).join("")||`<div class="empty" style="padding:1rem">No patients yet.</div>`}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pnt">All patients <span>Click name to view full summary</span></div>
+        <div class="sbar">
+          <input type="text" id="ovPtQ" placeholder="Search patients..." oninput="filterOvPts()">
+          <select id="ovPtType" onchange="filterOvPts()"><option value="">All types</option><option>OP</option><option>IP</option><option>HC</option></select>
+        </div>
+        <div id="ovPtList">${renderOvPtList(pts)}</div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">Could not load. ${e.message}</div>`);}
+}
+function renderOvPtList(rows){
+  if(!rows.length) return `<div class="empty">No patients found.</div>`;
+  return rows.slice().reverse().map(p=>`
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 3px;border-bottom:1px solid var(--line);cursor:pointer" onclick="openPtSummary('${p.patient_id}')">
+      <div class="ptav">${initials((p.title||"")+" "+p.name)}</div>
+      <div style="flex:1"><div style="font-size:.78rem;font-weight:600;color:var(--g);text-decoration:underline">${p.title||""} ${p.name}</div><div style="font-size:.65rem;color:var(--muted);font-family:monospace">${p.patient_id}</div></div>
+      <span class="pill ${p.patient_type==="IP"?"pp":p.patient_type==="HC"?"po":"pg"}">${p.patient_type||"—"}</span>
+    </div>`).join("");
+}
+function filterOvPts(){
+  const q=(document.getElementById("ovPtQ")?.value||"").toLowerCase(),t=document.getElementById("ovPtType")?.value||"";
+  const f=(window._ovPts||[]).filter(p=>{const m=(p.name||"").toLowerCase().includes(q)||(p.patient_id||"").includes(q);return m&&(!t||p.patient_type===t);});
+  const el=document.getElementById("ovPtList");if(el)el.innerHTML=renderOvPtList(f);
+}
+async function openPtSummary(pid){
+  openMod("Loading…","<div class='loading'><div class='spinner'></div>Loading patient record…</div>");
+  const res=await GET({action:"patient_summary",patient_id:pid});
+  if(!res.ok){document.getElementById("mBody").innerHTML=`<div class="empty">${res.error}</div>`;return;}
+  const pt=res.patient,visits=res.visits||[],consults=res.consultations||[],rxs=res.prescriptions||[],bills=res.billing||[],vitals=res.vitals||[],syms=res.symptoms||[];
+  const paid=bills.filter(b=>b.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+  const unpaid=bills.filter(b=>b.status!=="paid").reduce((a,r)=>a+Number(r.total||0),0);
+  const ls=syms.length?syms[syms.length-1]:null;
+  document.getElementById("mTitle").textContent=`${pt.title||""} ${pt.name} — ${pt.patient_id}`;
+  document.getElementById("mBox").classList.add("wide");
+  document.getElementById("mBody").innerHTML=`
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem">
+      <span class="pill pb">${pt.patient_id}</span><span class="pill ${pt.patient_type==="IP"?"pp":"pg"}">${pt.patient_type||"—"}</span>
+      <span class="pill po">BMI ${pt.bmi||"—"}</span><span class="pill pg">TSh ${paid.toLocaleString()} paid</span>
+      ${unpaid?`<span class="pill pr">TSh ${unpaid.toLocaleString()} unpaid</span>`:""}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+      <div>
+        <div class="panel" style="margin-bottom:.65rem">
+          <div class="pnt">Personal info</div>
+          <div style="font-size:.72rem;display:grid;grid-template-columns:1fr 1fr;gap:.25rem">
+            <div><span style="color:var(--muted)">Phone:</span> ${pt.phone||"—"}</div><div><span style="color:var(--muted)">Age:</span> ${pt.age||"—"}</div>
+            <div><span style="color:var(--muted)">Gender:</span> ${pt.gender||"—"}</div><div><span style="color:var(--muted)">Religion:</span> ${pt.religion||"—"}</div>
+            <div style="grid-column:1/-1"><span style="color:var(--muted)">Address:</span> ${[pt.street,pt.district,pt.region].filter(Boolean).join(", ")||"—"}</div>
+            <div style="grid-column:1/-1"><span style="color:var(--muted)">Emergency:</span> ${pt.emergency_name||"—"} · ${pt.emergency_phone||"—"}</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:.65rem">
+          <div class="pnt">Consultations</div>
+          ${consults.slice().reverse().slice(0,5).map(c=>`<div style="padding:.3rem 0;border-bottom:1px solid var(--line);font-size:.7rem"><b>${c.date}</b> — ${c.remedy||"No remedy"}</div>`).join("")||`<div style="color:var(--muted);font-size:.72rem">None yet.</div>`}
+        </div>
+        <div class="panel">
+          <div class="pnt">Billing</div>
+          ${bills.slice().reverse().map(b=>`<div style="display:flex;justify-content:space-between;padding:.28rem 0;border-bottom:1px solid var(--line);font-size:.7rem"><span>${b.bill_id} · ${b.date}</span><span>TSh ${Number(b.total||0).toLocaleString()} <span class="pill ${b.status==="paid"?"pg":"pr"}">${b.status}</span></span></div>`).join("")||`<div style="color:var(--muted);font-size:.72rem">No bills.</div>`}
+          <div style="margin-top:.4rem;font-size:.72rem;font-weight:700;color:var(--g);text-align:right">Paid: TSh ${paid.toLocaleString()} · Due: TSh ${unpaid.toLocaleString()}</div>
+        </div>
+      </div>
+      <div>
+        <div class="panel" style="margin-bottom:.65rem">
+          <div class="pnt">Timeline <span>${visits.length+consults.length+vitals.length} events</span></div>
+          <div class="tl">${[...visits.map(r=>({date:r.visit_date,type:r.visit_type+" visit",detail:r.visit_id,col:"#1D9E75"})),...consults.map(r=>({date:r.date,type:"Consultation",detail:r.remedy||"—",col:"#7F77DD"})),...vitals.map(r=>({date:r.date,type:"Vitals",detail:`BP:${r.bp||"—"} BMI:${r.bmi||"—"}`,col:"#C29B3B"}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12).map(it=>`<div class="tli"><div class="tldot" style="background:${it.col}"></div><div class="tldate">${it.date}</div><div><div class="tltype">${it.type}</div><div class="tldetail">${it.detail}</div></div></div>`).join("")||`<div class="empty">No activity.</div>`}</div>
+        </div>
+        ${ls?`<div class="panel"><div class="pnt">Symptoms <span>${ls.assessment_date}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.2rem">${Object.entries(ls).filter(([k])=>!["_id","_ts","patient_id","patient_name","assessment_date","recorded_by","is_baseline"].includes(k)&&Number(ls[k])>0).sort(([,a],[,b])=>Number(b)-Number(a)).slice(0,10).map(([k,v])=>{const n=Number(v);return `<div style="display:flex;justify-content:space-between;padding:.2rem .3rem;border-radius:4px;background:${n>=4?"#fbe8e8":n===3?"#faeeda":"var(--tint)"}"><span style="font-size:.62rem">${k.replace(/_/g," ")}</span><span class="s${n}" style="font-size:.6rem;padding:1px 4px;border-radius:3px">${n}</span></div>`;}).join("")}</div></div>`:""}
+      </div>
+    </div>`;
+}
+
+/* ── PATIENTS ── */
+async function renderPatients(){
+  loading();
+  const canAdd=(USER.roles||[]).some(r=>["receptionist","supervisor"].includes(r));
+  try{
+    const rows=await getSheet("patients");
+    window._pts=rows;
+    set(`
+      ${canAdd?`<button class="btn bp" style="margin-bottom:.8rem" id="regPtBtn">+ Register new patient</button>`:""}
+      <div class="sbar">
+        <input type="text" id="ptQ" placeholder="Search name, ID, phone…" oninput="filterPts()">
+        <select id="ptTypeF" onchange="filterPts()"><option value="">All types</option><option value="OP">OP</option><option value="IP">IP</option><option value="HC">HC</option></select>
+      </div>
+      <div class="ptg" id="ptGrid">${renderPtCards(rows)}</div>
+    `);
+    if(canAdd) document.getElementById("regPtBtn").addEventListener("click",openRegPt);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function renderPtCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No patients found.</div>`;
+  return rows.slice().reverse().map(p=>`
+    <div class="ptcard" onclick="openPtProfile('${p.patient_id}')">
+      <div class="ptav">${initials((p.title||"")+" "+p.name)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ptn">${p.title||""} ${p.name}</div>
+        <div class="ptid">${p.patient_id}</div>
+        <div class="ptmeta">${p.age||"—"}yrs · ${p.gender||"—"} · ${p.phone||"—"}</div>
+        <div class="ptbs">
+          <span class="pill ${p.patient_type==="IP"?"pp":p.patient_type==="HC"?"po":"pg"}">${p.patient_type||"—"}</span>
+          ${p.consent_signed==="YES"?`<span class="pill pg">Consent ✓</span>`:`<span class="pill pr">No consent</span>`}
+          <span class="pill pb">BMI ${p.bmi||"—"}</span>
+        </div>
+      </div>
+    </div>`).join("");
+}
+function filterPts(){
+  const q=(document.getElementById("ptQ")?.value||"").toLowerCase(),t=document.getElementById("ptTypeF")?.value||"";
+  document.getElementById("ptGrid").innerHTML=renderPtCards((window._pts||[]).filter(p=>((p.name||"").toLowerCase().includes(q)||(p.patient_id||"").includes(q)||(p.phone||"").includes(q))&&(!t||p.patient_type===t)));
+}
+
+function openEditPt(pid){
+  const pt=(window._pts||[]).find(p=>p.patient_id===pid);
+  if(!pt) return;
+  const rSel=(reg)=>{
+    let opts=`<option value="">— Select region —</option>`;
+    Object.keys(TZ).sort().forEach(r=>{opts+=`<option value="${r}" ${pt.region===r?"selected":""}>${r}</option>`;});
+    return opts;
+  };
+  const dSel=(reg)=>{
+    const districts=TZ[reg]||[];
+    let opts=`<option value="">— Select district —</option>`;
+    districts.forEach(d=>{opts+=`<option value="${d}" ${pt.district===d?"selected":""}>${d}</option>`;});
+    return opts;
+  };
+  openMod(`Edit — ${pt.title||""} ${pt.name}`,`
+    <div class="tabs">
+      <div class="tab active" onclick="swTab(this,'ept-p')">Personal</div>
+      <div class="tab" onclick="swTab(this,'ept-m')">Medical</div>
+      <div class="tab" onclick="swTab(this,'ept-c')">Consent</div>
+    </div>
+    <div class="tpanel active" id="ept-p">
+      <div class="fg">
+        <div class="field"><label>Title</label><select id="eptT"><option value="">—</option>${["Mr.","Mrs.","Ms.","Dr.","Prof."].map(t=>`<option ${pt.title===t?"selected":""}>${t}</option>`).join("")}</select></div>
+        <div class="field"><label>Full name *</label><input type="text" id="eptN" value="${esc(pt.name||"")}"></div>
+        <div class="field"><label>Date of birth</label><input type="date" id="eptDob" value="${pt.dob||""}"></div>
+        <div class="field"><label>Age</label><input type="number" id="eptAge" value="${pt.age||""}"></div>
+        <div class="field"><label>Gender</label><select id="eptGender"><option value="">—</option>${["Female","Male"].map(g=>`<option ${pt.gender===g?"selected":""}>${g}</option>`).join("")}</select></div>
+        <div class="field"><label>Tribe</label><input type="text" id="eptTribe" value="${esc(pt.tribe||"")}"></div>
+        <div class="field"><label>Religion</label><input type="text" id="eptReligion" value="${esc(pt.religion||"")}"></div>
+        <div class="field"><label>Marital status</label><select id="eptMarital"><option value="">—</option>${["Single","Married","Widowed","Divorced"].map(m=>`<option ${pt.marital_status===m?"selected":""}>${m}</option>`).join("")}</select></div>
+        <div class="field"><label>Occupation</label><input type="text" id="eptOcc" value="${esc(pt.occupation||"")}"></div>
+        <div class="field"><label>Phone *</label><input type="text" id="eptPhone" value="${esc(pt.phone||"")}"></div>
+        <div class="field"><label>Email</label><input type="email" id="eptEmail" value="${esc(pt.email||"")}"></div>
+        <div class="field"><label>Region</label><select id="eptRegion" onchange="loadDistricts('eptRegion','eptDistrict')">${rSel()}</select></div>
+        <div class="field"><label>District</label><select id="eptDistrict">${dSel(pt.region)}</select></div>
+        <div class="field full"><label>Street</label><input type="text" id="eptStreet" value="${esc(pt.street||"")}" list="streetDl2"><datalist id="streetDl2"><option value="Mjini"><option value="Sokoni"><option value="Mafinga"><option value="Makambako"></datalist></div>
+        <div class="field full"><label>Emergency contact name</label><input type="text" id="eptEmName" value="${esc(pt.emergency_name||"")}"></div>
+        <div class="field"><label>Relationship</label><input type="text" id="eptEmRel" value="${esc(pt.emergency_relation||"")}"></div>
+        <div class="field"><label>Emergency phone</label><input type="text" id="eptEmPhone" value="${esc(pt.emergency_phone||"")}"></div>
+      </div>
+    </div>
+    <div class="tpanel" id="ept-m">
+      <div class="fg">
+        <div class="field"><label>Weight (kg)</label><input type="number" id="eptWt" value="${pt.weight||""}" oninput="calcBMI('eptWt','eptHt','eptBmi')"></div>
+        <div class="field"><label>Height (cm)</label><input type="number" id="eptHt" value="${pt.height||""}" oninput="calcBMI('eptWt','eptHt','eptBmi')"></div>
+        <div class="bmid full" id="eptBmi" style="${pt.bmi?"display:block":""}">BMI: ${pt.bmi||"—"}</div>
+        <div class="field"><label>Patient type</label><select id="eptType"><option value="OP" ${pt.patient_type==="OP"?"selected":""}>Outpatient (OP)</option><option value="IP" ${pt.patient_type==="IP"?"selected":""}>Inpatient (IP)</option><option value="HC" ${pt.patient_type==="HC"?"selected":""}>Herb only (HC)</option></select></div>
+      </div>
+    </div>
+    <div class="tpanel" id="ept-c">
+      <div class="fg">
+        <div class="field"><label>Consent signed?</label><select id="eptConsent"><option value="YES" ${pt.consent_signed==="YES"?"selected":""}>Yes</option><option value="NO" ${pt.consent_signed!=="YES"?"selected":""}>No</option></select></div>
+        <div class="field"><label>Consent date</label><input type="date" id="eptConsentDate" value="${pt.consent_date||""}"></div>
+        <div class="field full"><label>Witnessed by</label><input type="text" id="eptConsentWit" value="${esc(pt.consent_witness||"")}"></div>
+      </div>
+    </div>
+    <div class="fa">
+      <button class="btn bp" onclick="submitEditPt('${pid}')">Save changes</button>
+      <button class="btn bg" onclick="openPtProfile('${pid}')">Cancel</button>
+    </div>
+    <div class="msg" id="eptMsg"></div>
+    <div id="eptWaWrap" style="display:none;margin-top:.75rem"></div>
+  `);
+}
+
+async function submitEditPt(pid){
+  const msg=document.getElementById("eptMsg");
+  if(!v("eptN")){showMsg(msg,"err","Full name is required.");return;}
+  const w=v("eptWt"),h=v("eptHt");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const payload={_id:pid,patient_id:pid,title:v("eptT"),name:v("eptN"),dob:v("eptDob"),age:v("eptAge"),gender:v("eptGender"),tribe:v("eptTribe"),religion:v("eptReligion"),marital_status:v("eptMarital"),occupation:v("eptOcc"),region:v("eptRegion"),district:v("eptDistrict"),street:v("eptStreet"),phone:v("eptPhone"),email:v("eptEmail"),emergency_name:v("eptEmName"),emergency_relation:v("eptEmRel"),emergency_phone:v("eptEmPhone"),weight:w,height:h,bmi:bmiVal||"",patient_type:v("eptType"),consent_signed:v("eptConsent"),consent_date:v("eptConsentDate"),consent_witness:v("eptConsentWit")};
+  const res=await POST({action:"update_patient",payload});
+  if(res.ok){
+    clearCache();
+    showMsg(msg,"ok","Patient record updated.");
+    // Show WA card option after edit
+    const phone=v("eptPhone"),name=(v("eptT")?v("eptT")+" ":"")+v("eptN");
+    if(phone){
+      const wrap=document.getElementById("eptWaWrap");
+      if(wrap){wrap.style.display="block";showWACard(pid,name,phone,wrap);}
+    }
+    // Update local cache
+    const idx=(window._pts||[]).findIndex(p=>p.patient_id===pid);
+    if(idx>=0) window._pts[idx]={...window._pts[idx],...payload};
+  }else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function openRegPt(){
+  openMod("Register new patient",`
+    <div class="tabs">
+      <div class="tab active" onclick="swTab(this,'rpt-p')">Personal</div>
+      <div class="tab" onclick="swTab(this,'rpt-m')">Medical</div>
+      <div class="tab" onclick="swTab(this,'rpt-c')">Consent</div>
+    </div>
+    <div class="tpanel active" id="rpt-p">
+      <div class="fg">
+        <div class="field"><label>Title</label><select id="ptT"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select></div>
+        <div class="field"><label>Full name *</label><input type="text" id="ptN" placeholder="Full name as on ID"><div class="hint">Required</div></div>
+        <div class="field"><label>Date of birth</label><input type="date" id="ptDob"></div>
+        <div class="field"><label>Age</label><input type="number" id="ptAge" placeholder="e.g. 45"></div>
+        <div class="field"><label>Gender</label><select id="ptGender"><option value="">—</option><option>Female</option><option>Male</option></select></div>
+        <div class="field"><label>Tribe / Kabila</label><input type="text" id="ptTribe" placeholder="e.g. Hehe"></div>
+        <div class="field"><label>Religion / Dini</label><input type="text" id="ptReligion" placeholder="e.g. SDA"></div>
+        <div class="field"><label>Marital status</label><select id="ptMarital"><option value="">—</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div>
+        <div class="field"><label>Occupation / Kazi</label><input type="text" id="ptOcc" placeholder="e.g. Teacher"></div>
+        <div class="field"><label>Phone / Simu *</label><input type="text" id="ptPhone" placeholder="+255 7xx xxx xxx"><div class="hint">For WhatsApp card</div></div>
+        <div class="field"><label>Email</label><input type="email" id="ptEmail" placeholder="email@example.com"></div>
+        <div class="field"><label>Region / Mkoa</label><select id="ptRegion" onchange="loadDistricts('ptRegion','ptDistrict')"><option value="">— Select region —</option></select></div>
+        <div class="field"><label>District / Wilaya</label><select id="ptDistrict"><option value="">— Select district —</option></select></div>
+        <div class="field full"><label>Street / Mtaa</label><input type="text" id="ptStreet" list="streetDl" placeholder="Type or select…"><datalist id="streetDl"><option value="Mjini"><option value="Sokoni"><option value="Mafinga"><option value="Makambako"><option value="Iringa Town"><option value="Dodoma Town"></datalist></div>
+        <div class="field full"><label>Emergency contact name</label><input type="text" id="ptEmName" placeholder="Full name"></div>
+        <div class="field"><label>Relationship</label><input type="text" id="ptEmRel" placeholder="e.g. Spouse"></div>
+        <div class="field"><label>Emergency phone</label><input type="text" id="ptEmPhone" placeholder="+255 7xx xxx xxx"></div>
+      </div>
+    </div>
+    <div class="tpanel" id="rpt-m">
+      <div class="fg">
+        <div class="field"><label>Weight (kg)</label><input type="number" id="ptWt" placeholder="e.g. 70" oninput="calcBMI('ptWt','ptHt','ptBmi')"></div>
+        <div class="field"><label>Height (cm)</label><input type="number" id="ptHt" placeholder="e.g. 165" oninput="calcBMI('ptWt','ptHt','ptBmi')"></div>
+        <div class="bmid full" id="ptBmi"></div>
+        <div class="field"><label>Patient type</label><select id="ptType2"><option value="OP">Outpatient (OP)</option><option value="IP">Inpatient (IP)</option><option value="HC">Herb only (HC)</option></select></div>
+      </div>
+    </div>
+    <div class="tpanel" id="rpt-c">
+      <div class="fg">
+        <div class="field"><label>Consent signed?</label><select id="ptConsent"><option value="YES">Yes — signed</option><option value="NO">No — not yet</option></select></div>
+        <div class="field"><label>Consent date</label><input type="date" id="ptConsentDate" value="${today()}"></div>
+        <div class="field full"><label>Witnessed by</label><input type="text" id="ptConsentWit" placeholder="Staff member present"></div>
+        <div class="certify full"><input type="checkbox" id="ptCert"><div><div class="ct">I certify the above information is accurate and complete.</div><div class="cb">Registered by: ${byLine()}</div></div></div>
+      </div>
+      <div style="margin-top:.6rem;padding:.6rem .75rem;background:var(--tint);border-radius:8px;font-size:.75rem">
+        <b>File opening fee: TSh ${FILE_FEE_NEW.toLocaleString()}</b><br>
+        <span style="color:var(--muted)">A billing record will be auto-created. Patient pays to: ${BANK}</span>
+      </div>
+    </div>
+    <div class="fa">
+      <button class="btn bp" onclick="submitPt()">Register patient</button>
+      <button class="btn bg" onclick="closeMod()">Cancel</button>
+    </div>
+    <div class="msg" id="ptMsg"></div>
+    <div id="waCardWrap" style="display:none;margin-top:.75rem"></div>
+  `);
+  const rSel=document.getElementById("ptRegion");
+  Object.keys(TZ).sort().forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;rSel.appendChild(o);});
+}
+
+async function submitPt(){
+  const msg=document.getElementById("ptMsg");
+  if(!v("ptN")){showMsg(msg,"err","Full name is required.");return;}
+  if(!document.getElementById("ptCert").checked){showMsg(msg,"err","Tick the certification checkbox.");return;}
+  const w=v("ptWt"),h=v("ptHt");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const name=v("ptN"),title=v("ptT"),phone=v("ptPhone");
+  const payload={title,name,dob:v("ptDob"),age:v("ptAge"),gender:v("ptGender"),tribe:v("ptTribe"),religion:v("ptReligion"),marital_status:v("ptMarital"),occupation:v("ptOcc"),region:v("ptRegion"),district:v("ptDistrict"),street:v("ptStreet"),phone,email:v("ptEmail"),emergency_name:v("ptEmName"),emergency_relation:v("ptEmRel"),emergency_phone:v("ptEmPhone"),weight:w,height:h,bmi:bmiVal,patient_type:v("ptType2"),consent_signed:v("ptConsent"),consent_date:v("ptConsentDate"),consent_witness:v("ptConsentWit")};
+  const res=await POST({action:"add_patient",payload});
+  if(res.ok){
+    clearCache();
+    showMsg(msg,"ok",`Registered! ID: ${res.patient_id} · BMI: ${res.bmi||"—"} · Fee bill auto-created (TSh ${FILE_FEE_NEW.toLocaleString()}). Send WhatsApp card below then close.`);
+    showWACard(res.patient_id,(title?title+" ":"")+name,phone);
+    // Refresh patient list in background — modal stays open until user closes manually
+    clearCache();
+  }else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function showWACard(patientId,name,phone,wrap){
+  if(!wrap) wrap=document.getElementById("waCardWrap");
+  if(!wrap) return;
+  const dt=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  const msgEN=`🌿 KIBIDULA WELLNESS CENTRE\nKituo cha Ustawi wa Afya — Kibidula\nMafinga, Iringa · Tanzania\n${"─".repeat(36)}\n✅ REGISTRATION CONFIRMED\n   USAJILIAJI UMEKAMILIKA\n${"─".repeat(36)}\nDear ${name},\nMpendwa ${name},\n\nYou have been successfully registered\nat Kibidula Wellness Centre.\nUmesajiliwa kikamilifu katika\nKituo cha Ustawi wa Afya cha Kibidula.\n\n🪪 Reg No / Namba: ${patientId}\n📅 Date / Tarehe: ${dt}\n${"─".repeat(36)}\n📌 Please keep & show this message\n   at your next visit.\n   Hifadhi ujumbe huu na uonyeshe\n   unapokuja tena kituo chetu.\n${"─".repeat(36)}\n🌿 Your health is our mission.\n   Afya yako ni dhamira yetu.`;
+  wrap.style.display="block";
+  wrap.innerHTML=`
+    <div style="font-size:.76rem;font-weight:700;color:var(--g);margin-bottom:.4rem">WhatsApp patient card</div>
+    <div class="wacard">${msgEN}</div>
+    <div style="display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap">
+      ${phone?`<a class="btn bp bsm" href="https://wa.me/${phone.replace(/\D/g,"")}?text=${encodeURIComponent(msgEN)}" target="_blank" rel="noopener">📱 Send via WhatsApp</a>`:""}
+      <button class="btn bg bsm" onclick="navigator.clipboard.writeText(document.querySelector('.wacard').textContent)">📋 Copy</button>
+    </div>
+    <div style="margin-top:.55rem" id="qrBox"></div>`;
+  // QR code
+  try{new QRCode(document.getElementById("qrBox"),{text:`KWC-PT:${patientId}|${name}`,width:110,height:110,colorDark:"#163A2B",colorLight:"#f4f3ee"});}catch(e){}
+}
+
+async function openPtProfile(pid){
+  const pt=(window._pts||[]).find(p=>p.patient_id===pid);
+  if(!pt) return;
+  const canEdit=(USER.access||[]).includes("patients");
+  const [vitals,consults,syms]=await Promise.all([getSheet("vitals"),getSheet("consultations"),getSheet("symptoms")]);
+  const pv=vitals.filter(r=>r.patient_id===pid),pc=consults.filter(r=>r.patient_id===pid),ps=syms.filter(r=>r.patient_id===pid);
+  const ls=ps.length?ps[ps.length-1]:null;
+  openMod(`${pt.title||""} ${pt.name} — ${pt.patient_id}`,`
+    ${canEdit?`<div style="display:flex;justify-content:flex-end;margin-bottom:.5rem"><button class="btn bg bsm" onclick="openEditPt('${pid}')">✏️ Edit patient info</button></div>`:""}
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.7rem">
+      <span class="pill pb">${pt.patient_id}</span><span class="pill ${pt.patient_type==="IP"?"pp":"pg"}">${pt.patient_type||"—"}</span>
+      <span class="pill po">BMI ${pt.bmi||"—"}</span>
+    </div>
+    <div class="tabs"><div class="tab active" onclick="swTab(this,'pi-info')">Info</div><div class="tab" onclick="swTab(this,'pi-vitals')">Vitals</div><div class="tab" onclick="swTab(this,'pi-syms')">Symptoms</div></div>
+    <div class="tpanel active" id="pi-info">
+      <div class="fg" style="font-size:.76rem">
+        <div><span style="color:var(--muted)">Phone:</span> ${pt.phone||"—"}</div><div><span style="color:var(--muted)">Age:</span> ${pt.age||"—"}</div>
+        <div><span style="color:var(--muted)">Gender:</span> ${pt.gender||"—"}</div><div><span style="color:var(--muted)">Marital:</span> ${pt.marital_status||"—"}</div>
+        <div><span style="color:var(--muted)">Religion:</span> ${pt.religion||"—"}</div><div><span style="color:var(--muted)">Occupation:</span> ${pt.occupation||"—"}</div>
+        <div class="full"><span style="color:var(--muted)">Address:</span> ${[pt.street,pt.district,pt.region].filter(Boolean).join(", ")||"—"}</div>
+        <div class="full"><span style="color:var(--muted)">Emergency:</span> ${pt.emergency_name||"—"} (${pt.emergency_relation||"—"}) ${pt.emergency_phone||""}</div>
+      </div>
+      ${pc.length?`<div style="margin-top:.7rem"><b style="font-size:.74rem;color:var(--g)">Recent consultations</b>${pc.slice().reverse().slice(0,3).map(c=>`<div style="padding:.32rem 0;border-bottom:1px solid var(--line);font-size:.72rem"><b>${c.date}</b> — ${c.remedy||"—"}</div>`).join("")}</div>`:""}
+    </div>
+    <div class="tpanel" id="pi-vitals">
+      ${pv.length?`<div class="tw"><table>${sortableTh(["Date","BP","Wt","SpO2","Pulse","Temp","BMI"])}<tbody>${pv.slice().reverse().map(r=>`<tr><td>${r.date}</td><td>${r.bp||"—"}</td><td>${r.weight||"—"}</td><td>${r.spo2||"—"}</td><td>${r.pulse||"—"}</td><td>${r.temp||"—"}</td><td>${r.bmi||"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">No vitals yet.</div>`}
+    </div>
+    <div class="tpanel" id="pi-syms">
+      ${ls?`<div style="font-size:.7rem;color:var(--muted);margin-bottom:.5rem">Last: ${ls.assessment_date}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.2rem">${Object.entries(ls).filter(([k])=>!["_id","_ts","patient_id","patient_name","assessment_date","recorded_by","is_baseline"].includes(k)&&Number(ls[k])>0).sort(([,a],[,b])=>Number(b)-Number(a)).map(([k,val])=>{const n=Number(val);return `<div style="display:flex;justify-content:space-between;padding:.2rem .35rem;border-radius:4px;background:${n>=4?"#fbe8e8":n===3?"#faeeda":"var(--tint)"}"><span style="font-size:.63rem">${k.replace(/_/g," ")}</span><span class="s${n}" style="font-size:.6rem;padding:1px 4px;border-radius:3px">${n}</span></div>`;}).join("")}</div>`:`<div class="empty">No symptoms yet.</div>`}
+    </div>
+  `);
+}
+
+/* ── VISITS ── */
+async function renderVisits(){
+  loading();
+  const canAdd=(USER.access||[]).includes("visits");
+  try{
+    const [rows,pts]=await Promise.all([getSheet("visits"),getSheet("patients")]);
+    window._visits=rows;window._pts=pts;
+    set(`
+      ${canAdd?`<button class="btn bp" style="margin-bottom:.8rem" onclick="openNewVisit()">+ Open visit</button>`:""}
+      <div class="sbar">
+        <input type="text" id="visQ" placeholder="Search patient name or visit ID…" oninput="filterVisits()">
+        <select id="visTypeF" onchange="filterVisits()"><option value="">All types</option><option>OP</option><option>IP</option><option>HC</option></select>
+        <select id="visStatus" onchange="filterVisits()"><option value="">All status</option><option value="open">Open</option><option value="discharged">Discharged</option></select>
+      </div>
+      <div class="panel">
+        <div class="pnt">Visits <span>${rows.length} total</span></div>
+        <div class="tw"><table id="visTblWrap">
+          ${sortableTh(["Visit ID","Date","Patient","Type","File fee","Herbs paid","Discharged","Outcome",""])}
+          <tbody id="visTbl">${renderVisTbl(rows)}</tbody>
+        </table></div>
+      </div>
+    `);
+    initSortable("visTblWrap");
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function renderVisTbl(rows){
+  if(!rows.length) return `<tr><td colspan="9" style="text-align:center;color:var(--muted)">No visits yet.</td></tr>`;
+  return rows.slice().reverse().map(r=>`<tr>
+    <td><span class="tlink" onclick="openVisitDetail('${r.visit_id}')">${r.visit_id}</span></td>
+    <td>${r.visit_date||"—"}</td><td>${r.patient_name||"—"}</td>
+    <td><span class="pill ${r.visit_type==="IP"?"pp":r.visit_type==="HC"?"po":"pg"}">${r.visit_type||"—"}</span></td>
+    <td>${r.file_fee_paid==="YES"?`<span class="pill pg">Paid</span>`:`<span class="pill pr">Unpaid</span>`}</td>
+    <td>${r.herbs_paid==="YES"?`<span class="pill pg">Paid</span>`:r.herbs_bill?`<span class="pill po">TSh ${Number(r.herbs_bill).toLocaleString()}</span>`:"—"}</td>
+    <td>${r.discharged==="YES"?`<span class="pill pg">Yes</span>`:`<span class="pill pr">No</span>`}</td>
+    <td>${r.outcome||"—"}</td>
+    <td><div class="aicons"><span class="aicon" onclick="openVisitDetail('${r.visit_id}')">✏️</span><span class="aicon del" onclick="reqDel('${r._ts}','visits','${esc(r.visit_id+' — '+(r.patient_name||""))}',this)">🗑</span></div></td>
+  </tr>`).join("");
+}
+function filterVisits(){
+  const q=(document.getElementById("visQ")?.value||"").toLowerCase();
+  const t=document.getElementById("visTypeF")?.value||"";
+  const s=document.getElementById("visStatus")?.value||"";
+  const f=(window._visits||[]).filter(r=>{
+    const m=(r.patient_name||"").toLowerCase().includes(q)||(r.visit_id||"").toLowerCase().includes(q);
+    const tm=!t||r.visit_type===t;
+    const sm=!s||(s==="discharged"?r.discharged==="YES":r.discharged!=="YES");
+    return m&&tm&&sm;
+  });
+  document.getElementById("visTbl").innerHTML=renderVisTbl(f);
+}
+
+function openNewVisit(){
+  const pts=(window._pts||[]);
+  openMod("Open visit for registered patient",`
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">Only registered patients can be opened for a visit.</div>
+    <div class="fg">
+      <div class="field full">
+        <label>Patient name *</label>
+        <div class="ac-wrap">
+          <input type="text" id="vPatName" placeholder="Start typing patient name…" autocomplete="off" oninput="acPt('vPatName','vPatId',this.value)">
+          <div class="ac-list" id="vPatName_ac"></div>
+        </div>
+        <input type="hidden" id="vPatId">
+        <div class="hint">Auto-suggest — only registered patients shown</div>
+      </div>
+      <div class="field"><label>Visit type *</label>
+        <select id="vType" onchange="previewVisitId()"><option value="OP">Outpatient (OP)</option><option value="IP">Inpatient (IP)</option><option value="HC">Herb only (HC)</option></select>
+      </div>
+      <div class="field"><label>Visit ID (auto-generated)</label><input type="text" id="vIdPreview" readonly style="background:var(--tint);font-family:monospace;font-size:.8rem" placeholder="Will be assigned on save"><div class="hint">Auto-filled when you save</div></div>
+    </div>
+    <div style="margin-top:.6rem;padding:.5rem .65rem;background:var(--tint);border-radius:8px;font-size:.75rem">
+      <b>Visit record keeping fee: TSh ${FILE_FEE_VISIT.toLocaleString()}</b> — auto-created in billing. Pay to: ${BANK}
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitVisit()">Open visit</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="vMsg"></div>
+  `);
+  window._acPts=pts;
+}
+
+function acPt(inputId,hiddenId,q){
+  const list=document.getElementById(inputId+"_ac");
+  if(!list) return;
+  const pts=window._acPts||window._pts||[];
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())||(p.patient_id||"").includes(q)).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="selectPt('${inputId}','${hiddenId}','${esc((p.title||"")+" "+p.name)}','${p.patient_id}')">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+function selectPt(inputId,hiddenId,name,id){
+  const inp=document.getElementById(inputId),hid=document.getElementById(hiddenId),list=document.getElementById(inputId+"_ac");
+  if(inp) inp.value=name;if(hid) hid.value=id;if(list) list.classList.remove("open");
+}
+document.addEventListener("click",e=>{document.querySelectorAll(".ac-list.open").forEach(l=>{if(!l.parentElement.contains(e.target))l.classList.remove("open");});});
+
+async function previewVisitId(){
+  const t=v("vType");
+  const prefix=t==="IP"?"KWC-IP":t==="HC"?"KWC-HC":"KWC-OP";
+  document.getElementById("vIdPreview").value="Generating…";
+  const res=await GET({action:"get_next_visit_id",visit_type:t});
+  if(res.ok) document.getElementById("vIdPreview").value=res.visit_id;
+}
+
+async function submitVisit(){
+  const msg=document.getElementById("vMsg");
+  const pid=v("vPatId"),pname=v("vPatName");
+  if(!pid){showMsg(msg,"err","Select a registered patient.");return;}
+  const res=await POST({action:"open_visit",payload:{patient_id:pid,patient_name:pname,visit_type:v("vType")}});
+  if(res.ok){clearCache();showMsg(msg,"ok",`Visit opened: ${res.visit_id} · Fee bill auto-created`);setTimeout(()=>{closeMod();renderVisits();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function openVisitDetail(vid){
+  const r=(window._visits||[]).find(x=>x.visit_id===vid);
+  if(!r) return;
+  openMod("Visit: "+vid,`
+    <div style="font-size:.78rem;margin-bottom:.65rem"><b>${r.patient_name}</b> · ${r.visit_date} · <span class="pill ${r.visit_type==="IP"?"pp":"pg"}">${r.visit_type}</span></div>
+    <div class="fg">
+      <div class="field"><label>File fee paid?</label><select id="vdFP"><option value="YES" ${r.file_fee_paid==="YES"?"selected":""}>Yes</option><option value="NO" ${r.file_fee_paid!=="YES"?"selected":""}>No</option></select></div>
+      <div class="field"><label>File fee receipt #</label><input type="text" id="vdFR" value="${r.file_fee_receipt||""}"></div>
+      <div class="field"><label>Herbs bill (TSh)</label><input type="number" id="vdHB" value="${r.herbs_bill||""}"></div>
+      <div class="field"><label>Herbs paid?</label><select id="vdHP"><option value="YES" ${r.herbs_paid==="YES"?"selected":""}>Yes</option><option value="NO" ${r.herbs_paid!=="YES"?"selected":""}>No</option></select></div>
+      <div class="field"><label>Herbs receipt #</label><input type="text" id="vdHR" value="${r.herbs_receipt||""}"></div>
+      <div class="field"><label>Discharged?</label><select id="vdD"><option value="NO" ${r.discharged!=="YES"?"selected":""}>No</option><option value="YES" ${r.discharged==="YES"?"selected":""}>Yes</option></select></div>
+      <div class="field"><label>Outcome</label><select id="vdO"><option value="">—</option>${["Improved","Stable","Referred","Did not complete"].map(o=>`<option ${r.outcome===o?"selected":""}>${o}</option>`).join("")}</select></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="updateVisit('${vid}')">Save</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="vdMsg"></div>
+  `);
+}
+async function updateVisit(vid){
+  const msg=document.getElementById("vdMsg");
+  const res=await POST({action:"update_visit",payload:{visit_id:vid,file_fee_paid:v("vdFP"),file_fee_receipt:v("vdFR"),herbs_bill:v("vdHB"),herbs_paid:v("vdHP"),herbs_receipt:v("vdHR"),discharged:v("vdD"),discharge_date:v("vdD")==="YES"?today():"",outcome:v("vdO")}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Updated.");setTimeout(()=>{closeMod();renderVisits();},900);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── PRACTITIONER ── */
+async function renderPractitioner(){
+  loading();
+  try{
+    const visits=await getSheet("visits");
+    // Only show patients with OPEN visits (not discharged)
+    const openVisits=visits.filter(r=>r.discharged!=="YES"&&r.status==="open");
+    const seenIds=new Set();
+    const activePts=[];
+    openVisits.forEach(v=>{if(!seenIds.has(v.patient_id)){seenIds.add(v.patient_id);activePts.push({patient_id:v.patient_id,patient_name:v.patient_name,visit_id:v.visit_id,visit_type:v.visit_type,visit_date:v.visit_date});}});
+    window._activePts=activePts;
+    window._allVisits=visits;
+    set(`
+      <div class="panel">
+        <div class="pnt">Active patients (open visits only) <span>Discharged patients not shown</span></div>
+        <div class="sbar"><input type="text" id="praQ" placeholder="Search by name or patient ID…" oninput="filterPraPts()"></div>
+        <div class="ptg" id="praGrid">${renderPraCards(activePts)}</div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function renderPraCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No patients with open visits. Register a patient and open a visit first.</div>`;
+  return rows.map(p=>`
+    <div class="ptcard" onclick="openPraWorkspace('${p.patient_id}','${esc(p.patient_name)}','${p.visit_id}')">
+      <div class="ptav">${initials(p.patient_name||"")}</div>
+      <div><div class="ptn">${p.patient_name||"—"}</div><div class="ptid">${p.patient_id}</div>
+      <div class="ptmeta"><span class="pill ${p.visit_type==="IP"?"pp":p.visit_type==="HC"?"po":"pg"}">${p.visit_type}</span> · ${p.visit_id} · ${p.visit_date}</div></div>
+    </div>`).join("");
+}
+function filterPraPts(){
+  const q=(document.getElementById("praQ")?.value||"").toLowerCase();
+  document.getElementById("praGrid").innerHTML=renderPraCards((window._activePts||[]).filter(p=>(p.patient_name||"").toLowerCase().includes(q)||(p.patient_id||"").includes(q)));
+}
+
+async function openPraWorkspace(patientId,patientName,visitId){
+  const [inv,pts]=await Promise.all([getSheet("inventory"),getSheet("patients")]);
+  const pt=(pts||[]).find(p=>p.patient_id===patientId)||{};
+  window._inventory=inv;
+  const by=byLine();
+  openMod(`Practitioner — ${patientName}`,`
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:.55rem">${patientId} · Visit: ${visitId} · BMI ${pt.bmi||"—"}</div>
+    <div class="tabs">
+      <div class="tab active" onclick="swTab(this,'pw-vitals')">Vitals</div>
+      <div class="tab" onclick="swTab(this,'pw-consult')">Consultation</div>
+      <div class="tab" onclick="swTab(this,'pw-syms')">Symptoms</div>
+      <div class="tab" onclick="swTab(this,'pw-life')">Lifestyle</div>
+      <div class="tab" onclick="swTab(this,'pw-discharge')" style="color:var(--err);font-weight:700">Discharge</div>
+    </div>
+
+    <div class="tpanel active" id="pw-vitals">
+      <div style="background:var(--tint);border-radius:8px;padding:.5rem .7rem;font-size:.75rem;margin-bottom:.65rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <span><b style="color:var(--muted)">Wt from reg:</b> <b style="color:var(--g)">${pt.weight||"—"} kg</b></span>
+        <span><b style="color:var(--muted)">Ht from reg:</b> <b style="color:var(--g)">${pt.height||"—"} cm</b></span>
+        <span><b style="color:var(--muted)">BMI:</b> <b style="color:var(--g)">${pt.bmi||"—"}</b></span>
+        <span style="font-size:.67rem;color:var(--muted)">Update weight/height by editing the patient record</span>
+      </div>
+      <div class="fg">
+        <div class="field"><label>Date</label><input type="date" id="pvDate" value="${today()}"></div>
+        <div class="field"><label>Visit ID</label><input type="text" id="pvVid" value="${visitId}" readonly style="background:var(--tint);font-family:monospace"></div>
+        <div class="field"><label>Blood pressure (BP)</label><input type="text" id="pvBP" placeholder="e.g. 120/80 mmHg"><div class="hint">Systolic/Diastolic in mmHg</div></div>
+        <div class="field"><label>Pulse rate (PR) bpm</label><input type="number" id="pvPulse" placeholder="e.g. 72"><div class="hint">Beats per minute</div></div>
+        <div class="field"><label>Respiratory rate (RR)</label><input type="number" id="pvRR" placeholder="e.g. 16"><div class="hint">Breaths per minute</div></div>
+        <div class="field"><label>SpO2 (%)</label><input type="number" id="pvSpo2" placeholder="e.g. 98"><div class="hint">Oxygen saturation</div></div>
+        <div class="field"><label>Temperature (°C)</label><input type="number" id="pvTemp" placeholder="e.g. 36.5"><div class="hint">Body temperature</div></div>
+      </div>
+      <div class="fa"><button class="btn bp" onclick="submitVitals('${patientId}','${esc(patientName)}')">Save vitals</button></div>
+      <div class="msg" id="pvMsg"></div>
+    </div>
+
+    <div class="tpanel" id="pw-consult">
+      <div class="fg">
+        <div class="field"><label>Date</label><input type="date" id="pcDate" value="${today()}"></div>
+        <div class="field"><label>Visit ID</label><input type="text" id="pcVid" value="${visitId}" readonly style="background:var(--tint);font-family:monospace"></div>
+
+        <div class="field full">
+          <label>Chief complaints (add each with duration) *</label>
+          <div class="hint" style="margin-bottom:.3rem">Add each complaint separately with its duration</div>
+          <div id="cmpWrap"></div>
+          <button type="button" class="btn bg bsm" onclick="addCmpRow()" style="margin-top:.3rem">+ Add complaint</button>
+        </div>
+
+        <div class="field full">
+          <label>Current medications</label>
+          <div id="medsWrap"></div>
+          <button type="button" class="btn bg bsm" onclick="addMedRow()" style="margin-top:.3rem">+ Add medication</button>
+        </div>
+
+        <div class="field full">
+          <label>Diagnoses (add each separately)</label>
+          <div class="hint" style="margin-bottom:.3rem">Each diagnosis on its own row — herbs will auto-suggest</div>
+          <div id="dxWrap"></div>
+          <button type="button" class="btn bg bsm" onclick="addDxRow()" style="margin-top:.3rem">+ Add diagnosis</button>
+        </div>
+
+        <div class="field full">
+          <label>Herb prescriptions</label>
+          <div class="hint" style="margin-bottom:.3rem">Add each herb — price auto-fills from inventory</div>
+          <div id="rxWrap"></div>
+          <button type="button" class="btn bg bsm" onclick="addRxRow()" style="margin-top:.3rem">+ Add herb</button>
+          <div id="rxTotal" style="margin-top:.4rem;font-size:.8rem;font-weight:700;color:var(--g)"></div>
+        </div>
+
+        <div class="field"><label>Follow-up needed?</label><select id="pcFollowup"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+        <div class="field"><label>Follow-up date</label><input type="date" id="pcFollowDate"></div>
+        <div class="field full"><label>Notes &amp; observations</label><textarea id="pcNotes" placeholder="Additional clinical notes…"></textarea></div>
+        <div class="certify full"><input type="checkbox" id="pcCert"><div><div class="ct">I certify this consultation record is accurate and complete.</div><div class="cb">Recorded by: ${by}</div></div></div>
+      </div>
+      <div class="fa"><button class="btn bp" onclick="submitConsult('${patientId}','${esc(patientName)}')">Save consultation</button></div>
+      <div class="msg" id="pcMsg"></div>
+    </div>
+
+    <div class="tpanel" id="pw-syms">
+      <div style="font-size:.74rem;color:var(--muted);margin-bottom:.6rem">Rate: 0=Never · 1=Rarely · 2=Occasionally · 3=Sometimes · 4=Often · 5=Always</div>
+      ${buildSymGrid()}
+      <div class="field" style="margin-top:.5rem"><label>Assessment type</label><select id="symBaseline"><option value="YES">Baseline — first assessment</option><option value="NO">Follow-up update</option></select></div>
+      <div class="fa"><button class="btn bp" onclick="submitSymptoms('${patientId}','${esc(patientName)}')">Save symptom assessment</button></div>
+      <div class="msg" id="symMsg"></div>
+    </div>
+
+    <div class="tpanel" id="pw-life">
+      ${buildLifestyleForm()}
+      <div class="field" style="margin-top:.5rem"><label>Assessment type</label><select id="lstBaseline"><option value="YES">Baseline</option><option value="NO">Follow-up</option></select></div>
+      <div class="fa"><button class="btn bp" onclick="submitLifestyle('${patientId}','${esc(patientName)}')">Save lifestyle assessment</button></div>
+      <div class="msg" id="lstMsg"></div>
+    </div>
+
+    <div class="tpanel" id="pw-discharge">
+      <div style="background:#fbe8e8;border-radius:8px;padding:.6rem .75rem;font-size:.75rem;color:var(--err);font-weight:600;margin-bottom:.85rem">
+        ⚠ This action discharges the patient and closes their current visit. Ensure all records are complete before proceeding.
+      </div>
+      <div class="fg">
+        <div class="field"><label>Discharge date *</label><input type="date" id="dcDate" value="${today()}"></div>
+        <div class="field"><label>Visit ID</label><input type="text" id="dcVid" value="${visitId}" readonly style="background:var(--tint);font-family:monospace"></div>
+        <div class="field full">
+          <label>Discharge status *</label>
+          <select id="dcStatus">
+            <option value="">— Select discharge status —</option>
+            <option value="Completed — full program">Completed — full program duration</option>
+            <option value="Completed — early improvement">Completed — discharged early, significant improvement</option>
+            <option value="Stable — self-discharge">Stable — patient chose to leave</option>
+            <option value="Referred — higher facility">Referred — higher level facility needed</option>
+            <option value="Referred — specialist">Referred — specialist consultation needed</option>
+            <option value="Referred — emergency">Referred — emergency transfer</option>
+            <option value="Did not complete — financial">Did not complete — financial reasons</option>
+            <option value="Did not complete — personal">Did not complete — personal reasons</option>
+            <option value="Did not complete — AMA">Did not complete — against medical advice</option>
+            <option value="Deceased">Deceased</option>
+            <option value="Other">Other — specify in notes below</option>
+          </select>
+          <div class="hint">Select the most appropriate discharge status</div>
+        </div>
+        <div class="field full">
+          <label>Referral destination (if referred)</label>
+          <input type="text" id="dcReferTo" placeholder="e.g. Mafinga District Hospital, Dr. Mwamba — Cardiology">
+          <div class="hint">Name of facility or specialist referred to</div>
+        </div>
+        <div class="field full">
+          <label>Treatment summary</label>
+          <textarea id="dcSummary" placeholder="Brief summary of treatment given, herbs prescribed, lifestyle changes recommended…" style="min-height:70px"></textarea>
+          <div class="hint">What was done during this visit / admission</div>
+        </div>
+        <div class="field full">
+          <label>Discharge note — additional observations</label>
+          <textarea id="dcNotes" placeholder="Any additional clinical observations, patient response, outstanding concerns, instructions to family, follow-up care plan…" style="min-height:85px"></textarea>
+          <div class="hint">Practitioner's open remarks — anything not captured above</div>
+        </div>
+        <div class="field"><label>Follow-up date (if needed)</label><input type="date" id="dcFollowup"></div>
+        <div class="field"><label>Follow-up instructions</label><input type="text" id="dcFollowInstr" placeholder="e.g. Return in 2 weeks, continue herbs"></div>
+        <div class="field full" style="background:var(--tint);border-radius:7px;padding:.45rem .6rem;font-size:.72rem;font-weight:700;color:var(--g)">Discharge vitals</div>
+        <div class="field"><label>BP at discharge</label><input type="text" id="dcBP" placeholder="e.g. 118/76 mmHg"></div>
+        <div class="field"><label>Pulse (PR) bpm</label><input type="number" id="dcPulse" placeholder="e.g. 72"></div>
+        <div class="field"><label>Respiratory rate (RR)</label><input type="number" id="dcRR" placeholder="e.g. 16"></div>
+        <div class="field"><label>SpO2 (%)</label><input type="number" id="dcSpo2" placeholder="e.g. 98"></div>
+        <div class="field"><label>Temperature (°C)</label><input type="number" id="dcTemp" placeholder="e.g. 36.5"></div>
+        <div class="field"><label>Weight at discharge (kg)</label><input type="number" id="dcWt" placeholder="e.g. 68" oninput="calcBMI('dcWt','dcHt','dcBmi')"></div>
+        <div class="field"><label>Height (cm)</label><input type="number" id="dcHt" placeholder="e.g. 165" oninput="calcBMI('dcWt','dcHt','dcBmi')"></div>
+        <div class="bmid full" id="dcBmi"></div>
+        <div class="certify full">
+          <input type="checkbox" id="dcCert">
+          <div><div class="ct">I certify that this discharge is clinically appropriate and all records are complete.</div><div class="cb">Discharging practitioner: ${byLine()}</div></div>
+        </div>
+      </div>
+      <div class="fa">
+        <button class="btn bp" style="background:var(--err);color:#fff" onclick="submitDischarge('${patientId}','${esc(patientName)}','${visitId}')">Confirm discharge</button>
+        <button class="btn bg" onclick="closeMod()">Cancel</button>
+      </div>
+      <div class="msg" id="dcMsg"></div>
+    </div>
+  `);
+  addCmpRow();addMedRow();addDxRow();addRxRow();
+}
+
+// Complaint rows
+let cmpC=0;
+function addCmpRow(comp="",dur=""){
+  cmpC++;const w=document.getElementById("cmpWrap");if(!w)return;
+  const d=document.createElement("div");d.className="cmprow";d.dataset.cid=cmpC;
+  d.innerHTML=`<input type="text" class="cname" placeholder="Complaint / Malalamiko e.g. Headache" value="${comp}"><input type="text" class="cdur" placeholder="Duration e.g. 3 days"><button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer" onclick="this.parentElement.remove()">✕</button>`;
+  w.appendChild(d);d.querySelector(".cname").focus();
+}
+function collectCmps(){return [...document.querySelectorAll("#cmpWrap [data-cid]")].map(r=>({complaint:r.querySelector(".cname").value.trim(),duration:r.querySelector(".cdur").value.trim()})).filter(c=>c.complaint);}
+
+// Medication rows
+let medC=0;
+function addMedRow(name="",dose="",freq="",dur=""){
+  medC++;const w=document.getElementById("medsWrap");if(!w)return;
+  const d=document.createElement("div");d.className="medrow";d.dataset.mid=medC;
+  d.innerHTML=`<input type="text" class="mn" placeholder="Medication" value="${name}"><input type="text" class="md" placeholder="Dose" value="${dose}"><input type="text" class="mf" placeholder="Frequency" value="${freq}"><input type="text" class="mdu" placeholder="Duration" value="${dur}"><button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer" onclick="this.parentElement.remove()">✕</button>`;
+  w.appendChild(d);
+}
+function collectMeds(){return [...document.querySelectorAll("#medsWrap [data-mid]")].map(r=>({name:r.querySelector(".mn").value.trim(),dose:r.querySelector(".md").value.trim(),freq:r.querySelector(".mf").value.trim(),duration:r.querySelector(".mdu").value.trim()})).filter(m=>m.name);}
+
+// Diagnosis rows — with herb auto-suggest
+let dxC=0;
+function addDxRow(dx=""){
+  dxC++;const w=document.getElementById("dxWrap");if(!w)return;
+  const conditions=Object.keys(HERB_CONDITIONS);
+  const d=document.createElement("div");d.className="dxrow";d.dataset.did=dxC;
+  d.innerHTML=`<div style="position:relative"><input type="text" list="dxList${dxC}" class="dxname" placeholder="Diagnosis / Condition" value="${dx}" oninput="onDxInput(this)" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem"><datalist id="dxList${dxC}">${conditions.map(c=>`<option value="${c}">`).join("")}</datalist></div><button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer" onclick="this.parentElement.remove()">✕</button>`;
+  w.appendChild(d);d.querySelector(".dxname").focus();
+}
+function onDxInput(inp){
+  const dx=inp.value.trim();
+  const suggestions=HERB_CONDITIONS[dx];
+  if(suggestions&&suggestions.length){
+    const existing=collectRx().map(r=>r.product_name);
+    suggestions.forEach(herb=>{if(!existing.includes(herb))addRxRow(herb,"","","",dx);});
+  }
+}
+function collectDx(){return [...document.querySelectorAll("#dxWrap [data-did]")].map(r=>r.querySelector(".dxname").value.trim()).filter(Boolean);}
+
+// RX rows — auto-price from inventory
+let rxC=0;
+function addRxRow(prod="",dose="",dur="",qty="",cond=""){
+  rxC++;const w=document.getElementById("rxWrap");if(!w)return;
+  const inv=window._inventory||[];
+  const herbs=(window._herbs||inv).map(h=>h.product_name).filter(Boolean);
+  const d=document.createElement("div");d.className="rxrow";d.dataset.rid=rxC;
+  d.innerHTML=`
+    <div style="position:relative">
+      <input type="text" class="rn" list="rxList${rxC}" placeholder="Herb / product" value="${prod}" oninput="onRxInput(this)" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+      <datalist id="rxList${rxC}">${inv.map(h=>`<option value="${h.product_name}">`).join("")}</datalist>
+    </div>
+    <input type="text" class="rd" placeholder="Dosage" value="${dose}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="text" class="rdu" placeholder="Duration" value="${dur}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="number" class="rq" placeholder="Qty" value="${qty}" oninput="calcRxTotal()" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="text" class="rprice" placeholder="TSh/unit" readonly style="background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer" onclick="this.parentElement.remove();calcRxTotal()">✕</button>`;
+  w.appendChild(d);
+  if(prod) fillRxPrice(d.querySelector(".rn"));
+}
+function onRxInput(inp){
+  const row=inp.closest("[data-rid]");
+  fillRxPrice(inp);
+  // caution check
+  const inv=window._inventory||[];
+  const match=inv.find(i=>(i.product_name||"").toLowerCase()===inp.value.toLowerCase());
+  let cautionEl=row.querySelector(".rx-caution");
+  if(!cautionEl){cautionEl=document.createElement("div");cautionEl.className="rx-caution";row.appendChild(cautionEl);}
+  if(match){
+    if(Number(match.quantity)<=0) cautionEl.innerHTML=`<span class="pill pr" style="font-size:.6rem">Out of stock</span>`;
+    else if(match.low_stock_alert==="YES") cautionEl.innerHTML=`<span class="pill po" style="font-size:.6rem">Low stock: ${match.quantity} ${match.unit}</span>`;
+    else cautionEl.innerHTML=`<span class="pill pg" style="font-size:.6rem">In stock: ${match.quantity} ${match.unit}</span>`;
+  }else{cautionEl.innerHTML="";}
+}
+function fillRxPrice(inp){
+  const inv=window._inventory||[];
+  const row=inp.closest("[data-rid]");if(!row) return;
+  const match=inv.find(i=>(i.product_name||"").toLowerCase()===inp.value.toLowerCase());
+  const priceEl=row.querySelector(".rprice");
+  if(priceEl) priceEl.value=match?Number(match.price_tzs||0).toLocaleString():"";
+  calcRxTotal();
+}
+function calcRxTotal(){
+  const inv=window._inventory||[];
+  let total=0;
+  document.querySelectorAll("#rxWrap [data-rid]").forEach(row=>{
+    const name=row.querySelector(".rn")?.value||"";
+    const qty=Number(row.querySelector(".rq")?.value||0);
+    const match=inv.find(i=>(i.product_name||"").toLowerCase()===name.toLowerCase());
+    if(match&&qty) total+=Number(match.price_tzs||0)*qty;
+  });
+  const el=document.getElementById("rxTotal");
+  if(el) el.textContent=total>0?`Herbs total: TSh ${total.toLocaleString()}`:"";
+  return total;
+}
+function collectRx(){
+  const inv=window._inventory||[];
+  return [...document.querySelectorAll("#rxWrap [data-rid]")].map(row=>{
+    const name=row.querySelector(".rn")?.value.trim()||"";
+    const qty=Number(row.querySelector(".rq")?.value||1);
+    const match=inv.find(i=>(i.product_name||"").toLowerCase()===name.toLowerCase());
+    const cost=match?Number(match.price_tzs||0)*qty:0;
+    return {product_name:name,dosage:row.querySelector(".rd")?.value.trim()||"",duration:row.querySelector(".rdu")?.value.trim()||"",quantity:qty,unit:match?match.unit||"":"",cost_tzs:cost};
+  }).filter(r=>r.product_name);
+}
+
+async function submitVitals(patientId,patientName){
+  const msg=document.getElementById("pvMsg");
+  // Use registration weight/height for BMI — not re-entered here
+  const pts=window._pts||[];
+  const pt=pts.find(p=>p.patient_id===patientId)||{};
+  const res=await POST({action:"add_vitals",payload:{patient_id:patientId,patient_name:patientName,visit_id:v("pvVid"),date:v("pvDate"),bp:v("pvBP"),weight:pt.weight||"",height:pt.height||"",bmi:pt.bmi||"",spo2:v("pvSpo2"),pulse:v("pvPulse"),rr:v("pvRR"),temp:v("pvTemp")}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Vitals saved.");}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function submitConsult(patientId,patientName){
+  const msg=document.getElementById("pcMsg");
+  const cmps=collectCmps();
+  if(!cmps.length){showMsg(msg,"err","Add at least one complaint.");return;}
+  if(!document.getElementById("pcCert").checked){showMsg(msg,"err","Tick the certification checkbox.");return;}
+  const rxs=collectRx();
+  const herbsTotal=calcRxTotal();
+  const payload={patient_id:patientId,patient_name:patientName,visit_id:v("pcVid"),date:v("pcDate"),complaints_json:JSON.stringify(cmps),current_meds_json:JSON.stringify(collectMeds()),diagnoses_json:JSON.stringify(collectDx()),remedy:rxs.map(r=>r.product_name).join(", "),dosage:rxs.map(r=>r.dosage).join("; "),treatment_days:"",followup_needed:v("pcFollowup"),followup_date:v("pcFollowDate"),notes:v("pcNotes"),prescriptions_json:JSON.stringify(rxs),herbs_total:herbsTotal,certified:true};
+  const res=await POST({action:"add_consultation",payload});
+  if(res.ok){clearCache();showMsg(msg,"ok","Consultation saved: "+res.consult_id+(herbsTotal>0?` · Herbs bill TSh ${herbsTotal.toLocaleString()} auto-created`:""));}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── SYMPTOM GRID ── */
+const SYMF=[
+  {sec:"Head & Neck / Kichwa na Shingo",f:[{id:"head_headache",l:"Headache"},{id:"head_forget",l:"Forgetfulness"},{id:"head_eye_pain",l:"Eye pain"},{id:"head_fever",l:"Fever / Homa"},{id:"head_ear_noise",l:"Ear ringing"},{id:"head_dizzy",l:"Dizziness"},{id:"head_faint",l:"Fainting"},{id:"head_nose_bleed",l:"Nosebleed"},{id:"head_seizure",l:"Seizure"},{id:"head_allergy",l:"Allergy"},{id:"head_neck_pain",l:"Neck pain"},{id:"head_fatigue",l:"Fatigue"},{id:"head_weakness",l:"Weakness"}]},
+  {sec:"Arms & Legs / Mikono na Miguu",f:[{id:"limb_hand_pain",l:"Hand pain"},{id:"limb_hand_numb",l:"Hand numbness"},{id:"limb_feet_swell",l:"Feet swelling"},{id:"limb_feet_pain",l:"Feet pain"},{id:"limb_feet_numb",l:"Feet numbness"},{id:"limb_sole_pain",l:"Sole pain"},{id:"limb_hand_cold",l:"Cold hands"},{id:"limb_feet_cold",l:"Cold feet"}]},
+  {sec:"Mouth / Mdomo",f:[{id:"mouth_sores",l:"Mouth sores"},{id:"mouth_bad_breath",l:"Bad breath"},{id:"mouth_dry",l:"Dry mouth"},{id:"mouth_lips_crack",l:"Cracked lips"},{id:"mouth_tongue_dry",l:"Dry tongue"},{id:"mouth_no_taste",l:"Loss of taste"}]},
+  {sec:"Central Body / Mwili wa Kati",f:[{id:"body_nausea",l:"Nausea"},{id:"body_constipation",l:"Constipation"},{id:"body_vomit",l:"Vomiting"},{id:"body_breathe_hard",l:"Breathlessness"},{id:"body_heartburn",l:"Heartburn"},{id:"body_urinate_often",l:"Frequent urination"},{id:"body_sweat",l:"Excessive sweating"},{id:"body_stomach_pain",l:"Stomach pain"},{id:"body_bp",l:"BP issues"},{id:"body_chest_pain",l:"Chest pain"},{id:"body_diarrhea",l:"Diarrhea"},{id:"body_heart_beat",l:"Irregular heartbeat"}]}
+];
+const SYMF_F=[{id:"female_menstrual_pain",l:"Menstrual pain"},{id:"female_irregular",l:"Irregular periods"},{id:"female_heavy_bleed",l:"Heavy bleeding"},{id:"female_breast_swelling",l:"Breast swelling"},{id:"female_breast_pain",l:"Breast pain"},{id:"female_discharge",l:"Vaginal discharge"}];
+const SYMF_M=[{id:"male_urine_problem",l:"Urinary problem"},{id:"male_pus",l:"Pus in urine"},{id:"male_low_libido",l:"Low libido"},{id:"male_prostate",l:"Prostate problem"},{id:"male_testicle_pain",l:"Testicle pain"},{id:"male_testicle_swell",l:"Testicle swelling"}];
+const SEVC=["s0","s1","s2","s3","s4","s5"];
+
+function buildSymGrid(){
+  const opts=[0,1,2,3,4,5].map(i=>`<option value="${i}">${i}</option>`).join("");
+  let h="";
+  [...SYMF].forEach(sec=>{
+    h+=`<div style="margin-bottom:.75rem"><div style="font-size:.74rem;font-weight:700;color:var(--g);margin-bottom:.35rem;padding-bottom:.2rem;border-bottom:1px solid var(--line)">${sec.sec}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.3rem">`;
+    sec.f.forEach(f=>{h+=`<div style="display:flex;flex-direction:column;gap:.12rem"><label style="font-size:.63rem">${f.l}</label><select id="sym_${f.id}" onchange="colorSym(this)" style="font-size:.67rem;padding:.25rem .35rem;border-radius:6px;border:1px solid var(--line);background:#fff">${opts}</select></div>`;});
+    h+=`</div></div>`;
+  });
+  h+=`<div style="margin-bottom:.75rem"><div style="font-size:.74rem;font-weight:700;color:var(--g);margin-bottom:.35rem;border-bottom:1px solid var(--line);padding-bottom:.2rem">Women only</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.3rem">`;
+  SYMF_F.forEach(f=>{h+=`<div style="display:flex;flex-direction:column;gap:.12rem"><label style="font-size:.63rem">${f.l}</label><select id="sym_${f.id}" onchange="colorSym(this)" style="font-size:.67rem;padding:.25rem .35rem;border-radius:6px;border:1px solid var(--line);background:#fff">${opts}</select></div>`;});
+  h+=`</div></div><div style="margin-bottom:.75rem"><div style="font-size:.74rem;font-weight:700;color:var(--g);margin-bottom:.35rem;border-bottom:1px solid var(--line);padding-bottom:.2rem">Men only</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.3rem">`;
+  SYMF_M.forEach(f=>{h+=`<div style="display:flex;flex-direction:column;gap:.12rem"><label style="font-size:.63rem">${f.l}</label><select id="sym_${f.id}" onchange="colorSym(this)" style="font-size:.67rem;padding:.25rem .35rem;border-radius:6px;border:1px solid var(--line);background:#fff">${opts}</select></div>`;});
+  h+=`</div></div>`;
+  return h;
+}
+function colorSym(sel){const n=Number(sel.value);sel.className=SEVC[n]||"";}
+
+async function submitSymptoms(pid,pname){
+  const msg=document.getElementById("symMsg");
+  const payload={patient_id:pid,patient_name:pname,is_baseline:v("symBaseline")};
+  [...SYMF.flatMap(s=>s.f),...SYMF_F,...SYMF_M].forEach(f=>{payload[f.id]=Number(document.getElementById("sym_"+f.id)?.value||0);});
+  const res=await POST({action:"add_symptoms",payload});
+  if(res.ok){clearCache();showMsg(msg,"ok","Symptoms saved.");}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+function buildLifestyleForm(){
+  return `<div class="fg">
+    <div class="field full" style="background:var(--tint);border-radius:7px;padding:.45rem .6rem;font-size:.72rem;font-weight:700;color:var(--g)">A. Lishe / Nutrition</div>
+    <div class="field"><label>Meals/day</label><select id="lst_meals"><option value="">—</option><option>1–2</option><option>3</option><option>3+ snacks</option><option>Irregular</option></select></div>
+    <div class="field"><label>Fruits & vegetables</label><select id="lst_fv"><option value="">—</option><option>Daily</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Processed food</label><select id="lst_proc"><option value="">—</option><option>Rarely</option><option>Weekly</option><option>Daily</option></select></div>
+    <div class="field"><label>Sugar foods</label><select id="lst_sugar"><option value="">—</option><option>Rarely</option><option>Few times/week</option><option>Daily</option></select></div>
+    <div class="field"><label>Meat/fish</label><select id="lst_meat"><option value="">—</option><option>Daily</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Breakfast</label><select id="lst_bfast"><option value="">—</option><option>Daily</option><option>Rarely</option><option>Never</option></select></div>
+    <div class="field full" style="background:var(--tint);border-radius:7px;padding:.45rem .6rem;font-size:.72rem;font-weight:700;color:var(--g)">B. Imani / Faith</div>
+    <div class="field"><label>Faith in God</label><select id="lst_faith"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    <div class="field"><label>Stress?</label><select id="lst_stress"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+    <div class="field"><label>Stress source</label><select id="lst_stress_src"><option value="">—</option><option>Family</option><option>Health</option><option>Work</option><option>Money</option></select></div>
+    <div class="field full" style="background:var(--tint);border-radius:7px;padding:.45rem .6rem;font-size:.72rem;font-weight:700;color:var(--g)">C–G. Air · Exercise · Water · Sunlight · Rest</div>
+    <div class="field"><label>Ventilation</label><select id="lst_vent"><option value="">—</option><option>Good</option><option>Moderate</option><option>Poor</option></select></div>
+    <div class="field"><label>Exercise frequency</label><select id="lst_ex"><option value="">—</option><option>Daily</option><option>3–5/week</option><option>1–2/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Water glasses/day</label><select id="lst_water"><option value="">—</option><option>&lt;3</option><option>3–5</option><option>6–8</option><option>9+</option></select></div>
+    <div class="field"><label>Urine colour</label><select id="lst_urine"><option value="">—</option><option>Light/clear</option><option>Yellow</option><option>Orange</option></select></div>
+    <div class="field"><label>Sunlight time</label><select id="lst_sun"><option value="">—</option><option>≥30 min/day</option><option>Few times/week</option><option>Rarely</option></select></div>
+    <div class="field"><label>Sleep hours</label><select id="lst_sleep"><option value="">—</option><option>&lt;5</option><option>5–6</option><option>7–8</option><option>&gt;8</option></select></div>
+    <div class="field"><label>Wake up tired?</label><select id="lst_waketired"><option value="">—</option><option>Often</option><option>Sometimes</option><option>Rarely</option></select></div>
+    <div class="field full" style="background:var(--tint);border-radius:7px;padding:.45rem .6rem;font-size:.72rem;font-weight:700;color:var(--g)">Other / Mengineyo</div>
+    <div class="field"><label>Alcohol</label><select id="lst_alc"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field"><label>Smoking</label><select id="lst_smoke2"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field"><label>Tea/Coffee</label><input type="text" id="lst_tc" placeholder="How often?"></div>
+    <div class="field"><label>Drugs</label><select id="lst_drugs"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+    <div class="field full"><label>3 main health goals</label><textarea id="lst_goals" placeholder="List goals…"></textarea></div>
+    <div class="field full"><label>Readiness to change</label><select id="lst_ready"><option value="">—</option><option value="1">1 — Maybe / Labda</option><option value="2">2 — Moderate / Wastani</option><option value="3">3 — Ready / Tayari</option><option value="4">4 — Very ready / Tayari sana</option></select></div>
+  </div>`;
+}
+async function submitLifestyle(pid,pname){
+  const msg=document.getElementById("lstMsg");
+  const payload={patient_id:pid,patient_name:pname,is_baseline:v("lstBaseline"),meals_per_day:v("lst_meals"),fruits_veg:v("lst_fv"),processed_food:v("lst_proc"),sugar_food:v("lst_sugar"),meat_fish:v("lst_meat"),breakfast:v("lst_bfast"),faith:v("lst_faith"),stress:v("lst_stress"),stress_source:v("lst_stress_src"),ventilation:v("lst_vent"),exercise_freq:v("lst_ex"),water_glasses:v("lst_water"),urine_color:v("lst_urine"),sunlight_time:v("lst_sun"),sleep_hours:v("lst_sleep"),wake_tired:v("lst_waketired"),alcohol:v("lst_alc"),smoking:v("lst_smoke2"),tea_coffee:v("lst_tc"),drugs:v("lst_drugs"),health_goals:v("lst_goals"),readiness_to_change:v("lst_ready")};
+  const res=await POST({action:"add_lifestyle",payload});
+  if(res.ok){clearCache();showMsg(msg,"ok","Lifestyle saved.");}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+async function submitDischarge(patientId,patientName,visitId){
+  const msg=document.getElementById("dcMsg");
+  if(!v("dcStatus")){showMsg(msg,"err","Select a discharge status.");return;}
+  if(!document.getElementById("dcCert").checked){showMsg(msg,"err","Tick the certification checkbox.");return;}
+  // Save discharge vitals
+  const dcW=v("dcWt"),dcH=v("dcHt");
+  const dcBmi=dcW&&dcH?(parseFloat(dcW)/Math.pow(parseFloat(dcH)/100,2)).toFixed(1):"";
+  if(v("dcBP")||v("dcPulse")||v("dcWt")){
+    await POST({action:"add_vitals",payload:{patient_id:patientId,patient_name:patientName,visit_id:visitId,date:v("dcDate"),bp:v("dcBP"),pulse:v("dcPulse"),rr:v("dcRR"),spo2:v("dcSpo2"),temp:v("dcTemp"),weight:dcW,height:dcH,bmi:dcBmi,notes:"Discharge vitals"}});
+  }
+  // Save outcome record
+  const outRes=await POST({action:"add_outcome",payload:{patient_id:patientId,patient_name:patientName,visit_id:visitId,date:v("dcDate"),outcome:v("dcStatus"),notes:[v("dcSummary"),v("dcNotes"),v("dcReferTo")?("Referred to: "+v("dcReferTo")):"",v("dcFollowup")?("Follow-up: "+v("dcFollowup")+" — "+v("dcFollowInstr")):""].filter(Boolean).join("\n")}});
+  if(!outRes.ok){showMsg(msg,"err",outRes.error||"Failed saving outcome.");return;}
+  // Mark visit as discharged
+  const visRes=await POST({action:"update_visit",payload:{visit_id:visitId,discharged:"YES",discharge_date:v("dcDate"),outcome:v("dcStatus")}});
+  if(!visRes.ok){showMsg(msg,"err",visRes.error||"Outcome saved but visit update failed.");return;}
+  clearCache();
+  showMsg(msg,"ok",`Patient discharged. Status: ${v("dcStatus")}. Visit closed.`);
+  setTimeout(()=>{closeMod();renderPractitioner();},2000);
+}
+
+/* ── INPATIENT ── */
+async function renderInpatient(){
+  loading();
+  const canAdd=(USER.access||[]).includes("inpatient");
+  try{
+    const [rows,pts,visits]=await Promise.all([getSheet("ip_logs"),getSheet("patients"),getSheet("visits")]);
+    window._iplogs=rows;window._pts=pts;
+    // Active IP patients: registered as IP and not discharged
+    const activeIP=pts.filter(p=>p.patient_type==="IP");
+    const openIPVisits=visits.filter(v=>v.visit_type==="IP"&&v.discharged!=="YES");
+    const openIPIds=new Set(openIPVisits.map(v=>v.patient_id));
+    // Show active (open visit) IP patients at top; discharged remain in log only
+    set(`
+      <div class="panel" style="margin-bottom:.8rem">
+        <div class="pnt">Add daily log for inpatient <span>Only active IP patients shown</span></div>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div class="ac-wrap" style="flex:1">
+            <input type="text" id="ipSearch" placeholder="Type IP patient name…" autocomplete="off" oninput="acIpPt(this.value)">
+            <div class="ac-list" id="ipSearch_ac"></div>
+          </div>
+        </div>
+        <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.5rem">
+          ${activeIP.filter(p=>openIPIds.has(p.patient_id)).map(p=>`
+            <div style="background:var(--tint);border-radius:9px;padding:.55rem .8rem;cursor:pointer;border:1px solid var(--line);transition:border-color .15s" onclick="openIpLog('${p.patient_id}','${esc((p.title||"")+" "+p.name)}')" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--line)'">
+              <div style="font-size:.8rem;font-weight:700;color:var(--g)">${p.title||""} ${p.name}</div>
+              <div style="font-size:.65rem;color:var(--muted);font-family:monospace">${p.patient_id}</div>
+              <div style="font-size:.62rem;color:var(--muted);margin-top:2px">${rows.filter(r=>r.patient_id===p.patient_id).length} logs recorded</div>
+            </div>`).join("")||`<div style="color:var(--muted);font-size:.78rem">No active inpatients. Register a patient as IP and open a visit.</div>`}
+        </div>
+      </div>
+      <div class="sbar">
+        <input type="text" id="ipFiltQ" placeholder="Filter log records by patient name…" oninput="filterIp()">
+      </div>
+      <div class="panel">
+        <div class="pnt">All inpatient daily logs <span>${rows.length} entries</span></div>
+        <div class="tw" id="ipTable">${renderIpTbl(rows)}</div>
+      </div>
+    `);
+    window._acIpPts=activeIP.filter(p=>openIPIds.has(p.patient_id));
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function acIpPt(q){
+  const list=document.getElementById("ipSearch_ac");if(!list) return;
+  const pts=window._acIpPts||[];
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="openIpLog('${p.patient_id}','${esc((p.title||"")+" "+p.name)}')">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+function renderIpTbl(rows){
+  if(!rows.length) return `<div class="empty">No daily logs yet.</div>`;
+  return `<table><thead><tr>${["Log ID","Date","Patient","Wk","Complaint","BP","Wt","BMI","Therapy","Food","Progress","By",""].map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.slice().reverse().map(r=>`<tr><td>${r.log_id||"—"}</td><td>${r.log_date||"—"}</td><td>${r.patient_name||"—"}</td><td>${r.week_number||"—"}</td><td>${(r.main_complaint||"—").slice(0,20)}</td><td>${r.vitals_bp||"—"}</td><td>${r.vitals_weight||"—"}</td><td>${r.vitals_bmi||"—"}</td><td>${(r.therapy||"—").slice(0,20)}</td><td>${(r.food_served||"—").slice(0,20)}</td><td>${(r.progress||"—").slice(0,20)}</td><td style="font-size:.63rem">${r.logged_by||"—"}</td><td><span class="aicon del" onclick="reqDel('${r._ts}','ip_logs','IP log ${r.log_id}',this)">🗑</span></td></tr>`).join("")}</tbody></table>`;
+}
+function filterIp(){
+  const q=(document.getElementById("ipFiltQ")?.value||"").toLowerCase();
+  document.getElementById("ipTable").innerHTML=renderIpTbl((window._iplogs||[]).filter(r=>!q||(r.patient_name||"").toLowerCase().includes(q)));
+}
+function openIpLog(prePatId="",prePatName=""){
+  const by=byLine();
+  openMod("Add inpatient daily log",`
+    <div class="fg">
+      <div class="field">
+        <label>Patient *</label>
+        ${prePatId
+          ? `<input type="text" id="ilPatName" value="${esc(prePatName)}" readonly style="background:var(--tint);font-weight:600;color:var(--g)"><input type="hidden" id="ilPatId" value="${prePatId}">`
+          : `<div class="ac-wrap"><input type="text" id="ilPatName" placeholder="Type IP patient name…" autocomplete="off" oninput="acPtFilter('ilPatName','ilPatId',this.value,true)"><div class="ac-list" id="ilPatName_ac"></div></div><input type="hidden" id="ilPatId">`
+        }
+      </div>
+      <div class="field"><label>Date *</label><input type="date" id="ilDate" value="${today()}"></div>
+      <div class="field"><label>Week #</label><input type="number" id="ilWeek" placeholder="e.g. 1"></div>
+      <div class="field full"><label>Main complaint today</label><input type="text" id="ilComp" placeholder="e.g. Mild back pain"></div>
+      <div class="field"><label>Blood pressure</label><input type="text" id="ilBP" placeholder="e.g. 110/70"></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="ilWt" placeholder="e.g. 64" oninput="calcBMI('ilWt','ilHt','ilBmi')"></div>
+      <div class="field"><label>Height (cm)</label><input type="number" id="ilHt" placeholder="e.g. 165" oninput="calcBMI('ilWt','ilHt','ilBmi')"></div>
+      <div class="bmid full" id="ilBmi"></div>
+      <div class="field"><label>SpO2 (%)</label><input type="number" id="ilSpo2" placeholder="98"></div>
+      <div class="field"><label>Pulse (bpm)</label><input type="number" id="ilPulse" placeholder="88"></div>
+      <div class="field"><label>Temperature (°C)</label><input type="number" id="ilTemp" placeholder="36.5"></div>
+      <div class="field full"><label>Therapy activities</label><textarea id="ilTherapy" placeholder="e.g. Hot/cold fomentations, morning walk…"></textarea></div>
+      <div class="field full"><label>Food served today</label><textarea id="ilFood" placeholder="e.g. Mango juice, green salad, oats…"></textarea></div>
+      <div class="field full"><label>Progress notes</label><textarea id="ilProg" placeholder="Clinical observations…"></textarea></div>
+      <div class="certify full"><input type="checkbox" id="ilCert"><div><div class="ct">I certify this log is accurate.</div><div class="cb">By: ${by}</div></div></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitIpLog()">Save log</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="ilMsg"></div>
+  `);
+  window._acPts=(window._pts||[]).filter(p=>p.patient_type==="IP");
+}
+function acPtFilter(inputId,hiddenId,q,ipOnly=false){
+  const list=document.getElementById(inputId+"_ac");if(!list) return;
+  const pts=ipOnly?(window._pts||[]).filter(p=>p.patient_type==="IP"):(window._pts||[]);
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="selectPt('${inputId}','${hiddenId}','${esc((p.title||"")+" "+p.name)}','${p.patient_id}')">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+async function submitIpLog(){
+  const msg=document.getElementById("ilMsg");
+  const pid=v("ilPatId"),pname=v("ilPatName");
+  if(!pid){showMsg(msg,"err","Select a patient.");return;}
+  if(!document.getElementById("ilCert").checked){showMsg(msg,"err","Tick certification.");return;}
+  const w=v("ilWt"),h=v("ilHt");
+  const bmiVal=w&&h?(parseFloat(w)/Math.pow(parseFloat(h)/100,2)).toFixed(1):"";
+  const res=await POST({action:"add_ip_log",payload:{patient_id:pid,patient_name:pname,log_date:v("ilDate"),week_number:v("ilWeek"),main_complaint:v("ilComp"),vitals_bp:v("ilBP"),vitals_weight:w,vitals_height:h,vitals_bmi:bmiVal,vitals_spo2:v("ilSpo2"),vitals_pulse:v("ilPulse"),vitals_temp:v("ilTemp"),therapy:v("ilTherapy"),food_served:v("ilFood"),progress:v("ilProg"),certified:true}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Log saved: "+res.log_id);setTimeout(()=>{closeMod();renderInpatient();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── HERBS ── */
+async function renderHerbs(){
+  loading();
+  const canAdd=(USER.access||[]).includes("herbs");
+  const canApprove=(USER.roles||[]).includes("supervisor")||USER.herb_senior;
+  try{
+    const [rows,inv]=await Promise.all([getSheet("herbs"),getSheet("inventory")]);
+    window._herbs=rows;window._inventory=inv;
+    const pending=rows.filter(r=>r.status==="pending_approval");
+    if(pending.length) document.getElementById("tbr").innerHTML=`<span class="pill po">${pending.length} pending approval</span>`;
+    set(`
+      ${canAdd?`<button class="btn bp" style="margin-bottom:.8rem" onclick="openAddHerb()">+ Add herb / product</button>`:""}
+      <div class="sbar">
+        <input type="text" id="herbQ" placeholder="Search herb name or condition…" oninput="filterHerbs()">
+        <select id="herbCatF" onchange="filterHerbs()"><option value="">All categories</option></select>
+      </div>
+      <div class="hg" id="herbGrid">${renderHerbCards(rows)}</div>
+    `);
+    // populate categories
+    const cats=[...new Set(rows.map(r=>r.category).filter(Boolean))];
+    const catSel=document.getElementById("herbCatF");
+    if(catSel) cats.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;catSel.appendChild(o);});
+    window._acPts=await getSheet("patients");
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function acRxPt(q){
+  const list=document.getElementById("rxPatQ_ac");if(!list) return;
+  const pts=window._acPts||[];
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())||(p.patient_id||"").includes(q)).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="document.getElementById('rxPatQ').value='${esc(p.patient_id)}';document.getElementById('rxPatQ_ac').classList.remove('open');lookupPrescriptions()">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+async function lookupPrescriptions(){
+  const pid=document.getElementById("rxPatQ")?.value.trim();
+  const el=document.getElementById("rxResult");
+  if(!pid||!el) return;
+  el.innerHTML=`<div class="loading" style="padding:.5rem"><div class="spinner"></div></div>`;
+  const res=await GET({action:"prescriptions_by_patient",patient_id:pid});
+  if(!res.ok){el.innerHTML=`<div style="color:var(--err);font-size:.78rem">${res.error||"Not found."}</div>`;return;}
+  const rxs=res.prescriptions||[],inv=res.inventory||[];
+  if(!rxs.length){el.innerHTML=`<div style="color:var(--muted);font-size:.78rem">No prescriptions for ${pid}.</div>`;return;}
+  el.innerHTML=`<div class="tw"><table><thead><tr><th>Date</th><th>Product</th><th>Dosage</th><th>Duration</th><th>Qty</th><th>Cost (TSh)</th><th>Status</th><th>Stock</th></tr></thead><tbody>${rxs.map(r=>{
+    const stock=inv.find(i=>(i.product_name||"").toLowerCase()===(r.product_name||"").toLowerCase());
+    const sb=stock?(Number(stock.quantity)<=0?`<span class="pill pr">Out</span>`:stock.low_stock_alert==="YES"?`<span class="pill po">Low:${stock.quantity}</span>`:`<span class="pill pg">${stock.quantity} ${stock.unit}</span>`):`<span class="pill pb">Unknown</span>`;
+    return `<tr><td>${r.date||"—"}</td><td>${r.product_name||"—"}</td><td>${r.dosage||"—"}</td><td>${r.duration||"—"}</td><td>${r.quantity||"—"}</td><td class="r">${r.cost_tzs?Number(r.cost_tzs).toLocaleString():"—"}</td><td><span class="pill ${r.status==="dispensed"?"pg":"po"}">${r.status||"prescribed"}</span></td><td>${sb}</td></tr>`;
+  }).join("")}</tbody></table></div>`;
+}
+function renderHerbCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No herbs yet.</div>`;
+  const canApprove=(USER.roles||[]).includes("supervisor")||USER.herb_senior;
+  return rows.map(h=>`
+    <div class="hcard" ${h.status==="pending_approval"?"style='border-color:var(--gold)'":" "}>
+      ${h.status==="pending_approval"?`<span class="pill po" style="position:absolute;top:.5rem;right:.5rem;font-size:.6rem">Pending</span>`:""}
+      <div style="font-size:.85rem;font-weight:700;color:var(--g);margin-bottom:.15rem">${h.product_name||"—"}</div>
+      ${h.category?`<span style="font-size:.6rem;background:var(--tint);color:var(--g);border-radius:99px;padding:1px 6px">${h.category}</span>`:""}
+      <div style="font-size:.68rem;color:var(--muted);margin:.25rem 0">${h.condition||"—"}</div>
+      <div class="tabs" style="margin-bottom:.4rem">
+        <div class="tab active" onclick="swTabLocal(this,'hc-info-${h._id}')">Info</div>
+        <div class="tab" onclick="swTabLocal(this,'hc-se-${h._id}')">Side effects</div>
+        <div class="tab" onclick="swTabLocal(this,'hc-ci-${h._id}')">Contraindications</div>
+      </div>
+      <div class="tpanel active" id="hc-info-${h._id}" style="font-size:.68rem">
+        <div><b>Ingredients:</b> ${(h.ingredients||"—").slice(0,100)}</div>
+        <div style="margin-top:.15rem"><b>Dose:</b> ${h.dosage||"—"}</div>
+        <div style="margin-top:.15rem"><b>Prep:</b> ${(h.preparation||"—").slice(0,80)}</div>
+      </div>
+      <div class="tpanel" id="hc-se-${h._id}" style="font-size:.68rem">
+        ${h.side_effects?`<div style="color:var(--err)">⚠ ${h.side_effects}</div>`:`<div style="color:var(--muted)">None recorded.</div>`}
+      </div>
+      <div class="tpanel" id="hc-ci-${h._id}" style="font-size:.68rem">
+        ${h.contraindications?`<div style="color:var(--err)">🚫 ${h.contraindications}</div>`:`<div style="color:var(--muted)">None recorded.</div>`}
+      </div>
+      <div style="font-size:.6rem;color:var(--muted);margin-top:.35rem">By: ${h.added_by||"—"}</div>
+      <div style="display:flex;gap:.25rem;flex-wrap:wrap;margin-top:.45rem">
+        ${h.status==="approved"?`<span class="pill pg">Approved</span>`:""}
+        <span class="aicon" onclick="openEditHerb('${h._id}')">✏️</span>
+        <span class="aicon del" onclick="reqDel('${h._ts}','herbs','Herb: ${esc(h.product_name||"")}',this)">🗑</span>
+        ${h.status==="pending_approval"&&canApprove?`<button class="btn bp bsm" onclick="approveHerb('${h._id}','approve')">Approve</button><button class="btn bd bsm" onclick="approveHerb('${h._id}','reject')">Reject</button>`:""}
+      </div>
+    </div>`).join("");
+}
+function swTabLocal(tabEl,panelId){
+  const card=tabEl.closest(".hcard");
+  card.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  card.querySelectorAll(".tpanel").forEach(p=>p.classList.remove("active"));
+  tabEl.classList.add("active");
+  const p=document.getElementById(panelId);if(p)p.classList.add("active");
+}
+function filterHerbs(){
+  const q=(document.getElementById("herbQ")?.value||"").toLowerCase();
+  const cat=document.getElementById("herbCatF")?.value||"";
+  document.getElementById("herbGrid").innerHTML=renderHerbCards((window._herbs||[]).filter(h=>((h.product_name||"").toLowerCase().includes(q)||(h.condition||"").toLowerCase().includes(q))&&(!cat||h.category===cat)));
+}
+function openAddHerb(){
+  openMod("Add herb / product",`
+    <div class="fg">
+      <div class="field full"><label>Product name *</label><input type="text" id="hn" placeholder="e.g. Ginger-Lemon Blend, Moringa tea"></div>
+      <div class="field"><label>Category</label><input type="text" id="hcat" placeholder="e.g. Root, Leaf, Blend, Oil"></div>
+      <div class="field full"><label>Condition(s) treated *</label><input type="text" id="hcond" placeholder="e.g. Nausea, hypertension"></div>
+      <div class="field full"><label>Ingredients</label><textarea id="hingr" placeholder="List all ingredients…"></textarea></div>
+      <div class="field full"><label>Preparation method</label><textarea id="hprep" placeholder="Step by step…"></textarea></div>
+      <div class="field"><label>Dosage</label><input type="text" id="hdose" placeholder="e.g. 2 cups/day × 7 days"></div>
+      <div class="field full"><label>Side effects</label><textarea id="hse" placeholder="Known side effects if any…" style="min-height:42px"></textarea></div>
+      <div class="field full"><label>Contraindications</label><textarea id="hci" placeholder="Who should NOT use this product…" style="min-height:42px"></textarea></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitHerb()">Submit</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="hMsg"></div>
+  `);
+}
+function openEditHerb(id){
+  const h=(window._herbs||[]).find(x=>x._id===id);if(!h) return;
+  openMod("Edit herb — "+h.product_name,`
+    <div class="fg">
+      <div class="field full"><label>Product name</label><input type="text" id="ehn" value="${esc(h.product_name||"")}"></div>
+      <div class="field"><label>Category</label><input type="text" id="ehcat" value="${esc(h.category||"")}"></div>
+      <div class="field full"><label>Condition(s)</label><input type="text" id="ehcond" value="${esc(h.condition||"")}"></div>
+      <div class="field full"><label>Ingredients</label><textarea id="ehingr">${h.ingredients||""}</textarea></div>
+      <div class="field full"><label>Preparation</label><textarea id="ehprep">${h.preparation||""}</textarea></div>
+      <div class="field"><label>Dosage</label><input type="text" id="ehdose" value="${esc(h.dosage||"")}"></div>
+      <div class="field full"><label>Side effects</label><textarea id="ehse" style="min-height:42px">${h.side_effects||""}</textarea></div>
+      <div class="field full"><label>Contraindications</label><textarea id="ehci" style="min-height:42px">${h.contraindications||""}</textarea></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitEditHerb('${id}')">Save</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="ehMsg"></div>
+  `);
+}
+async function submitHerb(){
+  const msg=document.getElementById("hMsg");
+  if(!v("hn")){showMsg(msg,"err","Product name required.");return;}
+  const res=await POST({action:"add_herb",payload:{product_name:v("hn"),category:v("hcat"),condition:v("hcond"),ingredients:v("hingr"),preparation:v("hprep"),dosage:v("hdose"),side_effects:v("hse"),contraindications:v("hci")}});
+  if(res.ok){clearCache();showMsg(msg,res.pending?"warn":"ok",res.pending?"Submitted — awaiting approval.":"Added to guide.");setTimeout(()=>{closeMod();renderHerbs();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+async function submitEditHerb(id){
+  const msg=document.getElementById("ehMsg");
+  const res=await POST({action:"update_herb",payload:{_id:id,product_name:v("ehn"),category:v("ehcat"),condition:v("ehcond"),ingredients:v("ehingr"),preparation:v("ehprep"),dosage:v("ehdose"),side_effects:v("ehse"),contraindications:v("ehci")}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Updated.");setTimeout(()=>{closeMod();renderHerbs();},1000);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+async function approveHerb(id,action){
+  const res=await POST({action:"approve_herb",payload:{_id:id,action}});
+  if(res.ok){clearCache();renderHerbs();}else alert(res.error||"Failed.");
+}
+
+/* ── INVENTORY ── */
+async function renderInventory(){
+  loading();
+  const canAdd=(USER.access||[]).includes("inventory");
+  try{
+    const [rows,herbs]=await Promise.all([getSheet("inventory"),getSheet("herbs")]);
+    window._inventory=rows;window._herbsForInv=herbs;
+    const low=rows.filter(r=>r.low_stock_alert==="YES");
+    if(low.length) document.getElementById("tbr").innerHTML=`<span class="pill pr">${low.length} low stock</span>`;
+    set(`
+      ${canAdd?`<button class="btn bp" style="margin-bottom:.8rem" onclick="openAddStock()">+ Add / restock</button>`:""}
+      <div class="panel">
+        <div class="pnt">Herb inventory <span>${rows.length} items</span></div>
+        <div class="tw"><table id="invTbl">
+          ${sortableTh(["Product","Qty","Unit","Price (TSh)","Last restocked","Threshold","Status","Updated by",""])}
+          <tbody>${rows.slice().reverse().map(r=>`<tr><td>${r.product_name||"—"}</td><td class="r">${r.quantity||0}</td><td>${r.unit||"—"}</td><td class="r">${r.price_tzs?Number(r.price_tzs).toLocaleString():"—"}</td><td>${r.last_restocked||"—"}</td><td class="r">${r.low_stock_threshold||10}</td><td>${r.low_stock_alert==="YES"?`<span class="pill pr">Low</span>`:`<span class="pill pg">OK</span>`}</td><td style="font-size:.65rem">${r.updated_by||"—"}</td><td><span class="aicon del" onclick="reqDel('${r._ts}','inventory','Inventory: ${esc(r.product_name||"")}',this)">🗑</span></td></tr>`).join("")}</tbody>
+        </table></div>
+      </div>
+    `);
+    initSortable("invTbl");
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function openAddStock(){
+  const herbs=(window._herbsForInv||[]).filter(h=>h.status==="approved");
+  openMod("Add / restock inventory",`
+    <div class="fg">
+      <div class="field full"><label>Product *</label><select id="invProd"><option value="">— Select —</option>${herbs.map(h=>`<option>${h.product_name}</option>`).join("")}</select></div>
+      <div class="field"><label>Quantity *</label><input type="number" id="invQty" placeholder="e.g. 500"></div>
+      <div class="field"><label>Unit *</label><select id="invUnit"><option>Grams</option><option>Kilograms</option><option>Bottles</option><option>Sachets</option><option>Litres</option><option>Pieces</option></select></div>
+      <div class="field"><label>Price per unit (TSh)</label><input type="number" id="invPrice" placeholder="e.g. 2000"></div>
+      <div class="field"><label>Low stock threshold</label><input type="number" id="invThresh" placeholder="10"></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitStock()">Save</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="invMsg"></div>
+  `);
+}
+async function submitStock(){
+  const msg=document.getElementById("invMsg");
+  if(!v("invProd")||!v("invQty")){showMsg(msg,"err","Product and quantity required.");return;}
+  const res=await POST({action:"add_inventory",payload:{product_name:v("invProd"),quantity:v("invQty"),unit:v("invUnit"),price_tzs:v("invPrice"),low_stock_threshold:v("invThresh")||10}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Stock saved.");setTimeout(()=>{closeMod();renderInventory();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── HERB SALES ── */
+async function renderSales(){
+  loading();
+  const canAdd=(USER.access||[]).includes("sales");
+  try{
+    const [rows,herbs,pts,inv,rxAll]=await Promise.all([getSheet("sales"),getSheet("herbs"),getSheet("patients"),getSheet("inventory"),getSheet("prescriptions")]);
+    window._salesRows=rows;window._herbs=herbs;window._pts=pts;window._inventory=inv;window._allRx=rxAll;
+    const total=rows.reduce((a,r)=>a+Number(r.total_amount_tzs||0),0);
+    const pendingRx=rxAll.filter(r=>r.status==="prescribed").length;
+    if(pendingRx) document.getElementById("tbr").innerHTML=`<span class="pill po">${pendingRx} prescriptions pending dispensing</span>`;
+    set(`
+      <div class="panel" style="margin-bottom:.85rem">
+        <div class="pnt" style="font-size:.95rem;margin-bottom:1rem">Patient prescription lookup — dispense herbs</div>
+        <div style="max-width:480px;margin:0 auto;text-align:center">
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem">Search patient by name or ID to see their prescribed herbs</div>
+          <div class="ac-wrap" style="margin-bottom:.65rem">
+            <input type="text" id="salRxQ" placeholder="Type patient name or registration ID…" autocomplete="off"
+              oninput="acSalPt(this.value)"
+              onkeydown="if(event.key==='Enter')lookupSaleRx()"
+              style="width:100%;background:#fff;border:2px solid var(--line);border-radius:10px;padding:.7rem 1rem;font:inherit;font-size:.9rem;color:var(--ink)">
+            <div class="ac-list" id="salRxQ_ac"></div>
+          </div>
+          <button class="btn bp" onclick="lookupSaleRx()" style="padding:.65rem 2rem;font-size:.88rem;border-radius:10px">Look up patient</button>
+        </div>
+        <div id="salRxResult" style="margin-top:.85rem"></div>
+      </div>
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi gold"><div class="kpin">${rows.length}</div><div class="kpil">Total sales</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--g)">${total.toLocaleString()}</div><div class="kpil">Revenue (TSh)</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--g)">${[...new Set(rows.map(r=>r.patient_id).filter(Boolean))].length}</div><div class="kpil">Patients served</div></div>
+      </div>
+      <div class="panel">
+        <div class="pnt">Sales records</div>
+        <div class="sbar"><input type="text" id="salQ" placeholder="Search patient or product…" oninput="filterSales()"></div>
+        <div class="tw"><table id="salTbl">
+          ${sortableTh(["Sale ID","Date","Patient","Items","Total (TSh)","Status","By",""])}
+          <tbody id="salTblBody">${renderSalTbl(rows)}</tbody>
+        </table></div>
+      </div>
+    `);
+    window._acPts=pts;
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+
+function acSalPt(q){
+  const list=document.getElementById("salRxQ_ac");if(!list) return;
+  const pts=window._acPts||window._pts||[];
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())||(p.patient_id||"").includes(q)).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="document.getElementById('salRxQ').value='${esc(p.patient_id)}';document.getElementById('salRxQ_ac').classList.remove('open');lookupSaleRx()">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+
+async function lookupSaleRx(){
+  const qval=document.getElementById("salRxQ")?.value.trim();
+  const el=document.getElementById("salRxResult");
+  if(!qval||!el) return;
+  el.innerHTML=`<div class="loading" style="padding:.5rem"><div class="spinner"></div></div>`;
+  // search by patient_id or name
+  const allRx=window._allRx||await getSheet("prescriptions");
+  const inv=window._inventory||[];
+  const matches=allRx.filter(r=>r.patient_id===qval||(r.patient_name||"").toLowerCase().includes(qval.toLowerCase()));
+  if(!matches.length){el.innerHTML=`<div style="color:var(--muted);font-size:.78rem">No prescriptions found for "${qval}".</div>`;return;}
+  const pending=matches.filter(r=>r.status==="prescribed");
+  const dispensed=matches.filter(r=>r.status==="dispensed");
+  el.innerHTML=`
+    <div style="font-size:.76rem;font-weight:700;color:var(--g);margin-bottom:.5rem">${matches[0].patient_name||qval} — ${pending.length} pending · ${dispensed.length} dispensed</div>
+    ${pending.length?`
+    <div style="font-size:.72rem;font-weight:600;color:var(--g);margin-bottom:.35rem">Pending dispensing — tick to mark as given:</div>
+    <div id="rxDispenseWrap">
+      ${pending.map(r=>{
+        const stock=inv.find(i=>(i.product_name||"").toLowerCase()===(r.product_name||"").toLowerCase());
+        const stockBadge=stock?(Number(stock.quantity)<=0?`<span class="pill pr">Out of stock</span>`:stock.low_stock_alert==="YES"?`<span class="pill po">Low: ${stock.quantity} ${stock.unit}</span>`:`<span class="pill pg">${stock.quantity} ${stock.unit}</span>`):`<span class="pill pb">Stock unknown</span>`;
+        return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .5rem;background:var(--tint);border-radius:8px;margin-bottom:.3rem">
+          <input type="checkbox" id="dsp_${r.prescription_id}" style="accent-color:var(--g);width:16px;height:16px;flex:0 0 auto" ${Number(stock?.quantity||1)<=0?"disabled":""}>
+          <div style="flex:1">
+            <div style="font-size:.76rem;font-weight:600">${r.product_name||"—"}</div>
+            <div style="font-size:.65rem;color:var(--muted)">${r.dosage||"—"} · ${r.duration||"—"} · Qty: ${r.quantity||"—"} ${r.unit||""}</div>
+            <div style="font-size:.65rem;color:var(--muted)">Prescribed: ${r.date||"—"} · Cost: TSh ${r.cost_tzs?Number(r.cost_tzs).toLocaleString():"—"}</div>
+          </div>
+          ${stockBadge}
+          ${Number(stock?.quantity||1)<=0?`<span class="pill pr" style="font-size:.6rem">Cannot dispense</span>`:""}
+        </div>`;
+      }).join("")}
+    </div>
+    <div style="margin-top:.35rem">
+      <label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:.2rem">Reason for not dispensing (for unchecked items)</label>
+      <input type="text" id="notDispensedReason" placeholder="e.g. Out of stock, patient declined, dosage to be confirmed…" style="width:100%;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:.45rem .6rem;font:inherit;font-size:.75rem">
+    </div>
+    <div class="fa" style="margin-top:.55rem">
+      <button class="btn bp" onclick="confirmDispense(${JSON.stringify(pending.map(r=>({id:r.prescription_id,pid:r.patient_id,pname:r.patient_name,vid:r.visit_id,prod:r.product_name,cost:r.cost_tzs,qty:r.quantity,unit:r.unit})))})">Confirm dispensing</button>
+    </div>
+    <div class="msg" id="dispMsg"></div>`:`<div style="font-size:.75rem;color:var(--muted)">No pending prescriptions for this patient.</div>`}
+    ${dispensed.length?`<div style="margin-top:.65rem;font-size:.72rem;font-weight:600;color:var(--muted)">Already dispensed:</div>
+    <div class="tw" style="margin-top:.3rem"><table><thead><tr><th>Product</th><th>Dosage</th><th>Qty</th><th>Cost (TSh)</th><th>Dispensed by</th></tr></thead><tbody>${dispensed.map(r=>`<tr><td>${r.product_name||"—"}</td><td>${r.dosage||"—"}</td><td>${r.quantity||"—"}</td><td class="r">${r.cost_tzs?Number(r.cost_tzs).toLocaleString():"—"}</td><td style="font-size:.65rem">${r.dispensed_by||"—"}</td></tr>`).join("")}</tbody></table></div>`:""}
+  `;
+}
+
+async function confirmDispense(pendingList){
+  const msg=document.getElementById("dispMsg");
+  const reason=document.getElementById("notDispensedReason")?.value.trim()||"Not dispensed";
+  const toDispense=pendingList.filter(r=>document.getElementById("dsp_"+r.id)?.checked);
+  const notDispensed=pendingList.filter(r=>!document.getElementById("dsp_"+r.id)?.checked);
+  if(!toDispense.length&&!notDispensed.length){showMsg(msg,"err","No items selected.");return;}
+  let totalCost=0;
+  // Mark dispensed ones
+  for(const rx of toDispense){
+    await POST({action:"update_prescription",payload:{prescription_id:rx.id,status:"dispensed"}});
+    totalCost+=Number(rx.cost||0);
+  }
+  // Mark not-dispensed with reason
+  for(const rx of notDispensed){
+    await POST({action:"update_prescription",payload:{prescription_id:rx.id,status:"not_dispensed",not_provided_reason:reason}});
+  }
+  // Auto-create sale record for dispensed items
+  if(toDispense.length>0){
+    const items=toDispense.map(r=>({product_name:r.prod,quantity:r.qty||1,unit:r.unit||"",price_tzs:0,subtotal:Number(r.cost||0)}));
+    await POST({action:"add_sale",payload:{patient_id:toDispense[0].pid||"",patient_name:toDispense[0].pname||"",date:today(),items_json:JSON.stringify(items),total_amount_tzs:totalCost,certified:true}});
+  }
+  clearCache();
+  showMsg(msg,"ok",`${toDispense.length} herb(s) dispensed. TSh ${totalCost.toLocaleString()} auto-added to billing for payment.`);
+  setTimeout(()=>lookupSaleRx(),1800);
+}
+function renderSalTbl(rows){
+  if(!rows.length) return `<tr><td colspan="8" style="text-align:center;color:var(--muted)">No sales yet.</td></tr>`;
+  return rows.slice().reverse().map(r=>{
+    let items="—";
+    try{const it=JSON.parse(r.items_json||"[]");items=it.map(i=>`${i.product_name} ×${i.quantity}`).join(", ");}catch(e){}
+    return `<tr><td>${r.sale_id||"—"}</td><td>${r.date||"—"}</td><td>${r.patient_name||"—"}</td><td style="max-width:150px;white-space:normal;font-size:.7rem">${items}</td><td class="r"><b>${r.total_amount_tzs?Number(r.total_amount_tzs).toLocaleString():"—"}</b></td><td>${r.bill_status==="paid"?`<span class="pill pg">Paid</span>`:`<span class="pill pr">Unpaid</span>`}</td><td style="font-size:.65rem">${r.recorded_by||"—"}</td><td><span class="aicon del" onclick="reqDel('${r._ts}','sales','Sale ${r.sale_id}',this)">🗑</span></td></tr>`;
+  }).join("");
+}
+function filterSales(){
+  const q=(document.getElementById("salQ")?.value||"").toLowerCase();
+  document.getElementById("salTblBody").innerHTML=renderSalTbl((window._salesRows||[]).filter(r=>(r.patient_name||"").toLowerCase().includes(q)||(r.items_json||"").toLowerCase().includes(q)));
+}
+
+function openSale(){
+  const inv=window._inventory||[];
+  const by=byLine();
+  openMod("Record herb sale — multiple herbs in one session",`
+    <div class="fg">
+      <div class="field"><label>Date *</label><input type="date" id="salDate" value="${today()}"></div>
+      <div class="field"><label>Patient name *</label>
+        <div class="ac-wrap">
+          <input type="text" id="salPatName" placeholder="Type patient name…" autocomplete="off" oninput="acPt('salPatName','salPatId',this.value)">
+          <div class="ac-list" id="salPatName_ac"></div>
+        </div>
+        <input type="hidden" id="salPatId">
+        <div class="hint">Required — who are the herbs being sold to?</div>
+      </div>
+      <div class="field full">
+        <label>Herbs sold (add as many as needed)</label>
+        <div class="hint" style="margin-bottom:.3rem">Select herb — price and total auto-compute from inventory</div>
+        <div id="saleItemsWrap"></div>
+        <button type="button" class="btn bg bsm" onclick="addSaleItem()" style="margin-top:.35rem">+ Add herb</button>
+        <div id="saleTotalDisp" style="margin-top:.5rem;font-size:.85rem;font-weight:700;color:var(--g)"></div>
+      </div>
+      <div class="certify full"><input type="checkbox" id="salCert"><div><div class="ct">I certify this sale is accurate.</div><div class="cb">By: ${by}</div></div></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitSale()">Save sale</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="salMsg"></div>
+  `);
+  window._acPts=window._pts||[];
+  addSaleItem();
+}
+let saleItemC=0;
+function addSaleItem(){
+  saleItemC++;const w=document.getElementById("saleItemsWrap");if(!w) return;
+  const inv=window._inventory||[];
+  const d=document.createElement("div");d.className="rxrow";d.dataset.siid=saleItemC;d.style.marginBottom=".35rem";
+  d.innerHTML=`
+    <div style="position:relative">
+      <input type="text" class="sin" list="siList${saleItemC}" placeholder="Herb name" oninput="onSaleItemInput(this)" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+      <datalist id="siList${saleItemC}">${inv.map(h=>`<option value="${h.product_name}">`).join("")}</datalist>
+    </div>
+    <input type="number" class="siq" placeholder="Qty" min="1" oninput="calcSaleTotal()" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="text" class="siu" placeholder="Unit" readonly style="background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="text" class="sip" placeholder="Price/unit" readonly style="background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem">
+    <input type="text" class="sit" placeholder="Subtotal" readonly style="background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem;font-weight:600;color:var(--g)">
+    <button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer" onclick="this.parentElement.remove();calcSaleTotal()">✕</button>`;
+  w.appendChild(d);
+}
+function onSaleItemInput(inp){
+  const row=inp.closest("[data-siid]");const inv=window._inventory||[];
+  const match=inv.find(i=>(i.product_name||"").toLowerCase()===inp.value.toLowerCase());
+  if(match){
+    row.querySelector(".siu").value=match.unit||"";
+    row.querySelector(".sip").value=Number(match.price_tzs||0).toLocaleString();
+  }else{row.querySelector(".siu").value="";row.querySelector(".sip").value="";}
+  calcSaleTotal();
+}
+function calcSaleTotal(){
+  const inv=window._inventory||[];let grand=0;
+  document.querySelectorAll("#saleItemsWrap [data-siid]").forEach(row=>{
+    const name=row.querySelector(".sin")?.value||"",qty=Number(row.querySelector(".siq")?.value||0);
+    const match=inv.find(i=>(i.product_name||"").toLowerCase()===name.toLowerCase());
+    const sub=match?Number(match.price_tzs||0)*qty:0;
+    const subEl=row.querySelector(".sit");if(subEl) subEl.value=sub>0?`TSh ${sub.toLocaleString()}`:"";
+    grand+=sub;
+  });
+  const el=document.getElementById("saleTotalDisp");
+  if(el) el.textContent=grand>0?`TOTAL: TSh ${grand.toLocaleString()}`:"";
+  return grand;
+}
+function collectSaleItems(){
+  const inv=window._inventory||[];
+  return [...document.querySelectorAll("#saleItemsWrap [data-siid]")].map(row=>{
+    const name=row.querySelector(".sin")?.value.trim()||"";
+    const qty=Number(row.querySelector(".siq")?.value||0);
+    const match=inv.find(i=>(i.product_name||"").toLowerCase()===name.toLowerCase());
+    return {product_name:name,quantity:qty,unit:match?match.unit||"":"",price_tzs:match?Number(match.price_tzs||0):0,subtotal:match?Number(match.price_tzs||0)*qty:0};
+  }).filter(r=>r.product_name&&r.quantity>0);
+}
+async function submitSale(){
+  const msg=document.getElementById("salMsg");
+  const pname=v("salPatName"),pid=v("salPatId");
+  if(!pname){showMsg(msg,"err","Patient name is required.");return;}
+  if(!document.getElementById("salCert").checked){showMsg(msg,"err","Tick certification.");return;}
+  const items=collectSaleItems();
+  if(!items.length){showMsg(msg,"err","Add at least one herb.");return;}
+  const total=items.reduce((a,i)=>a+i.subtotal,0);
+  const res=await POST({action:"add_sale",payload:{patient_id:pid||"",patient_name:pname,date:v("salDate"),items_json:JSON.stringify(items),total_amount_tzs:total,certified:true}});
+  if(res.ok){clearCache();showMsg(msg,"ok",`Sale recorded: ${res.sale_id} · TSh ${total.toLocaleString()} · Billing auto-created`);setTimeout(()=>{closeMod();renderSales();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── BILLING ── */
+async function renderBilling(){
+  loading();
+  const canAdd=(USER.access||[]).includes("billing");
+  try{
+    const [rows,pts]=await Promise.all([getSheet("billing"),getSheet("patients")]);
+    window._bills=rows;window._pts=pts;
+    const paid=rows.filter(r=>r.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    const unpaid=rows.filter(r=>r.status!=="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    set(`
+      ${canAdd?`<button class="btn bp" style="margin-bottom:.8rem" onclick="openBill()">+ Record extra charges</button>`:""}
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi gold"><div class="kpin">${rows.length}</div><div class="kpil">Total bills</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--ok)">${paid.toLocaleString()}</div><div class="kpil">Collected (TSh)</div></div>
+        <div class="kpi"><div class="kpin" style="color:var(--err)">${unpaid.toLocaleString()}</div><div class="kpil">Outstanding (TSh)</div></div>
+      </div>
+      <div class="panel">
+        <div class="pnt">Search patient to view & generate invoice</div>
+        <div class="sbar">
+          <div class="ac-wrap" style="flex:1">
+            <input type="text" id="billQ" placeholder="Type patient name to search…" autocomplete="off" oninput="acBillPt(this.value);filterBills()">
+            <div class="ac-list" id="billQ_ac"></div>
+          </div>
+          <select id="billStatus" onchange="filterBills()"><option value="">All</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option></select>
+          <select id="billType" onchange="filterBills()"><option value="">All types</option><option value="REG">Registration</option><option value="OP">OP</option><option value="IP">IP</option><option value="HC">HC</option></select>
+        </div>
+        <div class="tw"><table id="billTbl">
+          ${sortableTh(["Bill ID","Date","Patient","Type","File fee","Herbs","Total (TSh)","Status","Receipt","Action",""])}
+          <tbody id="billTblBody">${renderBillTbl(rows)}</tbody>
+        </table></div>
+        <div class="bank-box">
+          <div style="color:var(--muted);font-size:.72rem">All payments go to:</div>
+          <div style="font-weight:700;color:var(--g)">${BANK}</div>
+          <div style="color:var(--muted);font-size:.68rem;margin-top:.15rem">Patient pays at bank or mobile money, then brings receipt to the Receptionist.</div>
+        </div>
+      </div>
+    `);
+    initSortable("billTbl");
+    window._acPts=pts;
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function acBillPt(q){
+  const list=document.getElementById("billQ_ac");if(!list) return;
+  const pts=window._acPts||[];
+  if(q.length<1){list.classList.remove("open");return;}
+  const matches=pts.filter(p=>(p.name||"").toLowerCase().includes(q.toLowerCase())||(p.patient_id||"").includes(q)).slice(0,8);
+  if(!matches.length){list.classList.remove("open");return;}
+  list.innerHTML=matches.map(p=>`<div class="ac-item" onclick="document.getElementById('billQ').value='${esc((p.title||"")+" "+p.name)}';document.getElementById('billQ_ac').classList.remove('open');filterBills()">${p.title||""} ${p.name} <span class="pill pb" style="font-size:.6rem">${p.patient_id}</span></div>`).join("");
+  list.classList.add("open");
+}
+function renderBillTbl(rows){
+  if(!rows.length) return `<tr><td colspan="11" style="text-align:center;color:var(--muted)">No bills found.</td></tr>`;
+  return rows.slice().reverse().map(r=>`<tr>
+    <td style="font-family:monospace;font-size:.72rem">${r.bill_id||"—"}</td>
+    <td>${r.date||"—"}</td><td>${r.patient_name||"—"}</td>
+    <td><span class="pill ${r.visit_type==="IP"?"pp":r.visit_type==="REG"?"pb":r.visit_type==="HC"?"po":"pg"}">${r.visit_type||"—"}</span></td>
+    <td class="r">${r.file_fee?Number(r.file_fee).toLocaleString():"—"}</td>
+    <td class="r">${r.herbs_total?Number(r.herbs_total).toLocaleString():"—"}</td>
+    <td class="r"><b>${r.total?Number(r.total).toLocaleString():"—"}</b></td>
+    <td>${r.status==="paid"?`<span class="pill pg">Paid</span>`:`<span class="pill pr">Unpaid</span>`}</td>
+    <td style="font-size:.7rem">${r.receipt_number||"—"}</td>
+    <td>${r.status!=="paid"?`<button class="btn bp bsm" onclick="markPaid('${r.bill_id}')">Mark paid</button>`:""}</td>
+    <td><div class="aicons"><span class="aicon del" onclick="reqDel('${r._ts}','billing','Bill ${r.bill_id}',this)">🗑</span></div></td>
+  </tr>`).join("");
+}
+function filterBills(){
+  const q=(document.getElementById("billQ")?.value||"").toLowerCase();
+  const s=document.getElementById("billStatus")?.value||"";
+  const t=document.getElementById("billType")?.value||"";
+  const f=(window._bills||[]).filter(r=>{
+    const m=(r.patient_name||"").toLowerCase().includes(q)||(r.bill_id||"").toLowerCase().includes(q);
+    const sm=!s||(s==="paid"?r.status==="paid":r.status!=="paid");
+    const tm=!t||r.visit_type===t;
+    return m&&sm&&tm;
+  });
+  document.getElementById("billTblBody").innerHTML=renderBillTbl(f);
+}
+function openBill(){
+  const pts=window._pts||[];
+  openMod("Record extra charges",`
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:.65rem">
+      Use this for charges not auto-generated — e.g. laundry, special supplies, program additions, adjustments. File fees, visit fees and herb costs are auto-created by the system.
+    </div>
+    <div class="fg">
+      <div class="field full"><label>Patient name *</label>
+        <div class="ac-wrap">
+          <input type="text" id="blPatName" placeholder="Type patient name…" autocomplete="off" oninput="acPt('blPatName','blPatId',this.value)">
+          <div class="ac-list" id="blPatName_ac"></div>
+        </div>
+        <input type="hidden" id="blPatId">
+      </div>
+      <div class="field"><label>Visit ID (optional)</label><input type="text" id="blVid" placeholder="e.g. KWC-IP-2026/001"></div>
+      <div class="field"><label>Visit type</label><select id="blType"><option value="OP">OP</option><option value="IP">IP</option><option value="HC">HC</option></select></div>
+      <div class="field full">
+        <label>Charge items *</label>
+        <div class="hint" style="margin-bottom:.3rem">Add each charge separately — description and amount</div>
+        <div id="extraChargesWrap"></div>
+        <button type="button" class="btn bg bsm" onclick="addExtraCharge()" style="margin-top:.35rem">+ Add charge</button>
+        <div id="extraTotal" style="margin-top:.45rem;font-size:.82rem;font-weight:700;color:var(--g)"></div>
+      </div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitBill()">Record charges</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="blMsg"></div>
+  `);
+  window._acPts=pts;
+  addExtraCharge("Laundry","");
+  addExtraCharge("Program supplement","");
+}
+
+let extraChargeC=0;
+function addExtraCharge(desc="",amt=""){
+  extraChargeC++;
+  const w=document.getElementById("extraChargesWrap");if(!w) return;
+  const d=document.createElement("div");d.className="cmprow";d.dataset.ecid=extraChargeC;
+  d.innerHTML=`<input type="text" class="ecd" placeholder="Charge description e.g. Laundry, Bedding, Special diet" value="${desc}" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem;width:100%"><input type="number" class="eca" placeholder="Amount (TSh)" value="${amt}" oninput="calcExtraTotal()" style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:.32rem .45rem;font:inherit;font-size:.72rem;width:100%"><button type="button" style="background:#fbe8e8;border:1px solid #eec3c3;color:var(--err);border-radius:6px;padding:.28rem .4rem;cursor:pointer;white-space:nowrap" onclick="this.parentElement.remove();calcExtraTotal()">✕</button>`;
+  w.appendChild(d);
+}
+function calcExtraTotal(){
+  let total=0;
+  document.querySelectorAll("#extraChargesWrap [data-ecid]").forEach(row=>{total+=Number(row.querySelector(".eca")?.value||0);});
+  const el=document.getElementById("extraTotal");
+  if(el) el.textContent=total>0?`Total: TSh ${total.toLocaleString()}`:"";
+  return total;
+}
+function collectExtraCharges(){
+  return [...document.querySelectorAll("#extraChargesWrap [data-ecid]")].map(row=>({desc:row.querySelector(".ecd")?.value.trim()||"",amount:Number(row.querySelector(".eca")?.value||0)})).filter(r=>r.desc&&r.amount>0);
+}
+async function submitBill(){
+  const msg=document.getElementById("blMsg");
+  const pname=v("blPatName"),pid=v("blPatId");
+  if(!pname){showMsg(msg,"err","Patient name required.");return;}
+  const charges=collectExtraCharges();
+  if(!charges.length){showMsg(msg,"err","Add at least one charge item.");return;}
+  const total=charges.reduce((a,c)=>a+c.amount,0);
+  // Build description string for other field
+  const desc=charges.map(c=>`${c.desc}: TSh ${c.amount.toLocaleString()}`).join(" | ");
+  const res=await POST({action:"add_billing",payload:{patient_id:pid||"",patient_name:pname,visit_id:v("blVid"),visit_type:v("blType"),file_fee:0,herbs_total:0,program_cost:0,laundry:0,other:total,notes:desc}});
+  if(res.ok){clearCache();showMsg(msg,"ok",`Charges recorded: ${res.bill_id} · TSh ${total.toLocaleString()}`);setTimeout(()=>{closeMod();renderBilling();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+function markPaid(billId){
+  openMod("Confirm payment — "+billId,`
+    <div class="fg">
+      <div class="field full"><label>Receipt / Transaction number *</label><input type="text" id="rcptNum" placeholder="Bank or mobile money receipt number"><div class="hint">From AGDI bank or mobile money</div></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitMarkPaid('${billId}')">Confirm</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="rcptMsg"></div>
+  `);
+}
+async function submitMarkPaid(billId){
+  const msg=document.getElementById("rcptMsg");
+  const btn=document.querySelector("#rcptMsg ~ button, .fa .bp");
+  if(!v("rcptNum")){showMsg(msg,"err","Receipt number required.");return;}
+  showMsg(msg,"ok","Saving…");
+  try{
+    const res=await POST({action:"mark_paid",payload:{bill_id:billId,receipt_number:v("rcptNum")}});
+    if(res.ok){clearCache();showMsg(msg,"ok","Payment confirmed. ✓");setTimeout(()=>{closeMod();renderBilling();},1000);}
+    else showMsg(msg,"err",res.error||"Server returned an error. Try again.");
+  }catch(e){
+    showMsg(msg,"err","Connection error. Check internet and try again.");
+  }
+}
+
+/* ── STAFF ── */
+async function renderStaff(){
+  loading();
+  try{
+    const rows=await GET({action:"read_staff"});
+    const staff=rows.rows||[];window._staff=staff;
+    const active=staff.filter(r=>r.status==="active").length,rev=staff.filter(r=>r.status==="revoked").length;
+    document.getElementById("tbr").innerHTML=`<span class="pill pg">${active} active</span>${rev?`<span class="pill pr">${rev} revoked</span>`:""}`;
+    set(`
+      <button class="btn bp" style="margin-bottom:.8rem" onclick="openAddStaff()">+ Add staff account</button>
+      <div class="scg">${renderStaffCards(staff)}</div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function renderStaffCards(rows){
+  if(!rows.length) return `<div class="empty" style="grid-column:1/-1">No staff yet.</div>`;
+  return rows.map(s=>{
+    const roles=s.roles?String(s.roles).split(",").map(r=>r.trim()).filter(Boolean):[];
+    return `<div class="scrd" onclick="openStaffKpis('${s._id}','${esc((s.title||"")+" "+s.name)}','${esc((s.title?s.title+" ":"")+s.name)}')">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem">
+        <div class="scav">${initials((s.title||"")+" "+(s.name||""))}</div>
+        <div><div style="font-size:.8rem;font-weight:700">${s.title||""} ${s.name||"—"}</div><div style="font-size:.63rem;color:var(--muted)">@${s.username||"—"}</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.5rem">${roles.map(r=>`<span class="sr sr-${r}">${cap(r)}</span>`).join("")}${s.herb_senior==="YES"?`<span class="sr" style="background:var(--g);color:var(--gold)">Sr Herbalist</span>`:""}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.62rem;padding:2px 6px;border-radius:99px;font-weight:600;${s.status==="active"?"background:#e1f5ee;color:#085041":"background:#fbe8e8;color:#8c2828"}">${cap(s.status||"active")}</span>
+        <div style="display:flex;gap:.25rem" onclick="event.stopPropagation()">
+          <button style="font-size:.63rem;padding:2px 7px;border-radius:5px;border:1px solid var(--line);background:var(--card);color:var(--g);cursor:pointer" onclick="openEditStaff('${s._id}')">Edit</button>
+          ${s.status==="active"?`<button style="font-size:.63rem;padding:2px 7px;border-radius:5px;border:1px solid #eec3c3;background:#fbe8e8;color:var(--err);cursor:pointer" onclick="toggleStaff('${s._id}','${esc(s.name||"")}','revoked')">Revoke</button>`:`<button style="font-size:.63rem;padding:2px 7px;border-radius:5px;border:1px solid var(--line);background:var(--card);color:var(--g);cursor:pointer" onclick="toggleStaff('${s._id}','${esc(s.name||"")}','active')">Restore</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function openStaffKpis(staffId,fullName,name){
+  openMod(`${fullName} — Performance KPIs`,"<div class='loading'><div class='spinner'></div>Loading KPIs…</div>");
+  // Pass the full display name as it appears in recorded_by fields
+  const res=await GET({action:"staff_kpis",staff_id:staffId,staff_name:fullName});
+  if(!res.ok){document.getElementById("mBody").innerHTML=`<div class="empty">${res.error}</div>`;return;}
+  const k=res.kpis||{};
+  document.getElementById("mBody").innerHTML=`
+    <div class="kpis">
+      <div class="kpi gold"><div class="kpin">${k.patients_registered||0}</div><div class="kpil">Patients registered</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.consultations_total||0}</div><div class="kpil">Consultations</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.visits_recorded||0}</div><div class="kpil">Visits recorded</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.bills_generated||0}</div><div class="kpil">Bills generated</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--gold)">${(k.revenue_collected||0).toLocaleString()}</div><div class="kpil">Revenue collected (TSh)</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.sales_recorded||0}</div><div class="kpil">Herb sales recorded</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.herbs_dispensed||0}</div><div class="kpil">Herbs dispensed</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.ip_logs||0}</div><div class="kpil">IP daily logs</div></div>
+      <div class="kpi"><div class="kpin" style="color:var(--g)">${k.herbs_added||0}</div><div class="kpil">Herbs added to guide</div></div>
+    </div>
+  `;
+}
+
+function openAddStaff(){
+  openMod("Add staff account",`
+    <div class="fg">
+      <div class="field"><label>Title</label><select id="stT"><option value="">—</option><option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Dr.</option><option>Prof.</option></select></div>
+      <div class="field"><label>Full name *</label><input type="text" id="stN" placeholder="Full name"></div>
+      <div class="field"><label>Username *</label><input type="text" id="stU" placeholder="e.g. grace.mwamba"><div class="hint">Not case-sensitive at login</div></div>
+      <div class="field"><label>Password *</label><input type="text" id="stP" placeholder="Set a password"><div class="hint">Case-sensitive</div></div>
+      <div class="field full"><label>Roles (select one or more) *</label>
+        <div class="rcs">${["receptionist","practitioner","herbalist","administrator","supervisor"].map(r=>`<label class="rc"><input type="checkbox" name="stRole" value="${r}">${cap(r)}</label>`).join("")}</div>
+      </div>
+      <div class="field full"><label class="rc"><input type="checkbox" id="stHS">Senior Herbalist — can approve herbs and manage pricing</label></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitStaff()">Create account</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="stMsg"></div>
+  `);
+}
+async function submitStaff(){
+  const msg=document.getElementById("stMsg");
+  const roles=[...document.querySelectorAll('input[name="stRole"]:checked')].map(c=>c.value);
+  if(!v("stN")||!v("stU")||!v("stP")){showMsg(msg,"err","Name, username and password required.");return;}
+  if(!roles.length){showMsg(msg,"err","Select at least one role.");return;}
+  const res=await POST({action:"add_staff",payload:{title:v("stT"),name:v("stN"),username:v("stU"),password:v("stP"),roles,herb_senior:document.getElementById("stHS").checked}});
+  if(res.ok){showMsg(msg,"ok","Account created.");setTimeout(()=>{closeMod();renderStaff();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+function openEditStaff(id){
+  const s=(window._staff||[]).find(r=>r._id===id);if(!s) return;
+  const existing=s.roles?String(s.roles).split(",").map(r=>r.trim()):[];
+  openMod("Edit — "+(s.title||"")+" "+s.name,`
+    <div class="fg">
+      <div class="field"><label>Title</label><select id="edT"><option value="">—</option>${["Mr.","Mrs.","Ms.","Dr.","Prof."].map(t=>`<option ${s.title===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div class="field"><label>Full name</label><input type="text" id="edN" value="${esc(s.name||"")}"></div>
+      <div class="field"><label>Username</label><input type="text" id="edU" value="${esc(s.username||"")}"></div>
+      <div class="field"><label>New password (blank = keep)</label><input type="text" id="edP" placeholder="Leave blank to keep"></div>
+      <div class="field full"><label>Roles</label><div class="rcs">${["receptionist","practitioner","herbalist","administrator","supervisor"].map(r=>`<label class="rc"><input type="checkbox" name="edRole" value="${r}" ${existing.includes(r)?"checked":""}>${cap(r)}</label>`).join("")}</div></div>
+      <div class="field full"><label class="rc"><input type="checkbox" id="edHS" ${s.herb_senior==="YES"?"checked":""}>Senior Herbalist</label></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitEditStaff('${id}')">Save</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="edMsg"></div>
+  `);
+}
+async function submitEditStaff(id){
+  const msg=document.getElementById("edMsg");
+  const roles=[...document.querySelectorAll('input[name="edRole"]:checked')].map(c=>c.value);
+  if(!roles.length){showMsg(msg,"err","Select at least one role.");return;}
+  const payload={_id:id,title:v("edT"),name:v("edN"),username:v("edU"),roles,herb_senior:document.getElementById("edHS").checked};
+  if(v("edP")) payload.password=v("edP");
+  const res=await POST({action:"update_staff",payload});
+  if(res.ok){showMsg(msg,"ok","Updated.");setTimeout(()=>{closeMod();renderStaff();},1200);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+async function toggleStaff(id,name,status){
+  if(!confirm(`${status==="revoked"?"Revoke":"Restore"} account for ${name}?`)) return;
+  const res=await POST({action:"update_staff",payload:{_id:id,status}});
+  if(res.ok) renderStaff();else alert(res.error||"Failed.");
+}
+
+/* ── DELETE REQUESTS ── */
+async function renderDeleteReq(){
+  loading();
+  const isSup=(USER.roles||[]).includes("supervisor");
+  try{
+    const rows=await getSheet("delete_req");
+    const pending=rows.filter(r=>r.status==="pending");
+    if(pending.length) document.getElementById("tbr").innerHTML=`<span class="pill po">${pending.length} pending</span>`;
+    set(`
+      <button class="btn bg" style="margin-bottom:.8rem" onclick="openReqDel()">+ Request deletion</button>
+      <div class="panel">
+        <div class="pnt">Delete requests <span>${rows.length} total</span></div>
+        <div class="tw"><table>${sortableTh(["Request ID","Sheet","Record","Reason","Requested by","Status",...(isSup?["Action"]:[])])}<tbody>${rows.slice().reverse().map(r=>`<tr><td>${r.request_id||"—"}</td><td>${r.sheet_name||"—"}</td><td style="max-width:120px;white-space:normal;font-size:.7rem">${r.record_summary||r.record_id||"—"}</td><td style="max-width:150px;white-space:normal;font-size:.7rem">${r.reason||"—"}</td><td style="font-size:.67rem">${r.requested_by||"—"}</td><td><span class="pill ${r.status==="approved"?"pg":r.status==="rejected"?"pr":"po"}">${r.status||"pending"}</span></td>${isSup&&r.status==="pending"?`<td><button class="btn bp bsm" style="margin-right:.2rem" onclick="reviewDel('${r.request_id}','approve')">Approve</button><button class="btn bd bsm" onclick="reviewDel('${r.request_id}','reject')">Reject</button></td>`:isSup?"<td>—</td>":""}</tr>`).join("")||`<tr><td colspan="${isSup?7:6}" style="text-align:center;color:var(--muted)">No requests.</td></tr>`}</tbody></table></div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function openReqDel(){
+  openMod("Request record deletion",`
+    <div class="fg">
+      <div class="field full"><label>Module *</label><select id="drSheet"><option value="">—</option>${["patients","visits","ip_logs","vitals","symptoms","lifestyle","consultations","herbs","inventory","prescriptions","sales","billing"].map(s=>`<option value="${s}">${cap(s)}</option>`).join("")}</select></div>
+      <div class="field full"><label>Record ID / timestamp *</label><input type="text" id="drRecId" placeholder="ID or _ts of the record"></div>
+      <div class="field full"><label>Record summary</label><input type="text" id="drSummary" placeholder="Brief description to help Supervisor identify it"></div>
+      <div class="field full"><label>Reason *</label><textarea id="drReason" placeholder="Why should this record be deleted?"></textarea></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitReqDel()">Submit</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="drMsg"></div>
+  `);
+}
+async function submitReqDel(){
+  const msg=document.getElementById("drMsg");
+  if(!v("drSheet")||!v("drRecId")||!v("drReason")){showMsg(msg,"err","Sheet, record ID and reason required.");return;}
+  const res=await POST({action:"request_delete",payload:{sheet_name:v("drSheet"),record_id:v("drRecId"),record_ts:v("drRecId"),record_summary:v("drSummary"),reason:v("drReason")}});
+  if(res.ok){clearCache();showMsg(msg,"ok","Request submitted: "+res.request_id);setTimeout(()=>{closeMod();renderDeleteReq();},1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+async function reviewDel(reqId,action){
+  const note=action==="reject"?prompt("Reason for rejection:"):"";
+  if(action==="reject"&&!note) return;
+  if(!confirm(`${action==="approve"?"Approve and delete":"Reject"} this request?`)) return;
+  const res=await POST({action:"review_delete",payload:{request_id:reqId,action,review_note:note||"Approved"}});
+  if(res.ok){clearCache();renderDeleteReq();}else alert(res.error||"Failed.");
+}
+async function reqDel(ts,sheetKey,summary){
+  const isSup=(USER.roles||[]).includes("supervisor");
+  if(isSup){
+    if(!confirm(`Delete permanently?\n${summary}`)) return;
+    const res=await POST({action:"direct_delete",sheet:sheetKey,ts});
+    if(res.ok){clearCache();navigate(document.querySelector(".ni.active")?.dataset.page||"overview");}
+    else alert(res.error||"Not found.");
+  }else{
+    const reason=prompt(`Request deletion of:\n${summary}\n\nReason:`);
+    if(!reason) return;
+    const res=await POST({action:"request_delete",payload:{sheet_name:sheetKey,record_id:ts,record_ts:ts,record_summary:summary,reason}});
+    if(res.ok) alert("Delete request submitted.");else alert(res.error||"Failed.");
+  }
+}
+
+/* ── REPORTS ── */
+async function renderReports(){
+  loading();
+  if(!(USER.roles||[]).includes("supervisor")){set(`<div class="empty">Reports are restricted to Supervisor only.</div>`);return;}
+  try{
+    const d=await getBatch(["patients","visits","billing","sales"]);
+    const pts=d.patients||[],visits=d.visits||[],bills=d.billing||[],sales=d.sales||[];
+    const paid=bills.filter(b=>b.status==="paid").reduce((a,r)=>a+Number(r.total||0),0);
+    set(`
+      <div class="panel">
+        <div class="pnt">Summary report</div>
+        <div class="kpis">
+          <div class="kpi gold"><div class="kpin">${pts.length}</div><div class="kpil">Patients</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--g)">${pts.filter(p=>p.patient_type==="OP").length}</div><div class="kpil">Outpatients</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--g)">${pts.filter(p=>p.patient_type==="IP").length}</div><div class="kpil">Inpatients</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--g)">${visits.filter(v=>v.discharged==="YES").length}</div><div class="kpil">Discharged</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--gold)">${paid.toLocaleString()}</div><div class="kpil">Revenue (TSh)</div></div>
+          <div class="kpi"><div class="kpin" style="color:var(--g)">${sales.length}</div><div class="kpil">Herb sales</div></div>
+        </div>
+        <div style="margin-top:.75rem"><div style="font-size:.8rem;font-weight:700;color:var(--g);margin-bottom:.4rem">Outcomes</div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap">${["Improved","Stable","Referred","Did not complete"].map(o=>{const n=visits.filter(v=>v.outcome===o).length;return `<div style="background:var(--tint);border-radius:8px;padding:.5rem .75rem;font-size:.76rem"><div style="font-weight:700;color:var(--g)">${n}</div><div style="color:var(--muted)">${o}</div></div>`;}).join("")}</div>
+        </div>
+      </div>
+      <div class="panel"><div class="pnt">Export data</div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn bg" onclick="exportCSV(${JSON.stringify(pts).replace(/</g,"&lt;")},'KWC_Patients')">⬇ Patients CSV</button>
+          <button class="btn bg" onclick="exportCSV(${JSON.stringify(visits).replace(/</g,"&lt;")},'KWC_Visits')">⬇ Visits CSV</button>
+          <button class="btn bg" onclick="exportCSV(${JSON.stringify(bills).replace(/</g,"&lt;")},'KWC_Billing')">⬇ Billing CSV</button>
+          <button class="btn bg" onclick="exportCSV(${JSON.stringify(sales).replace(/</g,"&lt;")},'KWC_HerbSales')">⬇ Herb Sales CSV</button>
+        </div>
+      </div>
+    `);
+  }catch(e){set(`<div class="empty">${e.message}</div>`);}
+}
+function exportCSV(rows,name){
+  if(!rows||!rows.length){alert("No data.");return;}
+  const keys=Object.keys(rows[0]);
+  const esc2=val=>{val=(val==null)?"":String(val);return /[",\n]/.test(val)?'"'+val.replace(/"/g,'""')+'"':val;};
+  const csv=keys.join(",")+"\n"+rows.map(r=>keys.map(k=>esc2(r[k])).join(",")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));
+  a.download=name+"_"+today()+".csv";a.click();
+}
+
+/* ── CHANGE PASSWORD ── */
+function openCPw(){
+  openMod("Change password",`
+    <div class="fg">
+      <div class="field full"><label>Current password</label><input type="password" id="cpCur" placeholder="Current password"></div>
+      <div class="field full"><label>New password *</label><input type="password" id="cpNew" placeholder="New password"></div>
+      <div class="field full"><label>Confirm new *</label><input type="password" id="cpConf" placeholder="Repeat new password"></div>
+    </div>
+    <div class="fa"><button class="btn bp" onclick="submitCPw()">Change</button><button class="btn bg" onclick="closeMod()">Cancel</button></div>
+    <div class="msg" id="cpMsg"></div>
+  `);
+}
+async function submitCPw(){
+  const msg=document.getElementById("cpMsg");
+  if(v("cpCur")!==USER.password){showMsg(msg,"err","Current password incorrect.");return;}
+  if(!v("cpNew")){showMsg(msg,"err","New password required.");return;}
+  if(v("cpNew")!==v("cpConf")){showMsg(msg,"err","Passwords do not match.");return;}
+  const res=await POST({action:"change_password",new_password:v("cpNew")});
+  if(res.ok){USER.password=v("cpNew");saveSession(USER);showMsg(msg,"ok","Password changed.");setTimeout(closeMod,1500);}
+  else showMsg(msg,"err",res.error||"Failed.");
+}
+
+/* ── SORTABLE TABLES ── */
+function sortableTh(headers){
+  return `<thead><tr>${headers.map(h=>h?`<th onclick="sortTbl(this)" class="sortable">${h}<span class="sort-icon"></span></th>`:`<th></th>`).join("")}</tr></thead>`;
+}
+function initSortable(tableId){}
+function sortTbl(th){
+  const table=th.closest("table"),tbody=table.querySelector("tbody");
+  if(!tbody) return;
+  const idx=[...th.parentElement.children].indexOf(th);
+  const asc=th.classList.contains("asc");
+  table.querySelectorAll("th").forEach(t=>{t.classList.remove("asc","desc");});
+  th.classList.add(asc?"desc":"asc");
+  const rows=[...tbody.querySelectorAll("tr")];
+  rows.sort((a,b)=>{
+    const av=a.cells[idx]?.textContent.trim()||"",bv=b.cells[idx]?.textContent.trim()||"";
+    const an=Number(av.replace(/[^0-9.-]/g,"")),bn=Number(bv.replace(/[^0-9.-]/g,""));
+    const cmp=(!isNaN(an)&&!isNaN(bn))?an-bn:av.localeCompare(bv);
+    return asc?-cmp:cmp;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+
+/* ── UTILS ── */
+function v(id){const el=document.getElementById(id);return el?el.value.trim():"";}
+function today(){return new Date().toISOString().slice(0,10);}
+function initials(str){return (str||"").split(" ").filter(Boolean).map(w=>w[0]||"").join("").slice(0,2).toUpperCase()||"—";}
+function byLine(){return (USER.title?USER.title+" ":"")+USER.name+" ("+(USER.roles||[]).join(", ")+")";}
+function showMsg(el,type,msg){if(!el) return;el.className="msg "+(type==="ok"?"mok":type==="warn"?"mwarn":"merr")+" show";el.innerHTML=msg;}
+function openMod(title,body){
+  document.getElementById("mTitle").textContent=title;
+  document.getElementById("mBody").innerHTML=body;
+  document.getElementById("mBox").classList.remove("wide");
+  document.getElementById("mBg").classList.add("open");
+  document.getElementById("mBg").scrollTop=0;
+  // Enter key triggers primary action button in modal
+  // (only when not inside textarea or multiline input)
+  document.getElementById("mBg")._enterHandler=function(e){
+    if(e.key!=="Enter") return;
+    if(e.target.tagName==="TEXTAREA") return;
+    if(e.target.tagName==="INPUT"&&e.target.type==="text"&&e.target.classList.contains("ac-wrap")) return;
+    // Find first .bp button in modal body that is not Cancel
+    const btns=[...document.querySelectorAll("#mBody .btn.bp")];
+    if(btns.length){e.preventDefault();btns[0].click();}
+  };
+  document.getElementById("mBg").addEventListener("keydown",document.getElementById("mBg")._enterHandler);
+}
+function closeMod(){
+  const bg=document.getElementById("mBg");
+  if(bg._enterHandler) bg.removeEventListener("keydown",bg._enterHandler);
+  bg.classList.remove("open");
+}
+function swTab(tabEl,panelId){
+  const ctx=tabEl.closest(".modal")||document.getElementById("pc");
+  ctx.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  ctx.querySelectorAll(".tpanel").forEach(p=>p.classList.remove("active"));
+  tabEl.classList.add("active");
+  const panel=document.getElementById(panelId);if(panel) panel.classList.add("active");
+}
+function calcBMI(wtId,htId,displayId){
+  const w=parseFloat(document.getElementById(wtId)?.value||0);
+  const h=parseFloat(document.getElementById(htId)?.value||0)/100;
+  const el=document.getElementById(displayId);if(!el) return;
+  if(w&&h&&h>0){
+    const bmi=(w/(h*h)).toFixed(1);
+    const cat=bmi<18.5?"Underweight":bmi<25?"Normal":bmi<30?"Overweight":"Obese";
+    el.textContent=`BMI: ${bmi} — ${cat}`;el.className="bmid show";
+    el.style.color=bmi<18.5?"#0C447C":bmi<25?"#085041":bmi<30?"#633806":"#8c2828";
+  }else{el.className="bmid";}
+}
+function loadDistricts(rId,dId){
+  const reg=document.getElementById(rId)?.value;
+  const dSel=document.getElementById(dId);if(!dSel) return;
+  const districts=TZ[reg]||[];
+  dSel.innerHTML=`<option value="">— Select district —</option>`+districts.map(d=>`<option value="${d}">${d}</option>`).join("");
+}
+function esc(s){return String(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
+</script>
+</body>
+</html>
